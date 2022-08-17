@@ -3,6 +3,7 @@
 #include "Engine/Core/Core.h"
 #include "Engine/Events/Event.h"
 #include "Engine/Rendering/Context.h"
+#include "Engine/Rendering/LocalTexture2D.h"
 #include <glm/glm.hpp>
 #include <string_view>
 
@@ -27,7 +28,7 @@ namespace eng
 	class Window
 	{
 	public:
-		static Scope<Window> CreateScope(const WindowSpecifications& crSpecs, const Scope<Window>& crShareContextWindow);
+		static Scope<Window> CreateScope(const WindowSpecifications& crSpecs);
 		virtual ~Window() = default;
 	public:
 		virtual sint32 GetWidth() const = 0;
@@ -43,10 +44,10 @@ namespace eng
 		virtual bool IsMinimized() const = 0;
 		virtual bool IsMaximized() const = 0;
 
-		virtual const std::string& GetTitle() const = 0;
+		virtual std::string_view GetTitle() const = 0;
 		virtual void SetTitle(std::string_view title) = 0;
 
-		//virtual void SetIcon(const Ref<LocalTexture2D>& icon) = 0;
+		virtual void SetIcon(const Ref<LocalTexture2D>& crIcon) = 0;
 	public:
 		virtual bool IsVsyncEnabled() const = 0;
 		virtual void SetVsync(bool vsync) = 0;
@@ -72,9 +73,6 @@ namespace eng
 		virtual const Context& GetContext() const = 0;
 		virtual void* GetNativeWindow() = 0;
 		virtual const void* GetNativeWindow() const = 0;
-	public:
-		virtual bool ShouldClose() const = 0;
-		virtual void Close() = 0;
 	protected:
 		static void OnEvent(Event& rEvent);
 	};

@@ -1,6 +1,7 @@
 #include "Engine/pch.h"
 #include "Engine/Core/Application.h"
 #include "Engine/Rendering/Renderer.h"
+#include <filesystem>
 
 extern bool g_RestartApplication;
 extern eng::RendererAPI::API g_NextRendererAPI;
@@ -9,23 +10,37 @@ namespace eng
 {
 	static Application* s_pApplication = nullptr;
 
-	Application::Application(CommandLineArgs args)
+	Application::Application(const ApplicationSpecifications& crSpecs)
 	{
-		UNUSED(args); // TODO
+		PROFILE_FUNCTION();
 
 		CORE_ASSERT(s_pApplication == nullptr, "Attempted to recreate Application!");
 		s_pApplication = this;
 
-		m_Input = Input::CreateScope(BIND_FUNC(OnEvent));
+		if (!crSpecs.workingDirectory.empty())
+			std::filesystem::current_path(crSpecs.workingDirectory);
+
+		m_sInput = Input::CreateScope(BIND_FUNC(OnEvent));
+		m_sWindow = Window::CreateScope(crSpecs.windowSpecs);
+		Renderer::Init();
 	}
 
 	Application::~Application()
 	{
+		PROFILE_FUNCTION();
+
 		CORE_ASSERT(s_pApplication != nullptr, "Attempted to redestroy Application!");
 
+		// If layers aren't deleted by now, assume ownership and delete them.
+		for (auto& rLayer : m_LayerStack)
+		{
+			rLayer->OnDetach();
+			delete rLayer;
+		}
+
 		Renderer::Shutdown();
-		m_Windows.clear();
-		DestroyScope(m_Input);
+		DestroyScope(m_sWindow);
+		DestroyScope(m_sInput);
 
 		s_pApplication = nullptr;
 	}
@@ -50,81 +65,112 @@ namespace eng
 		m_Running = false;
 	}
 
-	Window& Application::OpenWindow(const WindowSpecifications& crWindowSpecs)
+	void Application::PushLayer(Layer* pLayer)
 	{
-		if (m_Windows.empty())
-		{
-			Window& rWindow = *m_Windows.emplace_back(Window::CreateScope(crWindowSpecs, nullptr));
-			Renderer::Init();
-			return rWindow;
-		}
+		CORE_ASSERT(pLayer != nullptr, "Layer was nullptr.");
 
-		return *m_Windows.emplace_back(Window::CreateScope(crWindowSpecs, m_Windows.front()));
+		pLayer->OnAttach();
+		m_LayerStack.PushLayer(pLayer);
 	}
 
-	Window& Application::GetWindow(size_t index)
+	void Application::PushOverlay(Layer* pOverlay)
 	{
-		CORE_ASSERT(index < m_Windows.size(), "Window index out of bounds!");
-		return *m_Windows[index];
+		CORE_ASSERT(pOverlay != nullptr, "Overlay was nullptr.");
+
+		pOverlay->OnAttach();
+		m_LayerStack.PushOverlay(pOverlay);
 	}
 
-	void Application::CloseWindow(size_t index)
+	Layer* Application::PopLayer()
 	{
-		CORE_ASSERT(index < m_Windows.size(), "Window index out of bounds!");
-		m_Windows[index]->Close(); // Mark the window for deletion.
+		Layer* pLayer = m_LayerStack.PopLayer();
+		if (pLayer != nullptr)
+			pLayer->OnDetach();
+#if ENABLE_LOGGING
+		else
+			LOG_CORE_WARN("Popping layer when there is no layer to pop. Potential push/pop layer/overlay imbalance.");
+#endif
+		return pLayer;
 	}
 
-	size_t Application::GetWindowIndex(const void* cpNativeWindow)
+	Layer* Application::PopOverlay()
 	{
-		for (size_t i = 0; i < m_Windows.size(); i++)
-			if (m_Windows[i]->GetNativeWindow() == cpNativeWindow)
-				return i;
-		return m_Windows.size();
-	}
-
-	size_t Application::GetWindowIndex(const Window& crWindow)
-	{
-		return GetWindowIndex(crWindow.GetNativeWindow());
+		Layer* pOverlay = m_LayerStack.PopOverlay();
+		if (pOverlay != nullptr)
+			pOverlay->OnDetach();
+#if ENABLE_LOGGING
+		else
+			LOG_CORE_WARN("Popping overlay when there is no overlay to pop. Potential push/pop layer/overlay imbalance.");
+#endif
+		return pOverlay;
 	}
 
 	void Application::OnEvent(Event& rEvent)
 	{
+		PROFILE_FUNCTION();
 
+		rEvent.Dispatch(this, &Application::OnWindowMinimizeEvent);
+		rEvent.Dispatch(this, &Application::OnWindowResizeEvent);
+
+		for (auto it = m_LayerStack.rbegin(); !rEvent.IsHandled() && it != m_LayerStack.rend(); ++it)
+		{
+			Layer& rLayer = **it;
+			if (rLayer.IsEnabled())
+				rLayer.OnEvent(rEvent);
+		}
+
+		// Dispatch this last, in case a layer handled the close event.
+		rEvent.Dispatch(this, &Application::OnWindowCloseEvent);
+	}
+
+	void Application::OnWindowCloseEvent(WindowCloseEvent& rEvent)
+	{
+		Close();
+	}
+
+	void Application::OnWindowResizeEvent(WindowResizeEvent& rEvent)
+	{
+		m_Rendering = rEvent.GetWidth() > 0 && rEvent.GetHeight() > 0 && !m_sWindow->IsMinimized();
+	}
+
+	void Application::OnWindowMinimizeEvent(WindowMinimizeEvent& rEvent)
+	{
+		m_Rendering = !rEvent.IsMinimized() && m_sWindow->GetWidth() > 0 && m_sWindow->GetHeight() > 0;
 	}
 
 	void Application::Run()
 	{
 		CORE_ASSERT(m_Running == false, "Cannot run the application while it is already running!");
-		CORE_ASSERT(!m_Windows.empty(), "Application must have at least one window to run!");
 		m_Running = true;
+		m_Rendering = true;
 
-		Input& rInput = *m_Input;
+		Input& rInput = *m_sInput;
 		while (m_Running)
 		{
+			PROFILE_SCOPE("Application::Run -> while(m_Running)");
+
 			Timestep timestep = rInput.GetElapsedTime();
-			rInput.PollEvents();
 
-			//Update(timestep);
-
-			Window& rFirstWindow = *m_Windows.front();
-			if (rFirstWindow.ShouldClose())
-				Renderer::Shutdown();
-
-			// Iterate over windows backwards for two reasons.
-			// 1) If the first window should be closed, which also means all other windows should be closed,
-			//		then close the other windows first.
-			// 2) Swapping all other windows before the first one takes the time that the first window
-			//		would spend waiting for vsync, i.e. it's faster.
-			for (size_t i = m_Windows.size(); i; )
+			// Update
 			{
-				auto& rWindow = *m_Windows[--i];
-				rWindow.GetContext().SwapBuffers();
-				if (rFirstWindow.ShouldClose() || rWindow.ShouldClose())
-					m_Windows.erase(m_Windows.begin() + i);
+				PROFILE_SCOPE("Application::Run -> Update");
+				for (auto& rpLayer : m_LayerStack)
+					if (rpLayer->IsEnabled())
+						rpLayer->OnUpdate(timestep);
 			}
 
-			if (m_Windows.empty())
-				Close();
+			// Render
+			if (m_Rendering)
+			{
+				PROFILE_SCOPE("Application::Run -> Render");
+
+				for (auto& rpLayer : m_LayerStack)
+					if (rpLayer->IsEnabled())
+						rpLayer->OnRender();
+				m_sWindow->GetContext().SwapBuffers();
+			}
+
+			rInput.PollEvents();
 		}
 	}
 }

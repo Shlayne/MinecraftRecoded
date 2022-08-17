@@ -8,7 +8,7 @@
 
 namespace eng
 {
-	WindowsWindow::WindowsWindow(const WindowSpecifications& crSpecs, const Scope<Window>& crShareContextWindow)
+	WindowsWindow::WindowsWindow(const WindowSpecifications& crSpecs)
 	{
 		PROFILE_FUNCTION();
 
@@ -17,8 +17,6 @@ namespace eng
 		m_State.resizable = crSpecs.resizable;
 		m_State.decorated = crSpecs.decorated;
 		m_State.focused = crSpecs.focusOnShow;
-
-		m_HasSharedContext = static_cast<bool>(crShareContextWindow);
 
 		glfwWindowHint(GLFW_RESIZABLE, m_State.resizable);
 		glfwWindowHint(GLFW_DECORATED, m_State.decorated);
@@ -36,11 +34,7 @@ namespace eng
 
 		{
 			PROFILE_SCOPE("glfwCreateWindow");
-			m_pWindow = glfwCreateWindow(
-				m_State.current.size.x, m_State.current.size.y,
-				m_State.title.c_str(),
-				NULL, m_HasSharedContext ? (static_cast<WindowsWindow*>(crShareContextWindow.get()))->m_pWindow : NULL
-			);
+			m_pWindow = glfwCreateWindow(m_State.current.size.x, m_State.current.size.y, m_State.title.c_str(), NULL, NULL);
 		}
 		CORE_ASSERT(m_pWindow != NULL, "Failed to create window!");
 
@@ -100,6 +94,15 @@ namespace eng
 		glfwSetWindowTitle(m_pWindow, title.data());
 	}
 
+	void WindowsWindow::SetIcon(const Ref<LocalTexture2D>& crIcon)
+	{
+		GLFWimage icon{};
+		icon.width = crIcon->GetWidth();
+		icon.height = crIcon->GetHeight();
+		icon.pixels = crIcon->GetData();
+		glfwSetWindowIcon(m_pWindow, 1, &icon);
+	}
+
 	void WindowsWindow::SetVsync(bool vsync)
 	{
 		WithContext(m_pWindow, [vsync]()
@@ -132,7 +135,7 @@ namespace eng
 			// Get the monitor that most of the window is on.
 			// On Windows, MonitorFromWindow(window->win32.handle, MONITOR_DEFAULTTONEAREST)
 			// does exactly this, but returns the windows monitor handle as opposed to the glfw monitor.
-			// However, glfw 3.3 doesn't support using that in this way.
+			// However, glfw 3.3.8 doesn't support using that in this way.
 
 			sint32 largestOverlap = sint32_min;
 			const GLFWvidmode* cpVideoMode = NULL;
@@ -191,11 +194,6 @@ namespace eng
 	{
 		glfwSetInputMode(m_pWindow, GLFW_CURSOR, mouseCaptured ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 		m_State.mouseCaptured = mouseCaptured;
-	}
-
-	bool WindowsWindow::ShouldClose() const
-	{
-		return m_ShouldClose || glfwWindowShouldClose(m_pWindow);
 	}
 
 	void WindowsWindow::SetCallbacks(GLFWwindow* pWindow)

@@ -7,6 +7,8 @@ namespace eng
 #if SYSTEM_WINDOWS
 		: m_pWindow(static_cast<GLFWwindow*>(pNativeWindow))
 	{
+		PROFILE_FUNCTION();
+
 		CORE_ASSERT(m_pWindow != NULL, "Context's Window is null!");
 		glfwMakeContextCurrent(m_pWindow);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -16,6 +18,8 @@ namespace eng
 
 	void OpenGLContext::SwapBuffers()
 	{
+		PROFILE_FUNCTION();
+
 #if SYSTEM_WINDOWS
 		glfwSwapBuffers(m_pWindow);
 #endif
@@ -23,6 +27,8 @@ namespace eng
 
 	void OpenGLContext::MakeCurrent()
 	{
+		PROFILE_FUNCTION();
+
 #if SYSTEM_WINDOWS
 		glfwMakeContextCurrent(m_pWindow);
 #endif

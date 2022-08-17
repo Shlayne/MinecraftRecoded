@@ -56,32 +56,32 @@ namespace eng
 
 #else // !ENABLE_LOGGING
 
-#define LOG_CORE_TRACE
-#define LOG_CORE_DEBUG
-#define LOG_CORE_INFO
-#define LOG_CORE_WARN
-#define LOG_CORE_ERROR
-#define LOG_CORE_FATAL
+#define LOG_CORE_TRACE(...)
+#define LOG_CORE_DEBUG(...)
+#define LOG_CORE_INFO(...)
+#define LOG_CORE_WARN(...)
+#define LOG_CORE_ERROR(...)
+#define LOG_CORE_FATAL(...)
 
-#define LOG_CORE_TRACE_IF
-#define LOG_CORE_DEBUG_IF
-#define LOG_CORE_INFO_IF
-#define LOG_CORE_WARN_IF
-#define LOG_CORE_ERROR_IF
-#define LOG_CORE_FATAL_IF
+#define LOG_CORE_TRACE_IF(...)
+#define LOG_CORE_DEBUG_IF(...)
+#define LOG_CORE_INFO_IF(...)
+#define LOG_CORE_WARN_IF(...)
+#define LOG_CORE_ERROR_IF(...)
+#define LOG_CORE_FATAL_IF(...)
 
-#define LOG_TRACE
-#define LOG_DEBUG
-#define LOG_INFO
-#define LOG_WARN
-#define LOG_ERROR
-#define LOG_FATAL
+#define LOG_TRACE(...)
+#define LOG_DEBUG(...)
+#define LOG_INFO(...)
+#define LOG_WARN(...)
+#define LOG_ERROR(...)
+#define LOG_FATAL(...)
 
-#define LOG_TRACE_IF
-#define LOG_DEBUG_IF
-#define LOG_INFO_IF
-#define LOG_WARN_IF
-#define LOG_ERROR_IF
-#define LOG_FATAL_IF
+#define LOG_TRACE_IF(...)
+#define LOG_DEBUG_IF(...)
+#define LOG_INFO_IF(...)
+#define LOG_WARN_IF(...)
+#define LOG_ERROR_IF(...)
+#define LOG_FATAL_IF(...)
 
 #endif // ENABLE_LOGGING

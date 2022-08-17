@@ -19,12 +19,15 @@ namespace eng
 		}));
 #endif
 
-		glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
-		int status = glfwInit();
-		CORE_ASSERT(status == GLFW_TRUE, "Failed to initialize GLFW!");
+		{
+			PROFILE_SCOPE("glfwInit");
+			glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
+			int status = glfwInit();
+			CORE_ASSERT(status == GLFW_TRUE, "Failed to initialize GLFW!");
 #if !ENABLE_ASSERTS
-		UNUSED(status);
+			UNUSED(status);
 #endif
+		}
 
 		UNUSED(glfwSetJoystickCallback([](sint32 jid, sint32 event)
 		{
@@ -45,8 +48,14 @@ namespace eng
 
 	WindowsInput::~WindowsInput()
 	{
+		PROFILE_FUNCTION();
+
 		UNUSED(glfwSetErrorCallback(NULL));
-		glfwTerminate();
+
+		{
+			PROFILE_SCOPE("glfwTerminate");
+			glfwTerminate();
+		}
 
 		// Reset all static data.
 

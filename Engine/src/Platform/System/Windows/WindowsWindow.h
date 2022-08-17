@@ -10,7 +10,7 @@ namespace eng
 	class WindowsWindow : public Window
 	{
 	public:
-		WindowsWindow(const WindowSpecifications& crSpecs, const Scope<Window>& crShareContextWindow);
+		WindowsWindow(const WindowSpecifications& crSpecs);
 		virtual ~WindowsWindow();
 	public:
 		inline virtual sint32 GetWidth() const override { return m_State.current.size.x; }
@@ -26,10 +26,10 @@ namespace eng
 		inline virtual bool IsMinimized() const override { return m_State.minimized; }
 		inline virtual bool IsMaximized() const override { return m_State.maximized; }
 
-		inline virtual const std::string& GetTitle() const override { return m_State.title; }
+		inline virtual std::string_view GetTitle() const override { return m_State.title; }
 		virtual void SetTitle(std::string_view title) override;
 
-		//virtual void SetIcon(const Ref<LocalTexture2D>& icon) override;
+		virtual void SetIcon(const Ref<LocalTexture2D>& crIcon) override;
 	public:
 		inline virtual bool IsVsyncEnabled() const override { return m_State.vsync; }
 		virtual void SetVsync(bool vsync) override;
@@ -55,9 +55,6 @@ namespace eng
 		inline virtual const Context& GetContext() const override { return *m_rContext; }
 		inline virtual void* GetNativeWindow() override { return m_pWindow; }
 		inline virtual const void* GetNativeWindow() const override { return m_pWindow; }
-	public:
-		virtual bool ShouldClose() const override;
-		inline virtual void Close() override { m_ShouldClose = true; }
 	private:
 		struct State
 		{
@@ -84,8 +81,6 @@ namespace eng
 		GLFWwindow* m_pWindow = NULL;
 		Scope<Context> m_rContext = nullptr;
 		State m_State;
-		bool m_ShouldClose : 1 = false;
-		bool m_HasSharedContext : 1 = false;
 	private:
 		static void SetCallbacks(GLFWwindow* pWindow);
 

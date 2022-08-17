@@ -22,6 +22,9 @@ namespace eng
 		// TODO: change this.
 		bool initialSettingRendererAPIStatus = RendererAPI::SetAPI(RendererAPI::API_OpenGL);
 		CORE_ASSERT(initialSettingRendererAPIStatus, "Failed to set initial Renderer API!");
+#if !ENABLE_ASSERTS
+		UNUSED(initialSettingRendererAPIStatus);
+#endif
 
 		do
 		{

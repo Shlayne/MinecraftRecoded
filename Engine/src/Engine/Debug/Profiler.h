@@ -1,5 +1,6 @@
 #pragma once
 
+// Drag and drop json files this produces into "chrome://tracing/" to view.
 #if ENABLE_PROFILE
 #include <algorithm>
 #include <chrono>
@@ -55,12 +56,12 @@ namespace eng
 	class ProfilerTimer
 	{
 	public:
-		ProfilerTimer(const char* name);
+		ProfilerTimer(const char* cpName);
 		~ProfilerTimer();
 	public:
 		void Stop();
 	private:
-		const char* m_Name;
+		const char* m_pName;
 		std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;
 		bool m_Stopped;
 	};

@@ -18,20 +18,9 @@ namespace eng
 		if (m_CurrentSession != nullptr)
 			InternalEndSession();
 
-		// Get filepath. TODO: see if this works.
-		std::string filepathPrefix = "Profiles/";
-		filepathPrefix += name;
-		std::string filepath = filepathPrefix + ".json";
-		uint32 index = 0;
-		std::error_code error;
-		while (!std::filesystem::exists(filepath, error))
-		{
-			filepath = filepathPrefix;
-			std::string indexString;
-			UNUSED(util::string::IToS(index, indexString));
-			filepath += indexString;
-			filepath += ".json";
-		}
+		std::string filepath = "Profiles/";
+		filepath += name;
+		filepath += ".profile.json";
 
 		// Create any directories that need to be created before opening the file
 		size_t lastSlashIndex = filepath.find_last_of("/\\");
@@ -113,8 +102,8 @@ namespace eng
 		}
 	}
 
-	ProfilerTimer::ProfilerTimer(const char* name)
-		: m_Name(name), m_Stopped(false), m_StartTimepoint(std::chrono::steady_clock::now()) {}
+	ProfilerTimer::ProfilerTimer(const char* cpName)
+		: m_pName(cpName), m_Stopped(false), m_StartTimepoint(std::chrono::steady_clock::now()) {}
 
 	ProfilerTimer::~ProfilerTimer()
 	{
@@ -130,7 +119,7 @@ namespace eng
 			std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() -
 			std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();
 
-		Profiler::Get().WriteProfile({ m_Name, highResStart, elapsedTime, std::this_thread::get_id() });
+		Profiler::Get().WriteProfile({ m_pName, highResStart, elapsedTime, std::this_thread::get_id() });
 
 		m_Stopped = true;
 	}

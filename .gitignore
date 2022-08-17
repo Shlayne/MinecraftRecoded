@@ -1,3 +1,9 @@
+# Profiling
+**.profile.json
+
+# Logging
+**.log
+
 # Visual Studio
 .vs/**
 **.sln
