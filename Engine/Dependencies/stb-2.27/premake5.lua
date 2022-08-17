@@ -1,5 +1,5 @@
-project "MinecraftRecoded"
-	kind "ConsoleApp"
+project "stb"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
 	cdialect "C17"
@@ -8,30 +8,18 @@ project "MinecraftRecoded"
 	targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
 
-	pchheader "MinecraftRecoded/pch.h"
-	pchsource "src/MinecraftRecoded/pch.cpp"
-
 	files {
-		"src/**.h",
-		"src/**.c",
-		"src/**.hpp",
-		"src/**.cpp",
-		"src/**.inl"
+		"include/stb_image.h",
+		"include/stb_image_write.h",
+		"src/stb.cpp",
 	}
 
 	includedirs {
-		-- Add any project source directories here.
-		"src",
-		"%{wks.location}/Engine/src",
-
-		-- Add any dependency includes here.
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.spdlog}",
+		"include",
 	}
 
-	-- Add any links dependency libs via their project names here.
-	links {
-		"Engine"
+	defines {
+		"_CRT_SECURE_NO_WARNINGS",
 	}
 
 	filter "system:windows"
@@ -44,15 +32,7 @@ project "MinecraftRecoded"
 		runtime "Debug"
 		optimize "Off"
 		symbols "On"
-
-		defines {
-			"CONFIG_PROFILE",
-
-			"ENABLE_PROFILE",
-			"ENABLE_ASSERTS",
-			"ENABLE_STATS",
-			"ENABLE_LOGGING"
-		}
+		defines "CONFIG_PROFILE"
 
 	filter "configurations:Debug"
 		runtime "Debug"
@@ -60,35 +40,14 @@ project "MinecraftRecoded"
 		symbols "Full"
 		defines "CONFIG_DEBUG"
 
-		defines {
-			"CONFIG_DEBUG",
-
-			"ENABLE_PROFILE",
-			"ENABLE_ASSERTS",
-			"ENABLE_STATS",
-			"ENABLE_LOGGING"
-		}
-
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "On"
 		symbols "On"
 		defines "CONFIG_RELEASE"
 
-		defines {
-			"CONFIG_RELEASE",
-
-			"ENABLE_STATS",
-			"ENABLE_LOGGING"
-		}
-
 	filter "configurations:Dist"
 		runtime "Release"
 		optimize "Full"
 		symbols "Off"
-
-		defines {
-			"CONFIG_DIST"
-		}
-		
-		kind "WindowedApp"
+		defines "CONFIG_DIST"

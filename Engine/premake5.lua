@@ -1,5 +1,5 @@
-project "MinecraftRecoded"
-	kind "ConsoleApp"
+project "Engine"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
 	cdialect "C17"
@@ -8,37 +8,63 @@ project "MinecraftRecoded"
 	targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
 
-	pchheader "MinecraftRecoded/pch.h"
-	pchsource "src/MinecraftRecoded/pch.cpp"
+	pchheader "Engine/pch.h"
+	pchsource "src/Engine/pch.cpp"
 
 	files {
-		"src/**.h",
-		"src/**.c",
-		"src/**.hpp",
-		"src/**.cpp",
-		"src/**.inl"
+		"src/Engine/**.h",
+		"src/Engine/**.cpp",
+		"src/Engine/**.inl",
+		"src/Engine.h",
 	}
 
 	includedirs {
 		-- Add any project source directories here.
 		"src",
-		"%{wks.location}/Engine/src",
+		-- "%{wks.location}/__PROJECT_NAME__/src",
 
 		-- Add any dependency includes here.
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb}",
 		"%{IncludeDir.spdlog}",
 	}
 
 	-- Add any links dependency libs via their project names here.
 	links {
-		"Engine"
+		"stb",
 	}
 
 	filter "system:windows"
 		systemversion "latest"
 		usestdpreproc "On"
 		buildoptions "/wd5105" -- Until Microsoft updates Windows 10 to not have terrible code (aka never), this must be here to prevent a warning.
-		defines "SYSTEM_WINDOWS"
+
+		defines {
+			"SYSTEM_WINDOWS",
+
+			"SUPPORTS_OPENGL"
+		}
+
+		includedirs {
+			"%{IncludeDir.glfw}",
+
+			"%{IncludeDir.glad}",
+			"src/Platform/RendererAPI/OpenGL/src",
+		}
+
+		links {
+			"glfw",
+
+			-- The static libs have to always be linked on their supported platforms,
+			-- because they are static libs and have to be. Their dll counterparts don't.
+			"OpenGLRendererAPI",
+		}
+
+		files {
+			"src/Platform/System/Windows/**.h",
+			"src/Platform/System/Windows/**.cpp",
+			"src/Platform/System/Windows/**.inl",
+		}
 
 	filter "configurations:Profile"
 		runtime "Debug"
@@ -58,7 +84,6 @@ project "MinecraftRecoded"
 		runtime "Debug"
 		optimize "Debug"
 		symbols "Full"
-		defines "CONFIG_DEBUG"
 
 		defines {
 			"CONFIG_DEBUG",
@@ -73,13 +98,18 @@ project "MinecraftRecoded"
 		runtime "Release"
 		optimize "On"
 		symbols "On"
-		defines "CONFIG_RELEASE"
 
 		defines {
 			"CONFIG_RELEASE",
 
 			"ENABLE_STATS",
 			"ENABLE_LOGGING"
+		}
+
+		excludes {
+			"src/Engine/Debug/**.h",
+			"src/Engine/Debug/**.cpp",
+			"src/Engine/Debug/**.inl",
 		}
 
 	filter "configurations:Dist"
@@ -90,5 +120,13 @@ project "MinecraftRecoded"
 		defines {
 			"CONFIG_DIST"
 		}
-		
-		kind "WindowedApp"
+
+		excludes {
+			"src/Engine/Debug/**.h",
+			"src/Engine/Debug/**.cpp",
+			"src/Engine/Debug/**.inl",
+			"src/Engine/Events/WindowEvents.cpp",
+			"src/Engine/Events/KeyEvents.cpp",
+			"src/Engine/Events/MouseEvents.cpp",
+			"src/Engine/Events/DeviceEvents.cpp",
+		}

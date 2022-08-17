@@ -4,7 +4,7 @@ workspace "MinecraftRecoded"
 	architecture "x86_64"
 	startproject "MinecraftRecoded"
 
-	configurations { "Debug", "Release", "Dist" }
+	configurations { "Profile", "Debug", "Release", "Dist" }
 
 	solutionitems {
 		-- Visual Studio
@@ -36,11 +36,17 @@ OutputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 include "Dependencies/premake/Custom/usestdpreproc.lua"
 include "Dependencies/Dependencies.lua"
 
+group "RendererAPI/OpenGL"
+	include "Engine/src/Platform/RendererAPI/OpenGL"
+	include "Engine/src/Platform/RendererAPI/OpenGL/Dependencies/glad-0.1.35"
+group "Dependencies/Engine"
+	include "Engine/Dependencies/stb-2.27"
+group "Dependencies/Engine/System/Windows"
+	include "Engine/Dependencies/glfw-3.3.8"
 group "Dependencies/MinecraftRecoded"
-	include "MinecraftRecoded/Dependencies/glad-0.1.35/"
-	include "MinecraftRecoded/Dependencies/glfw-3.3.8/"
-	include "MinecraftRecoded/Dependencies/stb-2.27/"
+	-- TODO: MinecraftRecoded-specific dependencies
 group ""
 
 -- Add any projects here with 'include "__PROJECT_NAME__"'
+include "Engine"
 include "MinecraftRecoded"
