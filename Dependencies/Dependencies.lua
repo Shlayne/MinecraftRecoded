@@ -3,7 +3,10 @@ LibraryDir = {}
 Library = {}
 
 -- Include Directories
---	IncludeDir["__PROJECT_NAME__"] = "%{__PROJECT_DIR_NAME__}/__PROJECT_INCLUDE_PATH__"
+	IncludeDir["glad"] = "%{wks.location}/MinecraftRecoded/Dependencies/glad-0.1.35/include/"
+	IncludeDir["glfw"] = "%{wks.location}/MinecraftRecoded/Dependencies/glfw-3.3.8/include/"
+	IncludeDir["glm"] = "%{wks.location}/MinecraftRecoded/Dependencies/glm-0.9.9.8/include/"
+	IncludeDir["stb"] = "%{wks.location}/MinecraftRecoded/Dependencies/stb-2.27/include/"
 
 -- Library Directories
 --	LibraryDir["__LIBRARY_DIR_NAME__"] = "%{__LIBRARY_DIR_NAME__}/__LIBRARY_DIR_PATH__"
