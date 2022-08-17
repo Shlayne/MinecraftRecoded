@@ -26,7 +26,6 @@ namespace eng
 		do
 		{
 			PROFILE_BEGIN_RUNTIME("Init");
-			RendererAPI::LoadAPI();
 			Application* application = CreateApplication(args);
 			PROFILE_END_RUNTIME();
 
@@ -36,12 +35,11 @@ namespace eng
 
 			PROFILE_BEGIN_RUNTIME("Shutdown");
 			delete application;
-			RendererAPI::UnloadAPI();
 			PROFILE_END_RUNTIME();
 
 			if (!RendererAPI::SetAPI(g_NextRendererAPI))
 			{
-				LOG_CORE_WARN("Could not set Renderer API to {0}. Defaulting to old Renderer API {1}", g_NextRendererAPI, RendererAPI::GetAPI());
+				LOG_CORE_WARN("Could not set Renderer API to {0}. Defaulting to old Renderer API {1}", +g_NextRendererAPI, +RendererAPI::GetAPI());
 				g_NextRendererAPI = RendererAPI::GetAPI();
 			}
 		}

@@ -1,8 +1,6 @@
 #include "Engine/pch.h"
 #include "Engine/Rendering/RendererAPI.h"
-#if SUPPORTS_OPENGL
-	#include "OpenGLRendererAPI/OpenGLRendererAPI.h"
-#endif
+#include "Platform/RendererAPI/OpenGL/OpenGLRendererAPI.h"
 
 namespace eng
 {
@@ -25,10 +23,8 @@ namespace eng
 	{
 		switch (api)
 		{
-#if SUPPORTS_OPENGL
-		case API_OpenGL: break;
-#endif
-		default: return false;
+			case API_OpenGL: break;
+			default: return false;
 		}
 
 		return true;
@@ -38,10 +34,8 @@ namespace eng
 	{
 		switch (s_API)
 		{
-#if SUPPORTS_OPENGL
-		case API_OpenGL: return eng::CreateScope<OpenGLRendererAPI>();
-#endif
-		UNKNOWN_RENDERER_API(s_API, nullptr);
+			case API_OpenGL: return eng::CreateScope<OpenGLRendererAPI>();
+			UNKNOWN_RENDERER_API(s_API, nullptr);
 		}
 	}
 }

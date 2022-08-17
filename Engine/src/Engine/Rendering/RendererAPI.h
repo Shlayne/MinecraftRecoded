@@ -60,8 +60,6 @@ namespace eng
 	private:
 		friend int Main(CommandLineArgs args);
 		static bool SetAPI(API api);
-		static void LoadAPI();
-		static void UnloadAPI();
 	private:
 		friend class Renderer;
 		static Scope<RendererAPI> CreateScope();

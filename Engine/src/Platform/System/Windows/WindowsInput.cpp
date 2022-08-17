@@ -7,7 +7,7 @@
 
 namespace eng
 {
-	WindowsInput::WindowsInput(eng::EventCallback&& rrfEventCallback)
+	WindowsInput::WindowsInput(EventCallback&& rrfEventCallback)
 		: m_fEventCallback(std::move(rrfEventCallback))
 	{
 		PROFILE_FUNCTION();
@@ -22,6 +22,9 @@ namespace eng
 		glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
 		int status = glfwInit();
 		CORE_ASSERT(status == GLFW_TRUE, "Failed to initialize GLFW!");
+#if !ENABLE_ASSERTS
+		UNUSED(status);
+#endif
 
 		UNUSED(glfwSetJoystickCallback([](sint32 jid, sint32 event)
 		{

@@ -16,6 +16,9 @@ project "Engine"
 		"src/Engine/**.cpp",
 		"src/Engine/**.inl",
 		"src/Engine.h",
+		"src/Platform/RendererAPI/**.h",
+		"src/Platform/RendererAPI/**.cpp",
+		"src/Platform/RendererAPI/**.inl",
 	}
 
 	includedirs {
@@ -24,6 +27,7 @@ project "Engine"
 		-- "%{wks.location}/__PROJECT_NAME__/src",
 
 		-- Add any dependency includes here.
+		"%{IncludeDir.glad}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.spdlog}",
@@ -31,6 +35,7 @@ project "Engine"
 
 	-- Add any links dependency libs via their project names here.
 	links {
+		"glad",
 		"stb",
 	}
 
@@ -39,25 +44,14 @@ project "Engine"
 		usestdpreproc "On"
 		buildoptions "/wd5105" -- Until Microsoft updates Windows 10 to not have terrible code (aka never), this must be here to prevent a warning.
 
-		defines {
-			"SYSTEM_WINDOWS",
-
-			"SUPPORTS_OPENGL"
-		}
+		defines "SYSTEM_WINDOWS"
 
 		includedirs {
 			"%{IncludeDir.glfw}",
-
-			"%{IncludeDir.glad}",
-			"src/Platform/RendererAPI/OpenGL/src",
 		}
 
 		links {
 			"glfw",
-
-			-- The static libs have to always be linked on their supported platforms,
-			-- because they are static libs and have to be. Their dll counterparts don't.
-			"OpenGLRendererAPI",
 		}
 
 		files {

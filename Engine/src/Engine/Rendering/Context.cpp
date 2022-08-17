@@ -1,9 +1,7 @@
 #include "Engine/pch.h"
 #include "Engine/Rendering/Context.h"
 #include "Engine/Rendering/RendererAPI.h"
-#if SUPPORTS_OPENGL
-	#include "OpenGLRendererAPI/OpenGLContext.h"
-#endif
+#include "Platform/RendererAPI/OpenGL/OpenGLContext.h"
 
 namespace eng
 {
@@ -11,10 +9,8 @@ namespace eng
 	{
 		switch (RendererAPI::GetAPI())
 		{
-#if SUPPORTS_OPENGL
-		case RendererAPI::API_OpenGL: return eng::CreateScope<OpenGLContext>(pNativeWindow);
-#endif
-		UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
+			case RendererAPI::API_OpenGL: return eng::CreateScope<OpenGLContext>(pNativeWindow);
+			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}
 }

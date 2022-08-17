@@ -10,7 +10,7 @@ namespace eng
 	class WindowsInput : public Input
 	{
 	public:
-		WindowsInput(eng::EventCallback&& rrfEventCallback);
+		WindowsInput(EventCallback&& rrfEventCallback);
 		virtual ~WindowsInput();
 	public:
 		virtual bool IsKeyPressed(Keycode keycode) const override;

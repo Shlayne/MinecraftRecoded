@@ -1,14 +1,11 @@
 #pragma once
 
 #include "Engine/Rendering/RendererAPI.h"
-#include "OpenGLRendererAPI/OpenGLRendererAPIBind.h"
 #include <glad/glad.h>
 
-#pragma warning(push)
-#pragma warning(disable: 4275)
 namespace eng
 {
-	class OPENGL_RENDERER_API OpenGLRendererAPI : public RendererAPI
+	class OpenGLRendererAPI : public RendererAPI
 	{
 	public:
 		OpenGLRendererAPI();
@@ -37,4 +34,3 @@ namespace eng
 		GLbitfield m_ClearBits = GL_COLOR_BUFFER_BIT;
 	};
 }
-#pragma warning(pop)

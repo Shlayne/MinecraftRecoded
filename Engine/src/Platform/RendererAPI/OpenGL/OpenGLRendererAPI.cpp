@@ -1,5 +1,5 @@
-#include "OpenGLRendererAPI/OpenGLRendererAPI.h"
-#include "OpenGLRendererAPI/OpenGLLogger.h"
+#include "Engine/pch.h"
+#include "Platform/RendererAPI/OpenGL/OpenGLRendererAPI.h"
 
 namespace eng
 {
@@ -10,11 +10,11 @@ namespace eng
 		{
 			case GL_DEBUG_SEVERITY_HIGH:         LOG_CORE_FATAL(cpMessage); return;
 			case GL_DEBUG_SEVERITY_MEDIUM:       LOG_CORE_ERROR(cpMessage); return;
-			case GL_DEBUG_SEVERITY_LOW:          LOG_CORE_WARN(cpMessage); return;
+			case GL_DEBUG_SEVERITY_LOW:          LOG_CORE_WARN(cpMessage);  return;
 			case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_CORE_TRACE(cpMessage); return;
 		}
 
-		CORE_ASSERT(false, "Unknown OpenGL severity level.");
+		CORE_ASSERT(false, "Unknown OpenGL severity level={0}.", severity);
 	}
 
 	OpenGLRendererAPI::OpenGLRendererAPI()
