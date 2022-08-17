@@ -5,7 +5,7 @@
 
 namespace eng
 {
-	Ref<VertexBuffer> VertexBuffer::CreateRef(uint32_t size, const void* cpData, BufferUsage usage)
+	Ref<VertexBuffer> VertexBuffer::CreateRef(uint32 size, const void* cpData, BufferUsage usage)
 	{
 		switch (RendererAPI::GetAPI())
 		{
@@ -14,7 +14,7 @@ namespace eng
 		}
 	}
 
-	Ref<IndexBuffer> IndexBuffer::CreateRef(uint32_t count, const void* cpData, BufferUsage usage, IndexBufferElementType type)
+	Ref<IndexBuffer> IndexBuffer::CreateRef(uint32 count, const void* cpData, BufferUsage usage, IndexBufferElementType type)
 	{
 		switch (RendererAPI::GetAPI())
 		{
@@ -23,7 +23,7 @@ namespace eng
 		}
 	}
 
-	Ref<UniformBuffer> UniformBuffer::CreateRef(uint32_t size, uint32_t binding, const void* cpData, BufferUsage usage)
+	Ref<UniformBuffer> UniformBuffer::CreateRef(uint32 size, uint32 binding, const void* cpData, BufferUsage usage)
 	{
 		switch (RendererAPI::GetAPI())
 		{

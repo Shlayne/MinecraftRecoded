@@ -10,7 +10,7 @@ namespace eng
 	public:
 		OpenGLVertexBuffer(uint32 size, const void* cpData, BufferUsage usage);
 		virtual ~OpenGLVertexBuffer();
-
+	public:
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
@@ -28,7 +28,7 @@ namespace eng
 	public:
 		OpenGLIndexBuffer(uint32 count, const void* cpData, BufferUsage usage, IndexBufferElementType type);
 		virtual ~OpenGLIndexBuffer();
-
+	public:
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
@@ -47,7 +47,7 @@ namespace eng
 	public:
 		OpenGLUniformBuffer(uint32 size, uint32 binding, const void* cpData, BufferUsage usage);
 		virtual ~OpenGLUniformBuffer();
-
+	public:
 		virtual void SetData(const void* cpData, uint32 size, uint32 offset = 0) override;
 	private:
 		GLuint m_RendererID = 0;

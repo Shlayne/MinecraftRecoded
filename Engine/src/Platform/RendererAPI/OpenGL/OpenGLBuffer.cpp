@@ -1,9 +1,9 @@
 #include "Engine/pch.h"
-#include "OpenGLBuffer.h"
+#include "Platform/RendererAPI/OpenGL/OpenGLBuffer.h"
 
 namespace eng
 {
-	static constexpr GLenum GetOpenGLUsage(BufferUsage usage)
+	static constexpr GLenum UnconvertBufferUsage(BufferUsage usage)
 	{
 		switch (usage)
 		{
@@ -26,7 +26,7 @@ namespace eng
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
-		glBufferData(GL_ARRAY_BUFFER, size, cpData, GetOpenGLUsage(usage));
+		glBufferData(GL_ARRAY_BUFFER, size, cpData, UnconvertBufferUsage(usage));
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
@@ -55,7 +55,7 @@ namespace eng
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * static_cast<GLsizeiptr>(GetIndexBufferElementSize(type)), cpData, GetOpenGLUsage(usage));
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * static_cast<GLsizeiptr>(GetIndexBufferElementSize(type)), cpData, UnconvertBufferUsage(usage));
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
@@ -75,7 +75,7 @@ namespace eng
 
 	void OpenGLIndexBuffer::SetData(const void* cpData, uint32 count)
 	{
-		CORE_ASSERT(count <= m_Count, "Index buffer SetData count out of bounds!");
+		CORE_ASSERT(count <= m_Count, "Index buffer count out of bounds!");
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, count * static_cast<GLsizeiptr>(GetIndexBufferElementSize(m_Type)), cpData);
@@ -84,7 +84,7 @@ namespace eng
 	OpenGLUniformBuffer::OpenGLUniformBuffer(uint32 size, uint32 binding, const void* cpData, BufferUsage usage)
 	{
 		glCreateBuffers(1, &m_RendererID);
-		glNamedBufferData(m_RendererID, size, cpData, GetOpenGLUsage(usage));
+		glNamedBufferData(m_RendererID, size, cpData, UnconvertBufferUsage(usage));
 		glBindBufferBase(GL_UNIFORM_BUFFER, binding, m_RendererID);
 	}
 

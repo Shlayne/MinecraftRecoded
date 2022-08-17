@@ -3,6 +3,40 @@
 
 namespace eng
 {
+	static constexpr GLenum UnconvertRendererPrimitive(RendererPrimitive primitive)
+	{
+		switch (primitive)
+		{
+			case RendererPrimitive_Points:                 return GL_POINTS;
+			case RendererPrimitive_Lines:                  return GL_LINES;
+			case RendererPrimitive_LineStrip:              return GL_LINE_STRIP;
+			case RendererPrimitive_Triangles:              return GL_TRIANGLES;
+			case RendererPrimitive_TriangleStrip:          return GL_TRIANGLE_STRIP;
+			case RendererPrimitive_LinesAdjacency:         return GL_LINES_ADJACENCY;
+			case RendererPrimitive_LineStripAdjacency:     return GL_LINE_STRIP_ADJACENCY;
+			case RendererPrimitive_TrianglesAdjacency:     return GL_TRIANGLES_ADJACENCY;
+			case RendererPrimitive_TriangleStripAdjacency: return GL_TRIANGLE_STRIP_ADJACENCY;
+			case RendererPrimitive_LineLoop:               return GL_LINE_LOOP;
+			case RendererPrimitive_TriangleFan:            return GL_TRIANGLE_FAN;
+		}
+
+		CORE_ASSERT(false, "Unknown Renderer Primitive!");
+		return 0;
+	}
+
+	static constexpr GLenum UnconvertIndexBufferElementType(IndexBufferElementType type)
+	{
+		switch (type)
+		{
+			case IndexBufferElementType_UInt32:	return GL_UNSIGNED_INT;
+			case IndexBufferElementType_UInt16:	return GL_UNSIGNED_SHORT;
+			case IndexBufferElementType_UInt8:	return GL_UNSIGNED_BYTE;
+		}
+
+		CORE_ASSERT(false, "Unknown Index Buffer Element Type!");
+		return 0;
+	}
+
 	static constexpr void DebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* cpMessage, const void* cpUserParam)
 	{
 		UNUSED(source, type, id, length, cpUserParam);
@@ -83,9 +117,16 @@ namespace eng
 		glClearColor(crColor.r, crColor.g, crColor.b, crColor.a);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed()
+	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& crVertexArray, const Ref<IndexBuffer>& crIndexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive)
 	{
-		// TODO:
+		crVertexArray->Bind();
+		crIndexBuffer->Bind();
+
+		GLenum glPrimitive = UnconvertRendererPrimitive(primitive);
+		GLsizei indexCount = static_cast<GLsizei>(count != 0 ? count : crIndexBuffer->GetCount());
+		GLenum glType = UnconvertIndexBufferElementType(crIndexBuffer->GetType());
+		auto pOffset = (const void*)(offset * static_cast<GLsizeiptr>(GetIndexBufferElementSize(crIndexBuffer->GetType())));
+		glDrawElements(glPrimitive, indexCount, glType, pOffset);
 	}
 
 	sint32 OpenGLRendererAPI::GetMaxTextureSlots()

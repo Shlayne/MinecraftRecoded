@@ -4,16 +4,7 @@
 
 namespace eng
 {
-	struct Cache
-	{
-		sint32 maxTextureSlots = 0;
-		sint32 maxTextureSize = 0;
-		sint32 maxFramebufferWidth = 0;
-		sint32 maxFramebufferHeight = 0;
-		sint32 maxFramebufferColorAttachments = 0;
-	};
-	static Cache s_Cache;
-
+	Renderer::Cache Renderer::s_Cache;
 	Scope<RendererAPI> Renderer::s_API = nullptr;
 
 	void Renderer::Init()
@@ -85,43 +76,8 @@ namespace eng
 		s_API->SetClearColor(crColor);
 	}
 
-	void Renderer::DrawIndexed()
+	void Renderer::DrawIndexed(const Ref<VertexArray>& crVertexArray, const Ref<IndexBuffer>& crIndexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive)
 	{
-		s_API->DrawIndexed();
-	}
-
-	sint32 Renderer::GetMaxTextureSlots()
-	{
-		if (s_Cache.maxTextureSlots != 0)
-			s_Cache.maxTextureSlots = s_API->GetMaxTextureSlots();
-		return s_Cache.maxTextureSlots;
-	}
-
-	sint32 Renderer::GetMaxTextureSize()
-	{
-		if (s_Cache.maxTextureSize != 0)
-			s_Cache.maxTextureSize = s_API->GetMaxTextureSize();
-		return s_Cache.maxTextureSize;
-	}
-
-	sint32 Renderer::GetMaxFramebufferWidth()
-	{
-		if (s_Cache.maxFramebufferWidth != 0)
-			s_Cache.maxFramebufferWidth = s_API->GetMaxFramebufferWidth();
-		return s_Cache.maxFramebufferWidth;
-	}
-
-	sint32 Renderer::GetMaxFramebufferHeight()
-	{
-		if (s_Cache.maxFramebufferHeight != 0)
-			s_Cache.maxFramebufferHeight = s_API->GetMaxFramebufferHeight();
-		return s_Cache.maxFramebufferHeight;
-	}
-
-	sint32 Renderer::GetMaxFramebufferColorAttachments()
-	{
-		if (s_Cache.maxFramebufferColorAttachments == 0)
-			s_Cache.maxFramebufferColorAttachments = s_API->GetMaxFramebufferColorAttachments();
-		return s_Cache.maxFramebufferColorAttachments;
+		s_API->DrawIndexed(crVertexArray, crIndexBuffer, offset, count, primitive);
 	}
 }

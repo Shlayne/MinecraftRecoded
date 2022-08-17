@@ -29,9 +29,8 @@ namespace eng
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
 
-		GLFWwindow* pPreviousContext = glfwGetCurrentContext();
 #if ENABLE_LOGGING
-		if (pPreviousContext)
+		if (glfwGetCurrentContext() != NULL)
 			LOG_CORE_WARN("Window created on thread with rendering context already current.");
 #endif
 

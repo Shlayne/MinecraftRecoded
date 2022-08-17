@@ -23,7 +23,7 @@ namespace eng
 		virtual void ClearDepth() override;
 		virtual void SetClearColor(const glm::vec4& crColor) override;
 
-		virtual void DrawIndexed() override;
+		virtual void DrawIndexed(const Ref<VertexArray>& crVertexArray, const Ref<IndexBuffer>& crIndexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive) override;
 	public: // Capabilities.
 		virtual sint32 GetMaxTextureSlots() override;
 		virtual sint32 GetMaxTextureSize() override;

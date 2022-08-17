@@ -35,10 +35,9 @@ namespace eng
 
 	struct VertexBufferElement
 	{
-		constexpr VertexBufferElement(VertexBufferElementType type, std::string_view name = "", bool normalized = false) noexcept;
+		constexpr VertexBufferElement(VertexBufferElementType type, bool normalized = false) noexcept;
 
 		VertexBufferElementType type;
-		std::string_view name;
 		bool normalized;
 		uint32 count;
 		uint32 size;
@@ -68,13 +67,13 @@ namespace eng
 		constexpr auto crend() const noexcept;
 	private:
 		std::vector<VertexBufferElement> m_Elements;
-		uint32_t m_Stride = 0;
+		uint32 m_Stride = 0;
 	};
 
 	class VertexBuffer
 	{
 	public:
-		static Ref<VertexBuffer> CreateRef(uint32_t size, const void* cpData = nullptr, BufferUsage usage = BufferUsage_StaticDraw);
+		static Ref<VertexBuffer> CreateRef(uint32 size, const void* cpData = nullptr, BufferUsage usage = BufferUsage_StaticDraw);
 		virtual ~VertexBuffer() = default;
 	public:
 		virtual void Bind() const = 0;

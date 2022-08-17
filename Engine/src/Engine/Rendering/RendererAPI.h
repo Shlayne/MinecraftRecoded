@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core/Core.h"
+#include "Engine/Rendering/VertexArray.h"
 
 namespace eng
 {
@@ -24,9 +25,7 @@ namespace eng
 
 		// OpenGL and Vulkan support these
 		RendererPrimitive_LineLoop,
-		RendererPrimitive_TriangleFan,
-
-		RendererPrimitive_Count
+		RendererPrimitive_TriangleFan
 	};
 
 	class RendererAPI
@@ -45,7 +44,7 @@ namespace eng
 		virtual void ClearDepth() = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 
-		virtual void DrawIndexed() = 0;
+		virtual void DrawIndexed(const Ref<VertexArray>& crVertexArray, const Ref<IndexBuffer>& crIndexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive) = 0;
 	public: // Renderer Capabilities.
 		virtual sint32 GetMaxTextureSlots() = 0;
 		virtual sint32 GetMaxTextureSize() = 0;

@@ -44,8 +44,8 @@ namespace eng
 		return 0;
 	}
 
-	constexpr VertexBufferElement::VertexBufferElement(VertexBufferElementType type, std::string_view name, bool normalized) noexcept
-		: type(type), name(name), normalized(normalized), count(GetElementCount(type)), size(GetElementSize(type)) {}
+	constexpr VertexBufferElement::VertexBufferElement(VertexBufferElementType type, bool normalized) noexcept
+		: type(type), normalized(normalized), count(GetElementCount(type)), size(GetElementSize(type)) {}
 
 	constexpr VertexBufferLayout::VertexBufferLayout(std::initializer_list<VertexBufferElement> elements) noexcept
 		: m_Elements(elements)
