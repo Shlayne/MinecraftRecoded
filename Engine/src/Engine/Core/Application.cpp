@@ -98,8 +98,6 @@ namespace eng
 		CORE_ASSERT(!m_Windows.empty(), "Application must have at least one window to run!");
 		m_Running = true;
 
-		Renderer::Init();
-
 		Input& rInput = *m_Input;
 		while (m_Running)
 		{

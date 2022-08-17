@@ -1,264 +1,127 @@
 #include "Engine/pch.h"
 #include "Engine/Rendering/Renderer.h"
 #include "Engine/Core/Application.h"
-#include "Engine/Rendering/RenderCommandQueue.h"
-#include "Engine/Rendering/RenderCommandData.h"
-#include <thread>
 
 namespace eng
 {
-	std::array<void*(*)(const void*), RenderCommand_Count> Renderer::s_CommandFunctions
+	struct Cache
 	{
-		&Renderer::Shutdown_Impl,
-
-		&Renderer::EnableDepthTest_Impl,
-		&Renderer::DisableDepthTest_Impl,
-		&Renderer::EnableBlending_Impl,
-		&Renderer::DisableBlending_Impl,
-		&Renderer::EnableCulling_Impl,
-		&Renderer::DisableCulling_Impl,
-
-		&Renderer::SetViewport_Impl,
-
-		&Renderer::Clear_Impl,
-		&Renderer::ClearDepth_Impl,
-		&Renderer::SetClearColor_Impl,
-
-		&Renderer::DrawIndexed_Impl,
-
-		&Renderer::GetMaxTextureSlots_Impl,
-		&Renderer::GetMaxTextureSize_Impl,
-		&Renderer::GetMaxFramebufferWidth_Impl,
-		&Renderer::GetMaxFramebufferHeight_Impl,
-		&Renderer::GetMaxFramebufferColorAttachments_Impl,
+		sint32 maxTextureSlots = 0;
+		sint32 maxTextureSize = 0;
+		sint32 maxFramebufferWidth = 0;
+		sint32 maxFramebufferHeight = 0;
+		sint32 maxFramebufferColorAttachments = 0;
 	};
+	static Cache s_Cache;
+
 	Scope<RendererAPI> Renderer::s_API = nullptr;
-	std::atomic<void*> Renderer::s_LastReturn = nullptr;
-	Renderer::Cache Renderer::s_Cache;
-
-	// Stuff that would be a static member in Renderer,
-	// but I don't want to include their headers in Renderer.h.
-	static RenderCommandQueue s_CommandQueue;
-	static std::thread s_RenderThread;
-
-	// For renderer api functions that have return values.
-	static std::condition_variable s_ReturnCondition;
-	static std::mutex s_ReturnMutex;
-	static std::atomic_bool s_ReturnAcquired = false;
 
 	void Renderer::Init()
 	{
-		//CORE_ASSERT(s_API == nullptr, "Attempted to recreate renderer!");
+		CORE_ASSERT(s_API == nullptr, "Attempted to recreate renderer!");
 
-		//s_API = RendererAPI::CreateScope();
-		//s_RenderThread = std::thread(&Renderer::RenderThread);
+		s_API = RendererAPI::CreateScope();
 	}
 
 	void Renderer::Shutdown()
 	{
-		//// May be called without Init being called.
-		//if (s_API == nullptr) return;
+		// May be called without Init being called.
+		if (s_API == nullptr)
+			return;
 
-		//s_CommandQueue.IssueCommand(RenderCommand_Shutdown, true);
-		//s_RenderThread.join();
-		//s_CommandQueue.ClearPendingCommands();
-		//DestroyScope(s_API);
+		DestroyScope(s_API);
 
-		//// Reset cached values.
-		//memset(&s_Cache, 0, sizeof(s_Cache));
+		// Reset cached values.
+		UNUSED(memset(&s_Cache, 0, sizeof(s_Cache)));
 	}
 
-	void Renderer::RenderThread()
+	void Renderer::EnableDepthTest()
 	{
-		//Application::Get().GetWindow().GetContext().MakeCurrent();
-
-		//RenderCommand command;
-		//do
-		//{
-		//	// Wait for a command to be issued.
-		//	command = s_CommandQueue.WaitForCommand();
-		//	// Execute the command.
-		//	s_LastReturn = s_CommandFunctions[command.GetType()](command.GetData());
-		//	// Delete the command's input data.
-		//	delete command.GetData();
-
-		//	// If the command had a return value...
-		//	if (s_LastReturn)
-		//	{
-		//		// Let the caller know and wait until they receive it before it's deleted.
-		//		{
-		//			std::lock_guard<std::mutex> lock(s_ReturnMutex);
-		//			s_ReturnCondition.notify_one();
-		//		}
-		//		while (!s_ReturnAcquired); // Should be very fast, if not instant.
-		//		s_ReturnAcquired = false;
-		//		delete static_cast<void*>(s_LastReturn);
-		//	}
-		//}
-		//while (command.GetType() != RenderCommand_Shutdown);
-
-		//RemoveCurrentContext();
+		s_API->EnableDepthTest();
 	}
 
-	void Renderer::EnableDepthTest() { s_CommandQueue.IssueCommand(RenderCommand_EnableDepthTest); }
-	void Renderer::DisableDepthTest() { s_CommandQueue.IssueCommand(RenderCommand_DisableDepthTest); }
-	void Renderer::EnableBlending() { s_CommandQueue.IssueCommand(RenderCommand_EnableBlending); }
-	void Renderer::DisableBlending() { s_CommandQueue.IssueCommand(RenderCommand_DisableBlending); }
-	void Renderer::EnableCulling() { s_CommandQueue.IssueCommand(RenderCommand_DisableCulling); }
-	void Renderer::DisableCulling() { s_CommandQueue.IssueCommand(RenderCommand_EnableCulling); }
-	
-	void Renderer::SetViewport(const glm::s32vec2& position, const glm::s32vec2& size)
-	{ s_CommandQueue.IssueCommand({ RenderCommand_SetViewport, new SetViewportData(position, size) }); }
+	void Renderer::DisableDepthTest()
+	{
+		s_API->DisableDepthTest();
+	}
 
-	void Renderer::Clear() { s_CommandQueue.IssueCommand(RenderCommand_Clear); }
-	void Renderer::ClearDepth() { s_CommandQueue.IssueCommand(RenderCommand_ClearDepth); }
-	void Renderer::SetClearColor(const glm::vec4& color)
-	{ s_CommandQueue.IssueCommand({ RenderCommand_SetClearColor, new SetClearColorData(color) }); }
+	void Renderer::EnableBlending()
+	{
+		s_API->EnableBlending();
+	}
+
+	void Renderer::DisableBlending()
+	{
+		s_API->DisableBlending();
+	}
+
+	void Renderer::EnableCulling()
+	{
+		s_API->EnableCulling();
+	}
+
+	void Renderer::DisableCulling()
+	{
+		s_API->DisableCulling();
+	}
+
+	void Renderer::SetViewport(const glm::s32vec2& crPosition, const glm::s32vec2& crSize)
+	{
+		s_API->SetViewport(crPosition, crSize);
+	}
+
+	void Renderer::Clear()
+	{
+		s_API->Clear();
+	}
+
+	void Renderer::ClearDepth()
+	{
+		s_API->ClearDepth();
+	}
+
+	void Renderer::SetClearColor(const glm::vec4& crColor)
+	{
+		s_API->SetClearColor(crColor);
+	}
+
+	void Renderer::DrawIndexed()
+	{
+		s_API->DrawIndexed();
+	}
 
 	sint32 Renderer::GetMaxTextureSlots()
-	{ return GetCachableSInt32(s_Cache.maxTextureSlots, RenderCommand_GetMaxTextureSlots); }
+	{
+		if (s_Cache.maxTextureSlots != 0)
+			s_Cache.maxTextureSlots = s_API->GetMaxTextureSlots();
+		return s_Cache.maxTextureSlots;
+	}
+
 	sint32 Renderer::GetMaxTextureSize()
-	{ return GetCachableSInt32(s_Cache.maxTextureSize, RenderCommand_GetMaxTextureSize); }
+	{
+		if (s_Cache.maxTextureSize != 0)
+			s_Cache.maxTextureSize = s_API->GetMaxTextureSize();
+		return s_Cache.maxTextureSize;
+	}
+
 	sint32 Renderer::GetMaxFramebufferWidth()
-	{ return GetCachableSInt32(s_Cache.maxFramebufferWidth, RenderCommand_GetMaxFramebufferWidth); }
+	{
+		if (s_Cache.maxFramebufferWidth != 0)
+			s_Cache.maxFramebufferWidth = s_API->GetMaxFramebufferWidth();
+		return s_Cache.maxFramebufferWidth;
+	}
+
 	sint32 Renderer::GetMaxFramebufferHeight()
-	{ return GetCachableSInt32(s_Cache.maxFramebufferHeight, RenderCommand_GetMaxFramebufferHeight); }
+	{
+		if (s_Cache.maxFramebufferHeight != 0)
+			s_Cache.maxFramebufferHeight = s_API->GetMaxFramebufferHeight();
+		return s_Cache.maxFramebufferHeight;
+	}
+
 	sint32 Renderer::GetMaxFramebufferColorAttachments()
-	{ return GetCachableSInt32(s_Cache.maxFramebufferColorAttachments, RenderCommand_GetMaxFramebufferColorAttachments); }
-
-	sint32 Renderer::GetCachableSInt32(sint32& rCache, RenderCommandType type)
 	{
-		// Since all of this is a decent chunk of work, cache it.
-		if (!rCache) // TODO: make a better way of checking if it's been cached already.
-		{
-			std::unique_lock<std::mutex> lock(s_ReturnMutex);
-			s_CommandQueue.IssueCommand(type, true);
-			// Wait for current render command to complete, if present, then wait until this command completes.
-			s_ReturnCondition.wait(lock);
-
-			rCache = *static_cast<sint32*>(static_cast<void*>(s_LastReturn));
-			s_ReturnAcquired = true; // Notify the render thread that it can resume operation.
-		}
-		return rCache;
-	}
-
-	// Implementation
-
-	void* Renderer::Shutdown_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		return nullptr;
-	}
-
-	void* Renderer::EnableDepthTest_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->EnableDepthTest();
-		return nullptr;
-	}
-
-	void* Renderer::DisableDepthTest_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->DisableDepthTest();
-		return nullptr;
-	}
-
-	void* Renderer::EnableBlending_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->EnableBlending();
-		return nullptr;
-	}
-
-	void* Renderer::DisableBlending_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->DisableBlending();
-		return nullptr;
-	}
-
-	void* Renderer::EnableCulling_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->EnableCulling();
-		return nullptr;
-	}
-
-	void* Renderer::DisableCulling_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->DisableCulling();
-		return nullptr;
-	}
-
-
-	void* Renderer::SetViewport_Impl(const void* pData)
-	{
-		auto& rData = *static_cast<const SetViewportData*>(pData);
-		s_API->SetViewport(rData.position, rData.size);
-		return nullptr;
-	}
-
-
-	void* Renderer::Clear_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->Clear();
-		return nullptr;
-	}
-
-	void* Renderer::ClearDepth_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		s_API->ClearDepth();
-		return nullptr;
-	}
-
-	void* Renderer::SetClearColor_Impl(const void* pData)
-	{
-		auto& rData = *static_cast<const SetClearColorData*>(pData);
-		s_API->SetClearColor(rData.color);
-		return nullptr;
-	}
-
-
-	void* Renderer::DrawIndexed_Impl(const void* pData)
-	{
-		// TODO
-		UNUSED(pData);
-		return nullptr;
-	}
-
-	// Capabilities Implementation
-
-	void* Renderer::GetMaxTextureSlots_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		return new sint32(s_API->GetMaxTextureSlots());
-	}
-
-	void* Renderer::GetMaxTextureSize_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		return new sint32(s_API->GetMaxTextureSize());
-	}
-
-	void* Renderer::GetMaxFramebufferWidth_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		return new sint32(s_API->GetMaxFramebufferWidth());
-	}
-
-	void* Renderer::GetMaxFramebufferHeight_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		return new sint32(s_API->GetMaxFramebufferHeight());
-	}
-
-	void* Renderer::GetMaxFramebufferColorAttachments_Impl(const void* pData)
-	{
-		UNUSED(pData);
-		return new sint32(s_API->GetMaxFramebufferColorAttachments());
+		if (s_Cache.maxFramebufferColorAttachments == 0)
+			s_Cache.maxFramebufferColorAttachments = s_API->GetMaxFramebufferColorAttachments();
+		return s_Cache.maxFramebufferColorAttachments;
 	}
 }

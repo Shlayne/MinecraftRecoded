@@ -20,13 +20,13 @@ namespace eng
 		virtual void EnableCulling() override;
 		virtual void DisableCulling() override;
 
-		virtual void SetViewport(const glm::s32vec2& position, const glm::s32vec2& size) override;
+		virtual void SetViewport(const glm::s32vec2& crPosition, const glm::s32vec2& crSize) override;
 
 		virtual void Clear() override;
 		virtual void ClearDepth() override;
-		virtual void SetClearColor(const glm::vec4& color) override;
+		virtual void SetClearColor(const glm::vec4& crColor) override;
 
-		//virtual void DrawIndexed() override; // TODO
+		virtual void DrawIndexed() override;
 	public: // Capabilities.
 		virtual sint32 GetMaxTextureSlots() override;
 		virtual sint32 GetMaxTextureSize() override;

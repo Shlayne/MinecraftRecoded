@@ -45,7 +45,7 @@ namespace eng
 		virtual void ClearDepth() = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 
-		//virtual void DrawIndexed() = 0; // TODO
+		virtual void DrawIndexed() = 0;
 	public: // Renderer Capabilities.
 		virtual sint32 GetMaxTextureSlots() = 0;
 		virtual sint32 GetMaxTextureSize() = 0;

@@ -63,9 +63,9 @@ namespace eng
 		glDisable(GL_CULL_FACE);
 	}
 
-	void OpenGLRendererAPI::SetViewport(const glm::s32vec2& position, const glm::s32vec2& size)
+	void OpenGLRendererAPI::SetViewport(const glm::s32vec2& crPosition, const glm::s32vec2& crSize)
 	{
-		glViewport(position.x, position.y, size.x, size.y);
+		glViewport(crPosition.x, crPosition.y, crSize.x, crSize.y);
 	}
 
 	void OpenGLRendererAPI::Clear()
@@ -78,9 +78,14 @@ namespace eng
 		glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
+	void OpenGLRendererAPI::SetClearColor(const glm::vec4& crColor)
 	{
-		glClearColor(color.r, color.g, color.b, color.a);
+		glClearColor(crColor.r, crColor.g, crColor.b, crColor.a);
+	}
+
+	void OpenGLRendererAPI::DrawIndexed()
+	{
+		// TODO:
 	}
 
 	sint32 OpenGLRendererAPI::GetMaxTextureSlots()
