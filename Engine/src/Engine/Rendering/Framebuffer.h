@@ -5,8 +5,8 @@
 
 namespace eng
 {
-	using FramebufferTextureFormat = uint8;
-	enum : FramebufferTextureFormat
+	using FramebufferTextureFormat_ = uint8;
+	enum FramebufferTextureFormat : FramebufferTextureFormat_
 	{
 		FramebufferTextureFormat_None = 0,
 
@@ -22,15 +22,15 @@ namespace eng
 		FramebufferTextureFormat_Depth = FramebufferTextureFormat_Depth24Stencil8
 	};
 
-	using FramebufferFilterMode = uint8;
-	enum : FramebufferFilterMode
+	using FramebufferFilterMode_ = uint8;
+	enum FramebufferFilterMode : FramebufferFilterMode_
 	{
 		FramebufferFilterMode_Linear,
 		FramebufferFilterMode_Nearest
 	};
 
-	using FramebufferWrapMode = uint8;
-	enum : FramebufferWrapMode
+	using FramebufferWrapMode_ = uint8;
+	enum FramebufferWrapMode : FramebufferWrapMode_
 	{
 		FramebufferWrapMode_ClampToEdge,
 		FramebufferWrapMode_Repeat
@@ -70,7 +70,7 @@ namespace eng
 	class Framebuffer
 	{
 	public:
-		static Ref<Framebuffer> Create(const FramebufferSpecification& crSpecs);
+		static Ref<Framebuffer> CreateRef(const FramebufferSpecification& crSpecs);
 		virtual ~Framebuffer() = default;
 	public:
 		virtual void Bind() = 0;

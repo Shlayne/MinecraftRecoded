@@ -35,6 +35,7 @@ namespace eng
 		{
 			sint32 maxTextureSlots = 0;
 			sint32 maxTextureSize = 0;
+			sint32 maxTextureArrayLayers = 0;
 			sint32 maxFramebufferWidth = 0;
 			sint32 maxFramebufferHeight = 0;
 			sint32 maxFramebufferColorAttachments = 0;

@@ -22,9 +22,11 @@ project "MinecraftRecoded"
 	includedirs {
 		-- Add any project source directories here.
 		"src",
+		"src/MinecraftRecoded/MinecraftRecoded",
 		"%{wks.location}/Engine/src",
 
 		-- Add any dependency includes here.
+		"%{IncludeDir.gcem}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.spdlog}",
 	}

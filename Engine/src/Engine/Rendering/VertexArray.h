@@ -8,7 +8,7 @@ namespace eng
 	class VertexArray
 	{
 	public:
-		static Ref<VertexArray> Create();
+		static Ref<VertexArray> CreateRef();
 		virtual ~VertexArray() = default;
 	public:
 		virtual void Bind() const = 0;

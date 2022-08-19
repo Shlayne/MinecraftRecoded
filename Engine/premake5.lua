@@ -27,6 +27,7 @@ project "Engine"
 		-- "%{wks.location}/__PROJECT_NAME__/src",
 
 		-- Add any dependency includes here.
+		"%{IncludeDir.gcem}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",

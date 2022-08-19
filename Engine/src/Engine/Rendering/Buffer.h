@@ -6,16 +6,16 @@
 
 namespace eng
 {
-	using BufferUsage = uint8;
-	enum : BufferUsage
+	using BufferUsage_ = uint8;
+	enum BufferUsage : BufferUsage_
 	{
 		BufferUsage_StreamDraw,  BufferUsage_StreamRead,  BufferUsage_StreamCopy,
 		BufferUsage_StaticDraw,  BufferUsage_StaticRead,  BufferUsage_StaticCopy,
 		BufferUsage_DynamicDraw, BufferUsage_DynamicRead, BufferUsage_DynamicCopy
 	};
 
-	using VertexBufferElementType = uint8;
-	enum : VertexBufferElementType
+	using VertexBufferElementType_ = uint8;
+	enum VertexBufferElementType : VertexBufferElementType_
 	{
 		VertexBufferElementType_Int,
 		VertexBufferElementType_Int2,
@@ -85,8 +85,8 @@ namespace eng
 		virtual void SetLayout(const VertexBufferLayout& crLayout) = 0;
 	};
 
-	using IndexBufferElementType = uint8;
-	enum : IndexBufferElementType
+	using IndexBufferElementType_ = uint8;
+	enum IndexBufferElementType : IndexBufferElementType_
 	{
 		IndexBufferElementType_UInt32,
 		IndexBufferElementType_UInt16,

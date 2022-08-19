@@ -27,6 +27,7 @@ namespace eng
 	public: // Capabilities.
 		virtual sint32 GetMaxTextureSlots() override;
 		virtual sint32 GetMaxTextureSize() override;
+		virtual sint32 GetMaxTextureArrayLayers() override;
 		virtual sint32 GetMaxFramebufferWidth() override;
 		virtual sint32 GetMaxFramebufferHeight() override;
 		virtual sint32 GetMaxFramebufferColorAttachments() override;

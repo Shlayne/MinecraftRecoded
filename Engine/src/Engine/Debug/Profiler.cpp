@@ -18,7 +18,13 @@ namespace eng
 		if (m_CurrentSession != nullptr)
 			InternalEndSession();
 
-		std::string filepath = "Profiles/";
+		// Cache this so that all profiles go to the same directory.
+		static std::string workingDirectory = std::filesystem::current_path().string();
+
+		std::string filepath = workingDirectory;
+		filepath += std::filesystem::path::preferred_separator;
+		filepath += "Profiles";
+		filepath += std::filesystem::path::preferred_separator;
 		filepath += name;
 		filepath += ".profile.json";
 
@@ -102,8 +108,8 @@ namespace eng
 		}
 	}
 
-	ProfilerTimer::ProfilerTimer(const char* cpName)
-		: m_pName(cpName), m_Stopped(false), m_StartTimepoint(std::chrono::steady_clock::now()) {}
+	ProfilerTimer::ProfilerTimer(std::string_view name)
+		: m_Name(name), m_Stopped(false), m_StartTimepoint(std::chrono::steady_clock::now()) {}
 
 	ProfilerTimer::~ProfilerTimer()
 	{
@@ -119,7 +125,7 @@ namespace eng
 			std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() -
 			std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();
 
-		Profiler::Get().WriteProfile({ m_pName, highResStart, elapsedTime, std::this_thread::get_id() });
+		Profiler::Get().WriteProfile({ m_Name, highResStart, elapsedTime, std::this_thread::get_id() });
 
 		m_Stopped = true;
 	}

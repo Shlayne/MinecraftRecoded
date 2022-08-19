@@ -23,7 +23,7 @@ namespace eng
 	public:
 		KeyPressEvent(void* pNativeWindow, Keycode keycode, Modifiers modifiers)
 			: KeyEvent(pNativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
-		EVENT_TYPE(EventType::KeyPress)
+		EVENT_TYPE(EventType_KeyPress)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -41,7 +41,7 @@ namespace eng
 	public:
 		KeyRepeatEvent(void* pNativeWindow, Keycode keycode, Modifiers modifiers)
 			: KeyEvent(pNativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
-		EVENT_TYPE(EventType::KeyRepeat)
+		EVENT_TYPE(EventType_KeyRepeat)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -59,7 +59,7 @@ namespace eng
 	public:
 		KeyReleaseEvent(void* pNativeWindow, Keycode keycode, Modifiers modifiers)
 			: KeyEvent(pNativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
-		EVENT_TYPE(EventType::KeyRelease)
+		EVENT_TYPE(EventType_KeyRelease)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -77,7 +77,7 @@ namespace eng
 	public:
 		CharTypeEvent(void* pNativeWindow, uint32 codepoint)
 			: KeyEvent(pNativeWindow), m_Codepoint(codepoint) {}
-		EVENT_TYPE(EventType::CharType)
+		EVENT_TYPE(EventType_CharType)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;

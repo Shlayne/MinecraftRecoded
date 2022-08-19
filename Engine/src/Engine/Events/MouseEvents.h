@@ -22,7 +22,7 @@ namespace eng
 	public:
 		MouseButtonPressEvent(void* pNativeWindow, MouseButton button, Modifiers modifiers)
 			: MouseEvent(pNativeWindow), m_Button(button), m_Modifiers(modifiers) {}
-		EVENT_TYPE(EventType::MouseButtonPress)
+		EVENT_TYPE(EventType_MouseButtonPress)
 		EVENT_CATEGORIES(EventCategory_Mouse | EventCategory_MouseButton)
 #if ENABLE_LOGGING
 		virtual operator std::string() const override;
@@ -40,7 +40,7 @@ namespace eng
 	public:
 		MouseButtonReleaseEvent(void* pNativeWindow, MouseButton button, Modifiers modifiers)
 			: MouseEvent(pNativeWindow), m_Button(button), m_Modifiers(modifiers) {}
-		EVENT_TYPE(EventType::MouseButtonRelease)
+		EVENT_TYPE(EventType_MouseButtonRelease)
 		EVENT_CATEGORIES(EventCategory_Mouse | EventCategory_MouseButton)
 #if ENABLE_LOGGING
 		virtual operator std::string() const override;
@@ -58,7 +58,7 @@ namespace eng
 	public:
 		MouseMoveEvent(void* pNativeWindow, float x, float y)
 			: MouseEvent(pNativeWindow), m_X(x), m_Y(y) {}
-		EVENT_TYPE(EventType::MouseMove)
+		EVENT_TYPE(EventType_MouseMove)
 		EVENT_CATEGORIES(EventCategory_Mouse)
 #if ENABLE_LOGGING
 		virtual operator std::string() const override;
@@ -76,7 +76,7 @@ namespace eng
 	public:
 		MouseScrollEvent(void* pNativeWindow, float offsetX, float offsetY)
 			: MouseEvent(pNativeWindow), m_OffsetX(offsetX), m_OffsetY(offsetY) {}
-		EVENT_TYPE(EventType::MouseScroll)
+		EVENT_TYPE(EventType_MouseScroll)
 		EVENT_CATEGORIES(EventCategory_Mouse)
 #if ENABLE_LOGGING
 		virtual operator std::string() const override;
@@ -94,7 +94,7 @@ namespace eng
 	public:
 		MouseEnterEvent(void* pNativeWindow, bool entered)
 			: MouseEvent(pNativeWindow), m_Entered(entered) {}
-		EVENT_TYPE(EventType::MouseEnter)
+		EVENT_TYPE(EventType_MouseEnter)
 		EVENT_CATEGORIES(EventCategory_Mouse)
 #if ENABLE_LOGGING
 		virtual operator std::string() const override;

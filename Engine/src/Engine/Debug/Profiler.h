@@ -17,7 +17,7 @@ namespace eng
 
 	struct ProfileResult
 	{
-		std::string name;
+		std::string_view name;
 
 		FloatingPointMicroseconds start;
 		std::chrono::microseconds elapsedTime;
@@ -56,12 +56,12 @@ namespace eng
 	class ProfilerTimer
 	{
 	public:
-		ProfilerTimer(const char* cpName);
+		ProfilerTimer(std::string_view name);
 		~ProfilerTimer();
 	public:
 		void Stop();
 	private:
-		const char* m_pName;
+		std::string_view m_Name;
 		std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;
 		bool m_Stopped;
 	};

@@ -31,20 +31,20 @@ namespace eng
 		return *this;
 	}
 
-	Ref<Texture2D> Texture2D::Create(const TextureSpecification& crSpecs)
+	Ref<Texture2D> Texture2D::CreateRef(const TextureSpecification& crSpecs)
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API_OpenGL: return CreateRef<OpenGLTexture>(crSpecs);
+			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLTexture>(crSpecs);
 			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}
 
-	Ref<Texture2D> Texture2D::Create(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex)
+	Ref<Texture2D> Texture2D::CreateRef(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex)
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API_OpenGL: return CreateRef<OpenGLTexture>(crFramebuffer, attachmentIndex);
+			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLTexture>(crFramebuffer, attachmentIndex);
 			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}

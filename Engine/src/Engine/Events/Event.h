@@ -7,17 +7,37 @@
 
 namespace eng
 {
-	enum class EventType
+	using EventType_ = uint8;
+	enum EventType : EventType_
 	{
-		WindowClose, WindowResize, WindowFramebufferResize, WindowMove, WindowFocus,
-			WindowMinimize, WindowMaximize, WindowPathDrop, WindowContentScale, WindowRefresh,
-		KeyPress, KeyRepeat, KeyRelease, CharType,
-		MouseButtonPress, MouseButtonRelease, MouseMove, MouseScroll, MouseEnter,
-		JoystickConnect, MonitorConnect
+		EventType_WindowClose,
+		EventType_WindowResize,
+		EventType_WindowFramebufferResize,
+		EventType_WindowMove,
+		EventType_WindowFocus,
+		EventType_WindowMinimize,
+		EventType_WindowMaximize,
+		EventType_WindowPathDrop,
+		EventType_WindowContentScale,
+		EventType_WindowRefresh,
+		
+		EventType_KeyPress,
+		EventType_KeyRepeat,
+		EventType_KeyRelease,
+		EventType_CharType,
+		
+		EventType_MouseButtonPress,
+		EventType_MouseButtonRelease,
+		EventType_MouseMove,
+		EventType_MouseScroll,
+		EventType_MouseEnter,
+		
+		EventType_JoystickConnect,
+		EventType_MonitorConnect
 	};
 
-	using EventCategory = uint8;
-	enum : EventCategory
+	using EventCategory_ = uint8;
+	enum EventCategory : EventCategory_
 	{
 		EventCategory_None = 0,
 		EventCategory_Window      = 1 << 0,
@@ -32,7 +52,7 @@ namespace eng
 		inline virtual EventType GetType() const override { return GetStaticType(); }
 
 #define EVENT_CATEGORIES(categories) \
-		inline virtual EventCategory GetCategories() const override { return (categories); }
+		inline virtual EventCategory GetCategories() const override { return static_cast<EventCategory>(categories); }
 
 	class Event
 	{

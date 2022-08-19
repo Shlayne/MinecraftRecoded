@@ -9,6 +9,7 @@ namespace eng
 	public:
 		static sint32 GetMaxTextureSlots();
 		static sint32 GetMaxTextureSize();
+		static sint32 GetMaxTextureArrayLayers();
 		static sint32 GetMaxFramebufferWidth();
 		static sint32 GetMaxFramebufferHeight();
 		static sint32 GetMaxFramebufferColorAttachments();

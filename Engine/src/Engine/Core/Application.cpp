@@ -144,6 +144,16 @@ namespace eng
 		m_Running = true;
 		m_Rendering = true;
 
+		// Send resize events to resize any cameras/framebuffers/etc.
+		{
+			PROFILE_SCOPE("Application::Run -> Initial Resize Events");
+			Window& rWindow = GetWindow();
+			WindowResizeEvent wre(rWindow.GetNativeWindow(), rWindow.GetWidth(), rWindow.GetHeight());
+			OnEvent(wre);
+			WindowFramebufferResizeEvent wfre(rWindow.GetNativeWindow(), rWindow.GetFramebufferWidth(), rWindow.GetFramebufferHeight());
+			OnEvent(wfre);
+		}
+
 		Input& rInput = *m_sInput;
 		while (m_Running)
 		{

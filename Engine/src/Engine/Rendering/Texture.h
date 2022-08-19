@@ -6,8 +6,8 @@
 
 namespace eng
 {
-	using TextureFormat = uint8;
-	enum : TextureFormat
+	using TextureFormat_ = uint8;
+	enum TextureFormat : TextureFormat_
 	{
 		TextureFormat_None = 0,
 
@@ -15,15 +15,15 @@ namespace eng
 		TextureFormat_RGBA8
 	};
 
-	using TextureFilterMode = uint8;
-	enum : TextureFilterMode
+	using TextureFilterMode_ = uint8;
+	enum TextureFilterMode : TextureFilterMode_
 	{
 		TextureFilterMode_Linear,
 		TextureFilterMode_Nearest
 	};
 
-	using TextureWrapMode = uint8;
-	enum : TextureWrapMode
+	using TextureWrapMode_ = uint8;
+	enum TextureWrapMode : TextureWrapMode_
 	{
 		TextureWrapMode_ClampToEdge,
 		TextureWrapMode_Repeat
@@ -80,7 +80,7 @@ namespace eng
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(const TextureSpecification& crSpecs);
-		static Ref<Texture2D> Create(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex);
+		static Ref<Texture2D> CreateRef(const TextureSpecification& crSpecs);
+		static Ref<Texture2D> CreateRef(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex);
 	};
 }

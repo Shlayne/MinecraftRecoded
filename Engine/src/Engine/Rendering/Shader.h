@@ -6,8 +6,8 @@
 
 namespace eng
 {
-	using ShaderStageType = uint8;
-	enum : ShaderStageType
+	using ShaderStageType_ = uint8;
+	enum ShaderStageType : ShaderStageType_
 	{
 		ShaderStageType_Vertex,
 		ShaderStageType_TessolationControl,
@@ -26,7 +26,7 @@ namespace eng
 	class Shader
 	{
 	public:
-		static Ref<Shader> Create(std::initializer_list<ShaderStage> stages);
+		static Ref<Shader> CreateRef(std::initializer_list<ShaderStage> stages);
 		virtual ~Shader() = default;
 	public:
 		virtual void Bind() const = 0;

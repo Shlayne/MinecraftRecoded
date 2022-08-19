@@ -22,7 +22,7 @@ namespace eng
 		glfwWindowHint(GLFW_DECORATED, m_State.decorated);
 		glfwWindowHint(GLFW_FOCUS_ON_SHOW, m_State.focused);
 		glfwWindowHint(GLFW_VISIBLE, false);
-#if CONFIG_DEBUG
+#if CONFIG_PROFILE || CONFIG_DEBUG
 		if (RendererAPI::GetAPI() == RendererAPI::API_OpenGL)
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif

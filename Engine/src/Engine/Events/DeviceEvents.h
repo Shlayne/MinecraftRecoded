@@ -10,7 +10,7 @@ namespace eng
 	public:
 		JoystickConnectEvent(Joystick joystick, bool connected)
 			: m_Joystick(joystick), m_Connected(connected) {}
-		EVENT_TYPE(EventType::JoystickConnect)
+		EVENT_TYPE(EventType_JoystickConnect)
 		EVENT_CATEGORIES(EventCategory_Device)
 #if ENABLE_LOGGING
 		virtual operator std::string() const override;

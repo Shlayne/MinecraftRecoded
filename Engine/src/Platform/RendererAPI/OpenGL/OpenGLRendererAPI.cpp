@@ -55,7 +55,7 @@ namespace eng
 	{
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#if CONFIG_DEBUG
+#if CONFIG_PROFILE || CONFIG_DEBUG
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(&DebugMessageCallback, NULL);
@@ -141,6 +141,13 @@ namespace eng
 		GLint maxTextureSize = 0;
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 		return static_cast<sint32>(maxTextureSize);
+	}
+
+	sint32 OpenGLRendererAPI::GetMaxTextureArrayLayers()
+	{
+		GLint maxTextureArrayLayers = 0;
+		glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxTextureArrayLayers);
+		return static_cast<sint32>(maxTextureArrayLayers);
 	}
 
 	sint32 OpenGLRendererAPI::GetMaxFramebufferWidth()

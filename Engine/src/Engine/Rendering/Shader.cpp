@@ -5,11 +5,11 @@
 
 namespace eng
 {
-	Ref<Shader> Shader::Create(std::initializer_list<ShaderStage> stages)
+	Ref<Shader> Shader::CreateRef(std::initializer_list<ShaderStage> stages)
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API_OpenGL: return CreateRef<OpenGLShader>(stages);
+			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLShader>(stages);
 			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}

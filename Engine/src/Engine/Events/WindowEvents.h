@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include "Engine/Events/Event.h"
 
 namespace eng
@@ -21,7 +22,7 @@ namespace eng
 	public:
 		WindowCloseEvent(void* pNativeWindow)
 			: WindowEvent(pNativeWindow) {}
-		EVENT_TYPE(EventType::WindowClose)
+		EVENT_TYPE(EventType_WindowClose)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -33,7 +34,7 @@ namespace eng
 	public:
 		WindowResizeEvent(void* pNativeWindow, sint32 width, sint32 height)
 			: WindowEvent(pNativeWindow), m_Width(width), m_Height(height) {}
-		EVENT_TYPE(EventType::WindowResize)
+		EVENT_TYPE(EventType_WindowResize)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -41,6 +42,7 @@ namespace eng
 	public:
 		inline sint32 GetWidth() const { return m_Width; }
 		inline sint32 GetHeight() const { return m_Height; }
+		inline glm::s32vec2 GetSize() const { return { m_Width, m_Height }; }
 	private:
 		sint32 m_Width;
 		sint32 m_Height;
@@ -51,7 +53,7 @@ namespace eng
 	public:
 		WindowFramebufferResizeEvent(void* pNativeWindow, sint32 width, sint32 height)
 			: WindowEvent(pNativeWindow), m_Width(width), m_Height(height) {}
-		EVENT_TYPE(EventType::WindowFramebufferResize)
+		EVENT_TYPE(EventType_WindowFramebufferResize)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -59,6 +61,7 @@ namespace eng
 	public:
 		inline sint32 GetWidth() const { return m_Width; }
 		inline sint32 GetHeight() const { return m_Height; }
+		inline glm::s32vec2 GetSize() const { return { m_Width, m_Height }; }
 	private:
 		sint32 m_Width;
 		sint32 m_Height;
@@ -69,7 +72,7 @@ namespace eng
 	public:
 		WindowMoveEvent(void* pNativeWindow, sint32 x, sint32 y)
 			: WindowEvent(pNativeWindow), m_X(x), m_Y(y) {}
-		EVENT_TYPE(EventType::WindowMove)
+		EVENT_TYPE(EventType_WindowMove)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -77,6 +80,7 @@ namespace eng
 	public:
 		inline sint32 GetX() const { return m_X; }
 		inline sint32 GetY() const { return m_Y; }
+		inline glm::s32vec2 GetPosition() const { return { m_X, m_Y }; }
 	private:
 		sint32 m_X;
 		sint32 m_Y;
@@ -87,7 +91,7 @@ namespace eng
 	public:
 		WindowFocusEvent(void* pNativeWindow, bool focused)
 			: WindowEvent(pNativeWindow), m_Focused(focused) {}
-		EVENT_TYPE(EventType::WindowFocus)
+		EVENT_TYPE(EventType_WindowFocus)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -103,7 +107,7 @@ namespace eng
 	public:
 		WindowMinimizeEvent(void* pNativeWindow, bool minimized)
 			: WindowEvent(pNativeWindow), m_Minimized(minimized) {}
-		EVENT_TYPE(EventType::WindowMinimize)
+		EVENT_TYPE(EventType_WindowMinimize)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -119,7 +123,7 @@ namespace eng
 	public:
 		WindowMaximizeEvent(void* pNativeWindow, bool maximized)
 			: WindowEvent(pNativeWindow), m_Maximized(maximized) {}
-		EVENT_TYPE(EventType::WindowMaximize)
+		EVENT_TYPE(EventType_WindowMaximize)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -135,7 +139,7 @@ namespace eng
 	public:
 		WindowPathDropEvent(void* pNativeWindow, sint32 count, const char** ppPaths)
 			: WindowEvent(pNativeWindow), m_Count(count), m_ppPaths(ppPaths) {}
-		EVENT_TYPE(EventType::WindowPathDrop)
+		EVENT_TYPE(EventType_WindowPathDrop)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -153,7 +157,7 @@ namespace eng
 	public:
 		WindowContentScaleEvent(void* pNativeWindow, float scaleX, float scaleY)
 			: WindowEvent(pNativeWindow), m_ScaleX(scaleX), m_ScaleY(scaleY) {}
-		EVENT_TYPE(EventType::WindowContentScale)
+		EVENT_TYPE(EventType_WindowContentScale)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;
@@ -161,6 +165,7 @@ namespace eng
 	public:
 		inline float GetScaleX() const { return m_ScaleX; }
 		inline float GetScaleY() const { return m_ScaleY; }
+		inline glm::vec2 GetScale() const { return { m_ScaleX, m_ScaleY }; }
 	private:
 		float m_ScaleX;
 		float m_ScaleY;
@@ -171,7 +176,7 @@ namespace eng
 	public:
 		WindowRefreshEvent(void* pNativeWindow)
 			: WindowEvent(pNativeWindow) {}
-		EVENT_TYPE(EventType::WindowRefresh)
+		EVENT_TYPE(EventType_WindowRefresh)
 #if ENABLE_LOGGING
 	public:
 		virtual operator std::string() const override;

@@ -7,8 +7,8 @@ namespace eng
 {
 	struct CommandLineArgs;
 
-	using RendererPrimitive = uint8;
-	enum : RendererPrimitive
+	using RendererPrimitive_ = uint8;
+	enum RendererPrimitive : RendererPrimitive_
 	{
 		// OpenGL, Vulkan, Direct3D, and Metal support these
 		RendererPrimitive_Points,
@@ -48,12 +48,13 @@ namespace eng
 	public: // Renderer Capabilities.
 		virtual sint32 GetMaxTextureSlots() = 0;
 		virtual sint32 GetMaxTextureSize() = 0;
+		virtual sint32 GetMaxTextureArrayLayers() = 0;
 		virtual sint32 GetMaxFramebufferWidth() = 0;
 		virtual sint32 GetMaxFramebufferHeight() = 0;
 		virtual sint32 GetMaxFramebufferColorAttachments() = 0;
 	public:
-		using API = uint8;
-		enum : API { API_None, API_OpenGL };
+		using API_ = uint8;
+		enum API : API_ { API_None, API_OpenGL };
 		static API GetAPI();
 		static bool SupportsAPI(API api);
 	private:

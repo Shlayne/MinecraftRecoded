@@ -1,0 +1,62 @@
+Source:
+	modid1:
+		scripts: e.g. OnXXXEvent, modded blocks/items/entities/guis/biomes/etc., world gen, etc.
+
+	modid2:
+		...
+
+	...
+
+	modidN:
+		...
+
+Assets:
+	modid1:
+		blockstates:
+		langs:
+		models:
+			block:
+			item:
+			entity:
+			armor:
+		shaders:
+		sounds:
+		textures:
+			armor:
+			block:
+			gui:
+				container:
+				hud:
+			item:
+			entity:
+			
+
+	modid2:
+		...
+
+	...
+
+	modidN:
+		...
+
+Data:
+	modid1:
+		advancements:
+		loottables:
+			block:
+			entity:
+			action: // e.g.: fishing
+			structure: // e.g.: dungeon chests
+		recipes:
+		tags:
+			block:
+			fluid:
+			item:
+
+	modid2:
+		...
+
+	...
+
+	modidN:
+		...

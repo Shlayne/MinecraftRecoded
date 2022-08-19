@@ -3,6 +3,7 @@ LibraryDir = {}
 Library = {}
 
 -- Include Directories
+	IncludeDir["gcem"] = "%{wks.location}/Engine/Dependencies/gcem-1.15.0/include/"
 	IncludeDir["glad"] = "%{wks.location}/Engine/Dependencies/glad-0.1.35/include/"
 	IncludeDir["glfw"] = "%{wks.location}/Engine/Dependencies/glfw-3.3.8/include/"
 	IncludeDir["glm"] = "%{wks.location}/Engine/Dependencies/glm-0.9.9.8/include/"

@@ -48,7 +48,8 @@ namespace eng
 			}
 
 			GLuint shaderID = shaderIDs.emplace_back(glCreateShader(UnconvertShaderStageType(crStage.type)));
-			glShaderSource(shaderID, 1, reinterpret_cast<const GLchar* const*>(file.data()), &length);
+			const GLchar* source[]{ file.data() };
+			glShaderSource(shaderID, 1, source, &length);
 
 			// Attach before compiling to not have to check when detaching shaders from the program.
 			glAttachShader(m_RendererID, shaderID);
@@ -56,13 +57,13 @@ namespace eng
 			// Compile shader
 			glCompileShader(shaderID);
 			GLint compiled;
-			glGetProgramiv(shaderID, GL_COMPILE_STATUS, &compiled);
+			glGetShaderiv(shaderID, GL_COMPILE_STATUS, &compiled);
 			if (compiled == GL_FALSE)
 			{
 				GLint length;
-				glGetProgramiv(shaderID, GL_INFO_LOG_LENGTH, &length);
+				glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
 				std::vector<GLchar> message(length);
-				glGetProgramInfoLog(shaderID, length, &length, message.data());
+				glGetShaderInfoLog(shaderID, length, &length, message.data());
 				LOG_CORE_WARN("{0}", static_cast<char*>(message.data()));
 				success = false;
 				break;

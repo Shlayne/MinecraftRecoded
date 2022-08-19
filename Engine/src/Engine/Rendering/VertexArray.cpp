@@ -5,11 +5,11 @@
 
 namespace eng
 {
-	Ref<VertexArray> VertexArray::Create()
+	Ref<VertexArray> VertexArray::CreateRef()
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API_OpenGL: return CreateRef<OpenGLVertexArray>();
+			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLVertexArray>();
 			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}
