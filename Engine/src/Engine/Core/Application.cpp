@@ -9,20 +9,20 @@ extern eng::RendererAPI::API g_NextRendererAPI;
 
 namespace eng
 {
-	static Application* s_pApplication = nullptr;
+	static Application* s_Application = nullptr;
 
-	Application::Application(const ApplicationSpecifications& crSpecs)
+	Application::Application(const ApplicationSpecifications& specs)
 	{
 		PROFILE_FUNCTION();
 
-		CORE_ASSERT(s_pApplication == nullptr, "Attempted to recreate Application!");
-		s_pApplication = this;
+		CORE_ASSERT(s_Application == nullptr, "Attempted to recreate Application!");
+		s_Application = this;
 
-		if (!crSpecs.workingDirectory.empty())
-			std::filesystem::current_path(crSpecs.workingDirectory);
+		if (!specs.workingDirectory.empty())
+			std::filesystem::current_path(specs.workingDirectory);
 
-		m_sInput = Input::CreateScope(BIND_FUNC(OnEvent));
-		m_sWindow = Window::CreateScope(crSpecs.windowSpecs);
+		m_Input = Input::CreateScope(BIND_FUNC(OnEvent));
+		m_Window = Window::CreateScope(specs.windowSpecs);
 		Renderer::Init();
 		ScriptEngine::Init();
 	}
@@ -31,27 +31,27 @@ namespace eng
 	{
 		PROFILE_FUNCTION();
 
-		CORE_ASSERT(s_pApplication != nullptr, "Attempted to redestroy Application!");
+		CORE_ASSERT(s_Application != nullptr, "Attempted to redestroy Application!");
 
 		// If layers aren't deleted by now, assume ownership and delete them.
-		for (auto& rLayer : m_LayerStack)
+		for (auto& layer : m_LayerStack)
 		{
-			rLayer->OnDetach();
-			delete rLayer;
+			layer->OnDetach();
+			delete layer;
 		}
 
 		ScriptEngine::Shutdown();
 		Renderer::Shutdown();
-		DestroyScope(m_sWindow);
-		DestroyScope(m_sInput);
+		DestroyScope(m_Window);
+		DestroyScope(m_Input);
 
-		s_pApplication = nullptr;
+		s_Application = nullptr;
 	}
 
 	Application& Application::Get()
 	{
-		CORE_ASSERT(s_pApplication != nullptr, "Attempted to get the application before it was created!");
-		return *s_pApplication;
+		CORE_ASSERT(s_Application != nullptr, "Attempted to get the application before it was created!");
+		return *s_Application;
 	}
 
 	void Application::Restart(RendererAPI::API nextRendererAPI)
@@ -68,77 +68,77 @@ namespace eng
 		m_Running = false;
 	}
 
-	void Application::PushLayer(Layer* pLayer)
+	void Application::PushLayer(Layer* layer)
 	{
-		CORE_ASSERT(pLayer != nullptr, "Layer was nullptr.");
+		CORE_ASSERT(layer != nullptr, "Layer was nullptr.");
 
-		pLayer->OnAttach();
-		m_LayerStack.PushLayer(pLayer);
+		layer->OnAttach();
+		m_LayerStack.PushLayer(layer);
 	}
 
-	void Application::PushOverlay(Layer* pOverlay)
+	void Application::PushOverlay(Layer* overlay)
 	{
-		CORE_ASSERT(pOverlay != nullptr, "Overlay was nullptr.");
+		CORE_ASSERT(overlay != nullptr, "Overlay was nullptr.");
 
-		pOverlay->OnAttach();
-		m_LayerStack.PushOverlay(pOverlay);
+		overlay->OnAttach();
+		m_LayerStack.PushOverlay(overlay);
 	}
 
 	Layer* Application::PopLayer()
 	{
-		Layer* pLayer = m_LayerStack.PopLayer();
-		if (pLayer != nullptr)
-			pLayer->OnDetach();
+		Layer* layer = m_LayerStack.PopLayer();
+		if (layer != nullptr)
+			layer->OnDetach();
 #if ENABLE_LOGGING
 		else
 			LOG_CORE_WARN("Popping layer when there is no layer to pop. Potential push/pop layer/overlay imbalance.");
 #endif
-		return pLayer;
+		return layer;
 	}
 
 	Layer* Application::PopOverlay()
 	{
-		Layer* pOverlay = m_LayerStack.PopOverlay();
-		if (pOverlay != nullptr)
-			pOverlay->OnDetach();
+		Layer* overlay = m_LayerStack.PopOverlay();
+		if (overlay != nullptr)
+			overlay->OnDetach();
 #if ENABLE_LOGGING
 		else
 			LOG_CORE_WARN("Popping overlay when there is no overlay to pop. Potential push/pop layer/overlay imbalance.");
 #endif
-		return pOverlay;
+		return overlay;
 	}
 
-	void Application::OnEvent(Event& rEvent)
+	void Application::OnEvent(Event& event)
 	{
 		PROFILE_FUNCTION();
 
-		rEvent.Dispatch(this, &Application::OnWindowMinimizeEvent);
-		rEvent.Dispatch(this, &Application::OnWindowResizeEvent);
+		event.Dispatch(this, &Application::OnWindowMinimizeEvent);
+		event.Dispatch(this, &Application::OnWindowResizeEvent);
 
-		for (auto it = m_LayerStack.rbegin(); !rEvent.IsHandled() && it != m_LayerStack.rend(); ++it)
+		for (auto it = m_LayerStack.rbegin(); !event.IsHandled() && it != m_LayerStack.rend(); ++it)
 		{
-			Layer& rLayer = **it;
-			if (rLayer.IsEnabled())
-				rLayer.OnEvent(rEvent);
+			Layer& layer = **it;
+			if (layer.IsEnabled())
+				layer.OnEvent(event);
 		}
 
 		// Dispatch this last, in case a layer handled the close event.
-		rEvent.Dispatch(this, &Application::OnWindowCloseEvent);
+		event.Dispatch(this, &Application::OnWindowCloseEvent);
 	}
 
-	void Application::OnWindowCloseEvent(WindowCloseEvent& rEvent)
+	void Application::OnWindowCloseEvent(WindowCloseEvent& event)
 	{
 		Close();
 	}
 
-	void Application::OnWindowResizeEvent(WindowResizeEvent& rEvent)
+	void Application::OnWindowResizeEvent(WindowResizeEvent& event)
 	{
-		m_Rendering = rEvent.GetWidth() > 0 && rEvent.GetHeight() > 0 && !m_sWindow->IsMinimized();
+		m_Rendering = event.GetWidth() > 0 && event.GetHeight() > 0 && !m_Window->IsMinimized();
 	}
 
-	void Application::OnWindowMinimizeEvent(WindowMinimizeEvent& rEvent)
+	void Application::OnWindowMinimizeEvent(WindowMinimizeEvent& event)
 	{
-		m_Rendering = !rEvent.IsMinimized() && m_sWindow->GetWidth() > 0 && m_sWindow->GetHeight() > 0;
+		m_Rendering = !event.IsMinimized() && m_Window->GetWidth() > 0 && m_Window->GetHeight() > 0;
 	}
 
 	void Application::Run()
@@ -150,26 +150,26 @@ namespace eng
 		// Send resize events to resize any cameras/framebuffers/etc.
 		{
 			PROFILE_SCOPE("Application::Run -> Initial Resize Events");
-			Window& rWindow = GetWindow();
-			WindowResizeEvent wre(rWindow.GetNativeWindow(), rWindow.GetWidth(), rWindow.GetHeight());
+			Window& window = GetWindow();
+			WindowResizeEvent wre(window.GetNativeWindow(), window.GetWidth(), window.GetHeight());
 			OnEvent(wre);
-			WindowFramebufferResizeEvent wfre(rWindow.GetNativeWindow(), rWindow.GetFramebufferWidth(), rWindow.GetFramebufferHeight());
+			WindowFramebufferResizeEvent wfre(window.GetNativeWindow(), window.GetFramebufferWidth(), window.GetFramebufferHeight());
 			OnEvent(wfre);
 		}
 
-		Input& rInput = *m_sInput;
+		Input& input = *m_Input;
 		while (m_Running)
 		{
 			PROFILE_SCOPE("Application::Run -> while(m_Running)");
 
-			Timestep timestep = rInput.GetElapsedTime();
+			Timestep timestep = input.GetElapsedTime();
 
 			// Update
 			{
 				PROFILE_SCOPE("Application::Run -> Update");
-				for (auto& rpLayer : m_LayerStack)
-					if (rpLayer->IsEnabled())
-						rpLayer->OnUpdate(timestep);
+				for (auto& layer : m_LayerStack)
+					if (layer->IsEnabled())
+						layer->OnUpdate(timestep);
 			}
 
 			// Render
@@ -177,13 +177,13 @@ namespace eng
 			{
 				PROFILE_SCOPE("Application::Run -> Render");
 
-				for (auto& rpLayer : m_LayerStack)
-					if (rpLayer->IsEnabled())
-						rpLayer->OnRender();
-				m_sWindow->GetContext().SwapBuffers();
+				for (auto& layer : m_LayerStack)
+					if (layer->IsEnabled())
+						layer->OnRender();
+				m_Window->GetContext().SwapBuffers();
 			}
 
-			rInput.PollEvents();
+			input.PollEvents();
 		}
 	}
 }

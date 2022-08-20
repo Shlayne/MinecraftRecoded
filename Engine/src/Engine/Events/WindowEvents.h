@@ -8,20 +8,20 @@ namespace eng
 	class WindowEvent : public Event
 	{
 	public:
-		WindowEvent(void* pNativeWindow)
-			: m_pNativeWindow(pNativeWindow) {}
+		WindowEvent(void* nativeWindow)
+			: m_NativeWindow(nativeWindow) {}
 		EVENT_CATEGORIES(EventCategory_Window)
 	public:
-		inline void* GetNativeWindow() const { return m_pNativeWindow; }
+		inline void* GetNativeWindow() const { return m_NativeWindow; }
 	private:
-		void* m_pNativeWindow;
+		void* m_NativeWindow;
 	};
 
 	class WindowCloseEvent : public WindowEvent
 	{
 	public:
-		WindowCloseEvent(void* pNativeWindow)
-			: WindowEvent(pNativeWindow) {}
+		WindowCloseEvent(void* nativeWindow)
+			: WindowEvent(nativeWindow) {}
 		EVENT_TYPE(EventType_WindowClose)
 #if ENABLE_LOGGING
 	public:
@@ -32,8 +32,8 @@ namespace eng
 	class WindowResizeEvent : public WindowEvent
 	{
 	public:
-		WindowResizeEvent(void* pNativeWindow, sint32 width, sint32 height)
-			: WindowEvent(pNativeWindow), m_Width(width), m_Height(height) {}
+		WindowResizeEvent(void* nativeWindow, sint32 width, sint32 height)
+			: WindowEvent(nativeWindow), m_Width(width), m_Height(height) {}
 		EVENT_TYPE(EventType_WindowResize)
 #if ENABLE_LOGGING
 	public:
@@ -51,8 +51,8 @@ namespace eng
 	class WindowFramebufferResizeEvent : public WindowEvent
 	{
 	public:
-		WindowFramebufferResizeEvent(void* pNativeWindow, sint32 width, sint32 height)
-			: WindowEvent(pNativeWindow), m_Width(width), m_Height(height) {}
+		WindowFramebufferResizeEvent(void* nativeWindow, sint32 width, sint32 height)
+			: WindowEvent(nativeWindow), m_Width(width), m_Height(height) {}
 		EVENT_TYPE(EventType_WindowFramebufferResize)
 #if ENABLE_LOGGING
 	public:
@@ -70,8 +70,8 @@ namespace eng
 	class WindowMoveEvent : public WindowEvent
 	{
 	public:
-		WindowMoveEvent(void* pNativeWindow, sint32 x, sint32 y)
-			: WindowEvent(pNativeWindow), m_X(x), m_Y(y) {}
+		WindowMoveEvent(void* nativeWindow, sint32 x, sint32 y)
+			: WindowEvent(nativeWindow), m_X(x), m_Y(y) {}
 		EVENT_TYPE(EventType_WindowMove)
 #if ENABLE_LOGGING
 	public:
@@ -89,8 +89,8 @@ namespace eng
 	class WindowFocusEvent : public WindowEvent
 	{
 	public:
-		WindowFocusEvent(void* pNativeWindow, bool focused)
-			: WindowEvent(pNativeWindow), m_Focused(focused) {}
+		WindowFocusEvent(void* nativeWindow, bool focused)
+			: WindowEvent(nativeWindow), m_Focused(focused) {}
 		EVENT_TYPE(EventType_WindowFocus)
 #if ENABLE_LOGGING
 	public:
@@ -105,8 +105,8 @@ namespace eng
 	class WindowMinimizeEvent : public WindowEvent
 	{
 	public:
-		WindowMinimizeEvent(void* pNativeWindow, bool minimized)
-			: WindowEvent(pNativeWindow), m_Minimized(minimized) {}
+		WindowMinimizeEvent(void* nativeWindow, bool minimized)
+			: WindowEvent(nativeWindow), m_Minimized(minimized) {}
 		EVENT_TYPE(EventType_WindowMinimize)
 #if ENABLE_LOGGING
 	public:
@@ -121,8 +121,8 @@ namespace eng
 	class WindowMaximizeEvent : public WindowEvent
 	{
 	public:
-		WindowMaximizeEvent(void* pNativeWindow, bool maximized)
-			: WindowEvent(pNativeWindow), m_Maximized(maximized) {}
+		WindowMaximizeEvent(void* nativeWindow, bool maximized)
+			: WindowEvent(nativeWindow), m_Maximized(maximized) {}
 		EVENT_TYPE(EventType_WindowMaximize)
 #if ENABLE_LOGGING
 	public:
@@ -137,8 +137,8 @@ namespace eng
 	class WindowPathDropEvent : public WindowEvent
 	{
 	public:
-		WindowPathDropEvent(void* pNativeWindow, sint32 count, const char** ppPaths)
-			: WindowEvent(pNativeWindow), m_Count(count), m_ppPaths(ppPaths) {}
+		WindowPathDropEvent(void* nativeWindow, sint32 count, const char** paths)
+			: WindowEvent(nativeWindow), m_Count(count), m_Paths(paths) {}
 		EVENT_TYPE(EventType_WindowPathDrop)
 #if ENABLE_LOGGING
 	public:
@@ -146,17 +146,17 @@ namespace eng
 #endif
 	public:
 		inline sint32 GetCount() const { return m_Count; }
-		inline const char* const* const GetPaths() const { return m_ppPaths; }
+		inline const char* const* const GetPaths() const { return m_Paths; }
 	private:
 		sint32 m_Count;
-		const char** m_ppPaths;
+		const char** m_Paths;
 	};
 
 	class WindowContentScaleEvent : public WindowEvent
 	{
 	public:
-		WindowContentScaleEvent(void* pNativeWindow, float scaleX, float scaleY)
-			: WindowEvent(pNativeWindow), m_ScaleX(scaleX), m_ScaleY(scaleY) {}
+		WindowContentScaleEvent(void* nativeWindow, float scaleX, float scaleY)
+			: WindowEvent(nativeWindow), m_ScaleX(scaleX), m_ScaleY(scaleY) {}
 		EVENT_TYPE(EventType_WindowContentScale)
 #if ENABLE_LOGGING
 	public:
@@ -174,8 +174,8 @@ namespace eng
 	class WindowRefreshEvent : public WindowEvent
 	{
 	public:
-		WindowRefreshEvent(void* pNativeWindow)
-			: WindowEvent(pNativeWindow) {}
+		WindowRefreshEvent(void* nativeWindow)
+			: WindowEvent(nativeWindow) {}
 		EVENT_TYPE(EventType_WindowRefresh)
 #if ENABLE_LOGGING
 	public:

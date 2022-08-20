@@ -9,6 +9,6 @@ namespace eng::io
 	std::string ReadFile(std::string_view filepath);
 	std::vector<uint8> ReadBinaryFile(std::string_view filepath);
 	bool WriteFile(std::string_view filepath, std::string_view contents);
-	bool WriteBinaryFile(std::string_view filepath, const std::vector<uint8>& crContents);
-	bool WriteBinaryFile(std::string_view filepath, const void* cpContents, size_t size);
+	bool WriteBinaryFile(std::string_view filepath, const std::vector<uint8>& contents);
+	bool WriteBinaryFile(std::string_view filepath, const void* contents, size_t size);
 }

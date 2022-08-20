@@ -5,18 +5,18 @@
 
 namespace eng
 {
-	void WithContext(void* pNativeWindow, const std::function<void()>& crfWork)
+	void WithContext(void* nativeWindow, const std::function<void()>& work)
 	{
-		GLFWwindow* pContext = static_cast<GLFWwindow*>(pNativeWindow);
+		GLFWwindow* context = static_cast<GLFWwindow*>(nativeWindow);
 
-		GLFWwindow* pCurrentContext = glfwGetCurrentContext();
-		bool setNewContext = pContext != pCurrentContext;
+		GLFWwindow* currentContext = glfwGetCurrentContext();
+		bool setNewContext = context != currentContext;
 
 		if (setNewContext)
-			glfwMakeContextCurrent(pContext);
-		crfWork();
+			glfwMakeContextCurrent(context);
+		work();
 		if (setNewContext)
-			glfwMakeContextCurrent(pCurrentContext);
+			glfwMakeContextCurrent(currentContext);
 	}
 
 	void RemoveCurrentContext()

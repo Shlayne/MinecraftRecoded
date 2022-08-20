@@ -3,21 +3,21 @@
 
 namespace eng
 {
-	void LayerStack::PushLayer(Layer* pLayer)
+	void LayerStack::PushLayer(Layer* layer)
 	{
-		CORE_ASSERT(pLayer != nullptr, "Layer is nullptr!");
-		CORE_ASSERT(std::find(m_Layers.begin(), m_Layers.begin() + m_LayerInsertIndex, pLayer) == m_Layers.begin() + m_LayerInsertIndex, "Cannot add the same layer twice!");
+		CORE_ASSERT(layer != nullptr, "Layer is nullptr!");
+		CORE_ASSERT(std::find(m_Layers.begin(), m_Layers.begin() + m_LayerInsertIndex, layer) == m_Layers.begin() + m_LayerInsertIndex, "Cannot add the same layer twice!");
 		
-		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, pLayer);
+		m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
 		m_LayerInsertIndex++;
 	}
 
-	void LayerStack::PushOverlay(Layer* pOverlay)
+	void LayerStack::PushOverlay(Layer* overlay)
 	{
-		CORE_ASSERT(pOverlay != nullptr, "Overlay is nullptr!");
-		CORE_ASSERT(std::find(m_Layers.begin() + m_LayerInsertIndex, m_Layers.end(), pOverlay) == m_Layers.end(), "Cannot add the same overlay twice!");
+		CORE_ASSERT(overlay != nullptr, "Overlay is nullptr!");
+		CORE_ASSERT(std::find(m_Layers.begin() + m_LayerInsertIndex, m_Layers.end(), overlay) == m_Layers.end(), "Cannot add the same overlay twice!");
 
-		m_Layers.emplace_back(pOverlay);
+		m_Layers.emplace_back(overlay);
 	}
 
 	Layer* LayerStack::PopLayer()
@@ -26,9 +26,9 @@ namespace eng
 			return nullptr;
 
 		auto it = m_Layers.begin() + --m_LayerInsertIndex;
-		Layer* pLayer = *it;
+		Layer* layer = *it;
 		m_Layers.erase(it);
-		return pLayer;
+		return layer;
 	}
 
 	Layer* LayerStack::PopOverlay()
@@ -37,8 +37,8 @@ namespace eng
 			return nullptr;
 
 		auto it = m_Layers.end() - 1;
-		Layer* pOverlay = *it;
+		Layer* overlay = *it;
 		m_Layers.erase(it);
-		return pOverlay;
+		return overlay;
 	}
 }

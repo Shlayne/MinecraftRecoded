@@ -6,49 +6,49 @@ namespace eng
 {
 	sint32 RendererCapabilities::GetMaxTextureSlots()
 	{
-		auto& rMaxTextureSlots = Renderer::s_Cache.maxTextureSlots;
-		if (rMaxTextureSlots == 0)
-			rMaxTextureSlots = Renderer::s_API->GetMaxTextureSlots();
-		return rMaxTextureSlots;
+		auto& maxTextureSlots = Renderer::s_Cache.maxTextureSlots;
+		if (maxTextureSlots == 0)
+			maxTextureSlots = Renderer::s_API->GetMaxTextureSlots();
+		return maxTextureSlots;
 	}
 
 	sint32 RendererCapabilities::GetMaxTextureSize()
 	{
-		auto& rMaxTextureSize = Renderer::s_Cache.maxTextureSize;
-		if (rMaxTextureSize == 0)
-			rMaxTextureSize = Renderer::s_API->GetMaxTextureSize();
-		return rMaxTextureSize;
+		auto& maxTextureSize = Renderer::s_Cache.maxTextureSize;
+		if (maxTextureSize == 0)
+			maxTextureSize = Renderer::s_API->GetMaxTextureSize();
+		return maxTextureSize;
 	}
 
 	sint32 RendererCapabilities::GetMaxTextureArrayLayers()
 	{
-		auto& rMaxTextureArrayLayers = Renderer::s_Cache.maxTextureArrayLayers;
-		if (rMaxTextureArrayLayers == 0)
-			rMaxTextureArrayLayers = Renderer::s_API->GetMaxTextureArrayLayers();
-		return rMaxTextureArrayLayers;
+		auto& maxTextureArrayLayers = Renderer::s_Cache.maxTextureArrayLayers;
+		if (maxTextureArrayLayers == 0)
+			maxTextureArrayLayers = Renderer::s_API->GetMaxTextureArrayLayers();
+		return maxTextureArrayLayers;
 	}
 
 	sint32 RendererCapabilities::GetMaxFramebufferWidth()
 	{
-		auto& rMaxFramebufferWidth = Renderer::s_Cache.maxFramebufferWidth;
-		if (rMaxFramebufferWidth == 0)
-			rMaxFramebufferWidth = Renderer::s_API->GetMaxFramebufferWidth();
-		return rMaxFramebufferWidth;
+		auto& maxFramebufferWidth = Renderer::s_Cache.maxFramebufferWidth;
+		if (maxFramebufferWidth == 0)
+			maxFramebufferWidth = Renderer::s_API->GetMaxFramebufferWidth();
+		return maxFramebufferWidth;
 	}
 
 	sint32 RendererCapabilities::GetMaxFramebufferHeight()
 	{
-		auto& rMaxFramebufferHeight = Renderer::s_Cache.maxFramebufferHeight;
-		if (rMaxFramebufferHeight == 0)
-			rMaxFramebufferHeight = Renderer::s_API->GetMaxFramebufferHeight();
-		return rMaxFramebufferHeight;
+		auto& maxFramebufferHeight = Renderer::s_Cache.maxFramebufferHeight;
+		if (maxFramebufferHeight == 0)
+			maxFramebufferHeight = Renderer::s_API->GetMaxFramebufferHeight();
+		return maxFramebufferHeight;
 	}
 
 	sint32 RendererCapabilities::GetMaxFramebufferColorAttachments()
 	{
-		auto& rMaxFramebufferColorAttachments = Renderer::s_Cache.maxFramebufferColorAttachments;
-		if (rMaxFramebufferColorAttachments == 0)
-			rMaxFramebufferColorAttachments = Renderer::s_API->GetMaxFramebufferColorAttachments();
-		return rMaxFramebufferColorAttachments;
+		auto& maxFramebufferColorAttachments = Renderer::s_Cache.maxFramebufferColorAttachments;
+		if (maxFramebufferColorAttachments == 0)
+			maxFramebufferColorAttachments = Renderer::s_API->GetMaxFramebufferColorAttachments();
+		return maxFramebufferColorAttachments;
 	}
 }

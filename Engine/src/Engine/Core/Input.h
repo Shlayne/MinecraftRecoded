@@ -23,9 +23,9 @@ namespace eng
 		// Gets the position of the mouse relative to the top left corner of the primary monitor.
 		virtual glm::vec2 GetAbsoluteMousePosition() const = 0;
 		// Gets the position of the mouse relative to the top left of the given window's content area.
-		virtual glm::vec2 GetRelativeMousePosition(const void* cpNativeWindow) const = 0;
+		virtual glm::vec2 GetRelativeMousePosition(const void* nativeWindow) const = 0;
 		// Gets the position of the mouse relative to the top left of the given window's content area.
-		virtual glm::vec2 GetRelativeMousePosition(const Window& crWindow) const = 0;
+		virtual glm::vec2 GetRelativeMousePosition(const Window& window) const = 0;
 
 		// Returns true if the joystick is connected, false otherwise.
 		virtual bool IsJoystickConnected(Joystick joystick) const = 0;
@@ -38,7 +38,7 @@ namespace eng
 	protected:
 		virtual Timestep GetElapsedTime() = 0;
 		virtual void PollEvents() = 0;
-		virtual void OnEvent(Event& rEvent) = 0;
+		virtual void OnEvent(Event& event) = 0;
 	protected:
 		inline void DisconnectJoystick(JoystickState& joystickState) { joystickState.Disconnect(); }
 		inline void ConnectJoystick(JoystickState& joystickState, uint32 buttonCount, uint32 axisCount, uint32 hatCount) { joystickState.Connect(buttonCount, axisCount, hatCount); }
@@ -46,7 +46,7 @@ namespace eng
 		inline void SetJoystickAxis(JoystickState& joystickState, JoystickAxis axis, float value) { joystickState.SetAxis(axis, value); }
 		inline void SetJoystickHat(JoystickState& joystickState, JoystickHat hat, JoystickHatState value) { joystickState.SetHat(hat, value); }
 	private:
-		static Scope<Input> CreateScope(EventCallback&& rrfEventCallback);
+		static Scope<Input> CreateScope(EventCallback&& eventCallback);
 	private:
 		friend class Application;
 		friend class Window;

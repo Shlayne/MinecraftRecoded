@@ -7,15 +7,15 @@
 
 namespace eng
 {
-	WindowsInput::WindowsInput(EventCallback&& rrfEventCallback)
-		: m_fEventCallback(std::move(rrfEventCallback))
+	WindowsInput::WindowsInput(EventCallback&& eventCallback)
+		: m_EventCallback(std::move(eventCallback))
 	{
 		PROFILE_FUNCTION();
 
 #if ENABLE_ASSERTS
-		UNUSED(glfwSetErrorCallback([](int errorCode, const char* pDescription)
+		UNUSED(glfwSetErrorCallback([](int errorCode, const char* description)
 		{
-			CORE_ASSERT(false, "GLFW Error ({0}): {1}", errorCode, pDescription);
+			CORE_ASSERT(false, "GLFW Error ({0}): {1}", errorCode, description);
 		}));
 #endif
 
@@ -31,11 +31,11 @@ namespace eng
 
 		UNUSED(glfwSetJoystickCallback([](sint32 jid, sint32 event)
 		{
-			WindowsInput& rInput = *static_cast<WindowsInput*>(&Get());
+			WindowsInput& input = *static_cast<WindowsInput*>(&Get());
 			switch (event)
 			{
-				case GLFW_CONNECTED: rInput.OnJoystickConnected(ConvertJoystickID(jid)); break;
-				case GLFW_DISCONNECTED: rInput.OnJoystickDisconnected(ConvertJoystickID(jid)); break;
+				case GLFW_CONNECTED: input.OnJoystickConnected(ConvertJoystickID(jid)); break;
+				case GLFW_DISCONNECTED: input.OnJoystickDisconnected(ConvertJoystickID(jid)); break;
 			}
 		}));
 
@@ -77,27 +77,27 @@ namespace eng
 
 	glm::vec2 WindowsInput::GetAbsoluteMousePosition() const
 	{
-		GLFWwindow* pWindow = glfwGetCurrentContext();
-		CORE_ASSERT(pWindow != NULL, "Window was null!");
+		GLFWwindow* window = glfwGetCurrentContext();
+		CORE_ASSERT(window != NULL, "Window was null!");
 		glm::s32vec2 windowPos{ 0 };
-		glfwGetWindowPos(pWindow, &windowPos.x, &windowPos.y);
+		glfwGetWindowPos(window, &windowPos.x, &windowPos.y);
 		glm::dvec2 cursorPos{ 0.0 };
-		glfwGetCursorPos(pWindow, &cursorPos.x, &cursorPos.y);
+		glfwGetCursorPos(window, &cursorPos.x, &cursorPos.y);
 		return glm::vec2(glm::dvec2(windowPos) + cursorPos);
 	}
 
-	glm::vec2 WindowsInput::GetRelativeMousePosition(const void* pNativeWindow) const
+	glm::vec2 WindowsInput::GetRelativeMousePosition(const void* nativeWindow) const
 	{
-		GLFWwindow* pWindow = const_cast<GLFWwindow*>(static_cast<const GLFWwindow*>(pNativeWindow));
-		CORE_ASSERT(pWindow != NULL, "Window was null!");
+		GLFWwindow* window = const_cast<GLFWwindow*>(static_cast<const GLFWwindow*>(nativeWindow));
+		CORE_ASSERT(window != NULL, "Window was null!");
 		glm::dvec2 cursorPos{ 0.0 };
-		glfwGetCursorPos(pWindow, &cursorPos.x, &cursorPos.y);
+		glfwGetCursorPos(window, &cursorPos.x, &cursorPos.y);
 		return glm::vec2(cursorPos);
 	}
 
-	glm::vec2 WindowsInput::GetRelativeMousePosition(const Window& crWindow) const
+	glm::vec2 WindowsInput::GetRelativeMousePosition(const Window& window) const
 	{
-		return GetRelativeMousePosition(crWindow.GetNativeWindow());
+		return GetRelativeMousePosition(window.GetNativeWindow());
 	}
 
 	bool WindowsInput::IsJoystickConnected(Joystick joystick) const
@@ -148,11 +148,11 @@ namespace eng
 			if (JoystickState& joystickState = m_Joysticks[ConvertJoystickID(jid)]; joystickState.IsConnected())
 			{
 				sint32 buttonCount;
-				const uint8* pButtons;
+				const uint8* buttons;
 				sint32 axisCount;
-				const float* pAxes;
+				const float* axes;
 				sint32 hatCount;
-				const uint8* pHats = glfwGetJoystickHats(jid, &hatCount);
+				const uint8* hats = glfwGetJoystickHats(jid, &hatCount);
 
 				if (glfwJoystickIsGamepad(jid) == GLFW_TRUE)
 				{
@@ -162,59 +162,59 @@ namespace eng
 					CORE_ASSERT(success, "Joystick gamepad connect mismatch!");
 
 					buttonCount = sizeof(gamepadState.buttons) / sizeof(*gamepadState.buttons);
-					pButtons = gamepadState.buttons;
+					buttons = gamepadState.buttons;
 					axisCount = sizeof(gamepadState.axes) / sizeof(*gamepadState.axes);
-					pAxes = gamepadState.axes;
+					axes = gamepadState.axes;
 				}
 				else
 				{
-					pButtons = glfwGetJoystickButtons(jid, &buttonCount);
-					pAxes = glfwGetJoystickAxes(jid, &axisCount);
+					buttons = glfwGetJoystickButtons(jid, &buttonCount);
+					axes = glfwGetJoystickAxes(jid, &axisCount);
 				}
 
 				for (sint32 i = 0; i < buttonCount; i++)
-					SetJoystickButton(joystickState, ConvertJoystickButton(i), pButtons[i]);
+					SetJoystickButton(joystickState, ConvertJoystickButton(i), buttons[i]);
 				for (sint32 i = 0; i < axisCount; i++)
-					SetJoystickAxis(joystickState, ConvertJoystickAxis(i), pAxes[i]);
+					SetJoystickAxis(joystickState, ConvertJoystickAxis(i), axes[i]);
 				for (sint32 i = 0; i < hatCount; i++)
-					SetJoystickHat(joystickState, ConvertJoystickHat(i), pHats[i]);
+					SetJoystickHat(joystickState, ConvertJoystickHat(i), hats[i]);
 			}
 		}
 	}
 
-	void WindowsInput::OnEvent(Event& rEvent)
+	void WindowsInput::OnEvent(Event& event)
 	{
-		rEvent.Dispatch(this, &WindowsInput::OnKeyPressEvent);
-		rEvent.Dispatch(this, &WindowsInput::OnKeyReleaseEvent);
-		rEvent.Dispatch(this, &WindowsInput::OnMouseButtonPressEvent);
-		rEvent.Dispatch(this, &WindowsInput::OnMouseButtonReleaseEvent);
-		m_fEventCallback(rEvent);
+		event.Dispatch(this, &WindowsInput::OnKeyPressEvent);
+		event.Dispatch(this, &WindowsInput::OnKeyReleaseEvent);
+		event.Dispatch(this, &WindowsInput::OnMouseButtonPressEvent);
+		event.Dispatch(this, &WindowsInput::OnMouseButtonReleaseEvent);
+		m_EventCallback(event);
 	}
 
-	void WindowsInput::OnKeyPressEvent(KeyPressEvent& rEvent)
+	void WindowsInput::OnKeyPressEvent(KeyPressEvent& event)
 	{
-		Keycode keycode = rEvent.GetKeycode();
+		Keycode keycode = event.GetKeycode();
 		CORE_ASSERT(keycode < Keycode_Count, "Keycode index={0} out of bounds!", keycode);
 		m_Keys[keycode / 8] |= (1 << (keycode % 8));
 	}
 
-	void WindowsInput::OnKeyReleaseEvent(KeyReleaseEvent& rEvent)
+	void WindowsInput::OnKeyReleaseEvent(KeyReleaseEvent& event)
 	{
-		Keycode keycode = rEvent.GetKeycode();
+		Keycode keycode = event.GetKeycode();
 		CORE_ASSERT(keycode < Keycode_Count, "Keycode index={0} out of bounds!", keycode);
 		m_Keys[keycode / 8] &= ~(1 << (keycode % 8));
 	}
 
-	void WindowsInput::OnMouseButtonPressEvent(MouseButtonPressEvent& rEvent)
+	void WindowsInput::OnMouseButtonPressEvent(MouseButtonPressEvent& event)
 	{
-		MouseButton button = rEvent.GetButton();
+		MouseButton button = event.GetButton();
 		CORE_ASSERT(button < Keycode_Count, "Keycode index={0} out of bounds!", button);
 		m_MouseButtons[button / 8] |= (1 << (button % 8));
 	}
 
-	void WindowsInput::OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& rEvent)
+	void WindowsInput::OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& event)
 	{
-		MouseButton button = rEvent.GetButton();
+		MouseButton button = event.GetButton();
 		CORE_ASSERT(button < Keycode_Count, "Keycode index={0} out of bounds!", button);
 		m_MouseButtons[button / 8] &= ~(1 << (button % 8));
 	}

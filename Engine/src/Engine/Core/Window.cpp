@@ -7,15 +7,15 @@
 
 namespace eng
 {
-	Scope<Window> Window::CreateScope(const WindowSpecifications& crSpecs)
+	Scope<Window> Window::CreateScope(const WindowSpecifications& specs)
 	{
 #if SYSTEM_WINDOWS
-		return eng::CreateScope<WindowsWindow>(crSpecs);
+		return eng::CreateScope<WindowsWindow>(specs);
 #endif
 	}
 
-	void Window::OnEvent(Event& rEvent)
+	void Window::OnEvent(Event& event)
 	{
-		Input::Get().OnEvent(rEvent);
+		Input::Get().OnEvent(event);
 	}
 }

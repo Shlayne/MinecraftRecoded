@@ -16,13 +16,13 @@ namespace eng
 		static void EnableCulling();
 		static void DisableCulling();
 
-		static void SetViewport(const glm::s32vec2& crPosition, const glm::s32vec2& crSize);
+		static void SetViewport(const glm::s32vec2& position, const glm::s32vec2& size);
 
 		static void Clear();
 		static void ClearDepth();
-		static void SetClearColor(const glm::vec4& crColor);
+		static void SetClearColor(const glm::vec4& color);
 
-		static void DrawIndexed(const Ref<VertexArray>& crVertexArray, const Ref<IndexBuffer>& crIndexBuffer, uint32 offset = 0, uint32 count = 0, RendererPrimitive primitive = RendererPrimitive_Triangles);
+		static void DrawIndexed(const Ref<VertexArray>& vertexArray, const Ref<IndexBuffer>& indexBuffer, uint32 offset = 0, uint32 count = 0, RendererPrimitive primitive = RendererPrimitive_Triangles);
 	private:
 		friend class Application;
 		static void Init();

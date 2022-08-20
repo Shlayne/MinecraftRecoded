@@ -9,8 +9,8 @@ namespace eng
 	class LayerStack
 	{
 	public:
-		void PushLayer(Layer* pLayer);
-		void PushOverlay(Layer* pOverlay);
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 		Layer* PopLayer();
 		Layer* PopOverlay();
 

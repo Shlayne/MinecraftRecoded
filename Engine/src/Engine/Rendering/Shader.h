@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Core/Core.h"
-#include <glm/glm.hpp>
 #include <string_view>
 
 namespace eng

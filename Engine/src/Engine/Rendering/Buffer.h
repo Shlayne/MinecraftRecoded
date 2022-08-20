@@ -73,16 +73,16 @@ namespace eng
 	class VertexBuffer
 	{
 	public:
-		static Ref<VertexBuffer> CreateRef(uint32 size, const void* cpData = nullptr, BufferUsage usage = BufferUsage_StaticDraw);
+		static Ref<VertexBuffer> CreateRef(uint32 size, const void* data = nullptr, BufferUsage usage = BufferUsage_StaticDraw);
 		virtual ~VertexBuffer() = default;
 	public:
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		virtual void SetData(const void* cpData, uint32 size) = 0;
+		virtual void SetData(const void* data, uint32 size) = 0;
 
 		virtual const VertexBufferLayout& GetLayout() const = 0;
-		virtual void SetLayout(const VertexBufferLayout& crLayout) = 0;
+		virtual void SetLayout(const VertexBufferLayout& layout) = 0;
 	};
 
 	using IndexBufferElementType_ = uint8;
@@ -96,13 +96,13 @@ namespace eng
 	class IndexBuffer
 	{
 	public:
-		static Ref<IndexBuffer> CreateRef(uint32 count, const void* cpData = nullptr, BufferUsage usage = BufferUsage_StaticDraw, IndexBufferElementType type = IndexBufferElementType_UInt32);
+		static Ref<IndexBuffer> CreateRef(uint32 count, const void* data = nullptr, BufferUsage usage = BufferUsage_StaticDraw, IndexBufferElementType type = IndexBufferElementType_UInt32);
 		virtual ~IndexBuffer() = default;
 	public:
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		virtual void SetData(const void* cpData, uint32 count) = 0;
+		virtual void SetData(const void* data, uint32 count) = 0;
 
 		virtual uint32 GetCount() const = 0;
 		virtual IndexBufferElementType GetType() const = 0;
@@ -111,10 +111,10 @@ namespace eng
 	class UniformBuffer
 	{
 	public:
-		static Ref<UniformBuffer> CreateRef(uint32 size, uint32 binding, const void* cpData = nullptr, BufferUsage usage = BufferUsage_StaticDraw);
+		static Ref<UniformBuffer> CreateRef(uint32 size, uint32 binding, const void* data = nullptr, BufferUsage usage = BufferUsage_StaticDraw);
 		virtual ~UniformBuffer() = default;
 	public:
-		virtual void SetData(const void* cpData, uint32 size, uint32 offset = 0) = 0;
+		virtual void SetData(const void* data, uint32 size, uint32 offset = 0) = 0;
 	};
 }
 

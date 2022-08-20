@@ -29,9 +29,9 @@ namespace eng
 		m_RendererID = glCreateProgram();
 
 		std::vector<GLuint> shaderIDs;
-		for (const auto& crStage : stages)
+		for (const auto& stage : stages)
 		{
-			std::string file = io::ReadFile(crStage.filepath);
+			std::string file = io::ReadFile(stage.filepath);
 			if (file.empty())
 			{
 				LOG_CORE_WARN("Shader file=\"{0}\" does not exist or is empty.");
@@ -47,7 +47,7 @@ namespace eng
 				break;
 			}
 
-			GLuint shaderID = shaderIDs.emplace_back(glCreateShader(UnconvertShaderStageType(crStage.type)));
+			GLuint shaderID = shaderIDs.emplace_back(glCreateShader(UnconvertShaderStageType(stage.type)));
 			const GLchar* source[]{ file.data() };
 			glShaderSource(shaderID, 1, source, &length);
 

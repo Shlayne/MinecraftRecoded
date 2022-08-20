@@ -45,17 +45,17 @@ namespace eng::io
 		return false;
 	}
 
-	bool WriteBinaryFile(std::string_view filepath, const std::vector<uint8_t>& crContents)
+	bool WriteBinaryFile(std::string_view filepath, const std::vector<uint8_t>& contents)
 	{
-		return WriteBinaryFile(filepath, crContents.data(), crContents.size());
+		return WriteBinaryFile(filepath, contents.data(), contents.size());
 	}
 
-	bool WriteBinaryFile(std::string_view filepath, const void* cpContents, size_t size)
+	bool WriteBinaryFile(std::string_view filepath, const void* contents, size_t size)
 	{
 		std::ofstream file(filepath.data(), std::ios::binary);
 		if (file.is_open())
 		{
-			file.write((const char*)cpContents, size);
+			file.write((const char*)contents, size);
 			file.close();
 			return file.good();
 		}

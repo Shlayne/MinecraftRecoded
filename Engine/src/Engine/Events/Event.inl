@@ -16,16 +16,16 @@ namespace eng
 	}
 
 	template<typename C, typename E>
-	inline void Event::Dispatch(C* object, void(C::*fCallback)(E&))
+	inline void Event::Dispatch(C* object, void(C::*callback)(E&))
 	{
 		if (!IsHandled() && GetType() == E::GetStaticType())
-			(object->*fCallback)(static_cast<E&>(*this));
+			(object->*callback)(static_cast<E&>(*this));
 	}
 
 	template<typename E>
-	inline void Event::Dispatch(void(*fCallback)(E&))
+	inline void Event::Dispatch(void(*callback)(E&))
 	{
 		if (!IsHandled() && GetType() == E::GetStaticType())
-			fCallback(static_cast<E&>(*this));
+			callback(static_cast<E&>(*this));
 	}
 }

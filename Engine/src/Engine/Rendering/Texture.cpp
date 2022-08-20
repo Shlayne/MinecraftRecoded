@@ -5,46 +5,46 @@
 
 namespace eng
 {
-	TextureSpecification& TextureSpecification::operator=(const TextureSpecification& crSpecs) noexcept
+	TextureSpecification& TextureSpecification::operator=(const TextureSpecification& specs) noexcept
 	{
-		if (this != &crSpecs)
+		if (this != &specs)
 		{
-			texture = crSpecs.texture;
-			minFilter = crSpecs.minFilter;
-			magFilter = crSpecs.magFilter;
-			wrapS = crSpecs.wrapS;
-			wrapT = crSpecs.wrapT;
+			texture = specs.texture;
+			minFilter = specs.minFilter;
+			magFilter = specs.magFilter;
+			wrapS = specs.wrapS;
+			wrapT = specs.wrapT;
 		}
 		return *this;
 	}
 
-	TextureSpecification& TextureSpecification::operator=(TextureSpecification&& rrSpecs) noexcept
+	TextureSpecification& TextureSpecification::operator=(TextureSpecification&& specs) noexcept
 	{
-		if (this != &rrSpecs)
+		if (this != &specs)
 		{
-			texture = std::move(rrSpecs.texture);
-			minFilter = rrSpecs.minFilter;
-			magFilter = rrSpecs.magFilter;
-			wrapS = rrSpecs.wrapS;
-			wrapT = rrSpecs.wrapT;
+			texture = std::move(specs.texture);
+			minFilter = specs.minFilter;
+			magFilter = specs.magFilter;
+			wrapS = specs.wrapS;
+			wrapT = specs.wrapT;
 		}
 		return *this;
 	}
 
-	Ref<Texture2D> Texture2D::CreateRef(const TextureSpecification& crSpecs)
+	Ref<Texture2D> Texture2D::CreateRef(const TextureSpecification& specs)
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLTexture>(crSpecs);
+			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLTexture>(specs);
 			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}
 
-	Ref<Texture2D> Texture2D::CreateRef(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex)
+	Ref<Texture2D> Texture2D::CreateRef(const Ref<Framebuffer>& framebuffer, sint32 attachmentIndex)
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLTexture>(crFramebuffer, attachmentIndex);
+			case RendererAPI::API_OpenGL: return eng::CreateRef<OpenGLTexture>(framebuffer, attachmentIndex);
 			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}

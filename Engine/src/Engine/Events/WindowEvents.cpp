@@ -55,9 +55,9 @@ namespace eng
 	WindowPathDropEvent::operator std::string() const
 	{
 		std::stringstream stream;
-		stream << "WindowPathDropEvent: count=" << m_Count << " paths=[\"" << m_ppPaths[0];
+		stream << "WindowPathDropEvent: count=" << m_Count << " paths=[\"" << m_Paths[0];
 		for (sint32 i = 1; i < m_Count; i++)
-			stream << "\",\"" << m_ppPaths[i];
+			stream << "\",\"" << m_Paths[i];
 		stream << "\"]";
 		return stream.str();
 	}

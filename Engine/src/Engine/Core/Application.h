@@ -22,26 +22,26 @@ namespace eng
 	{
 	public:
 		static Application& Get();
-		inline Window& GetWindow() { return *m_sWindow; }
+		inline Window& GetWindow() { return *m_Window; }
 	public:
 		void Restart(RendererAPI::API nextRendererAPI = RendererAPI::GetAPI());
 		void Close();
 	public:
-		void PushLayer(Layer* pLayer);
-		void PushOverlay(Layer* pOverlay);
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 		Layer* PopLayer();
 		Layer* PopOverlay();
 	private:
-		void OnEvent(Event& rEvent);
-		void OnWindowCloseEvent(WindowCloseEvent& rEvent);
-		void OnWindowResizeEvent(WindowResizeEvent& rEvent);
-		void OnWindowMinimizeEvent(WindowMinimizeEvent& rEvent);
+		void OnEvent(Event& event);
+		void OnWindowCloseEvent(WindowCloseEvent& event);
+		void OnWindowResizeEvent(WindowResizeEvent& event);
+		void OnWindowMinimizeEvent(WindowMinimizeEvent& event);
 	private:
 		friend class Input;
-		inline Input& GetInput() { return *m_sInput; }
+		inline Input& GetInput() { return *m_Input; }
 	private:
-		Scope<Input> m_sInput;
-		Scope<Window> m_sWindow;
+		Scope<Input> m_Input;
+		Scope<Window> m_Window;
 		LayerStack m_LayerStack;
 	private:
 		bool m_Running : 1 = false;
@@ -51,7 +51,7 @@ namespace eng
 		void Run();
 	protected:
 		friend Application* CreateApplication(CommandLineArgs args);
-		Application(const ApplicationSpecifications& crSpecs);
+		Application(const ApplicationSpecifications& specs);
 		virtual ~Application();
 	private:
 		Application(const Application&) = delete;

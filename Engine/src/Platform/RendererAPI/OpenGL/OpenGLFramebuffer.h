@@ -8,7 +8,7 @@ namespace eng
 	class OpenGLFramebuffer : public Framebuffer
 	{
 	public:
-		OpenGLFramebuffer(const FramebufferSpecification& crSpecs);
+		OpenGLFramebuffer(const FramebufferSpecification& specs);
 		virtual ~OpenGLFramebuffer();
 	public:
 		virtual void Bind() override;

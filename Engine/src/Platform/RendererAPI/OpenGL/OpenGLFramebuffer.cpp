@@ -45,9 +45,9 @@ namespace eng
 		return multisampled ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 	}
 
-	static void CreateTextures(GLenum textureTarget, uint32* pID, uint32 count)
+	static void CreateTextures(GLenum textureTarget, uint32* id, uint32 count)
 	{
-		glCreateTextures(textureTarget, count, pID);
+		glCreateTextures(textureTarget, count, id);
 	}
 
 	static void BindTexture(GLenum textureTarget, uint32 id)
@@ -55,7 +55,7 @@ namespace eng
 		glBindTexture(textureTarget, id);
 	}
 
-	static void AttachColorTexture(uint32 id, sint32 samples, GLenum internalFormat, GLenum format, sint32 width, sint32 height, FramebufferTextureSpecification textureSpecification, uint32 index)
+	static void AttachColorTexture(uint32 id, sint32 samples, GLenum internalFormat, GLenum format, sint32 width, sint32 height, FramebufferTextureSpecification specs, uint32 index)
 	{
 		bool multisampled = samples > 1;
 		if (multisampled)
@@ -65,16 +65,16 @@ namespace eng
 		else
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetOpenGLFilterMode(textureSpecification.minFilter));
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetOpenGLFilterMode(textureSpecification.magFilter));
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, UnconvertFramebufferWrapMode(textureSpecification.wrapS));
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, UnconvertFramebufferWrapMode(textureSpecification.wrapT));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetOpenGLFilterMode(specs.minFilter));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetOpenGLFilterMode(specs.magFilter));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, UnconvertFramebufferWrapMode(specs.wrapS));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, UnconvertFramebufferWrapMode(specs.wrapT));
 		}
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index, GetTextureTarget(multisampled), id, 0);
 	}
 
-	static void AttachDepthTexture(uint32 id, sint32 samples, GLenum format, GLenum attachmentType, sint32 width, sint32 height, FramebufferTextureSpecification textureSpecification)
+	static void AttachDepthTexture(uint32 id, sint32 samples, GLenum format, GLenum attachmentType, sint32 width, sint32 height, FramebufferTextureSpecification specs)
 	{
 		bool multisampled = samples > 1;
 		if (multisampled)
@@ -84,17 +84,17 @@ namespace eng
 		else
 		{
 			glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetOpenGLFilterMode(textureSpecification.minFilter));
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetOpenGLFilterMode(textureSpecification.magFilter));
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, UnconvertFramebufferWrapMode(textureSpecification.wrapS));
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, UnconvertFramebufferWrapMode(textureSpecification.wrapT));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetOpenGLFilterMode(specs.minFilter));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetOpenGLFilterMode(specs.magFilter));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, UnconvertFramebufferWrapMode(specs.wrapS));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, UnconvertFramebufferWrapMode(specs.wrapT));
 		}
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GetTextureTarget(multisampled), id, 0);
 	}
 
-	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& crSpecs)
-		: m_Specs(crSpecs)
+	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& specs)
+		: m_Specs(specs)
 	{
 		for (const auto& specification : m_Specs.attachments.attachments)
 		{

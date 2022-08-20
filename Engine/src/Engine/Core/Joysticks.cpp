@@ -22,9 +22,9 @@ namespace eng
 		m_AxisCount = axisCount;
 		m_HatCount = hatCount;
 
-		m_pButtons = buttonCount != 0 ? new uint8[1 + (buttonCount - 1) / 8]() : nullptr;
-		m_pAxes = axisCount != 0 ? new float[axisCount]() : nullptr;
-		m_pHats = hatCount != 0 ? new JoystickHatState[1 + (hatCount - 1) / 2]() : nullptr;
+		m_Buttons = buttonCount != 0 ? new uint8[1 + (buttonCount - 1) / 8]() : nullptr;
+		m_Axes = axisCount != 0 ? new float[axisCount]() : nullptr;
+		m_Hats = hatCount != 0 ? new JoystickHatState[1 + (hatCount - 1) / 2]() : nullptr;
 	}
 
 	void JoystickState::Disconnect()
@@ -37,30 +37,30 @@ namespace eng
 		m_AxisCount = 0;
 		m_HatCount = 0;
 
-		delete[] m_pButtons;
-		delete[] m_pAxes;
-		delete[] m_pHats;
+		delete[] m_Buttons;
+		delete[] m_Axes;
+		delete[] m_Hats;
 	}
 
 	bool JoystickState::GetButton(JoystickButton button) const
 	{
 		CORE_ASSERT(m_Connected, "Attempted to read button status from disconnected joystick!");
 		CORE_ASSERT(button < m_ButtonCount, "Joystick button index out of bounds!");
-		return m_pButtons[button / 8] & (1 << (button % 8));
+		return m_Buttons[button / 8] & (1 << (button % 8));
 	}
 
 	float JoystickState::GetAxis(JoystickAxis axis) const
 	{
 		CORE_ASSERT(m_Connected, "Attempted to read axis status from disconnected joystick!");
 		CORE_ASSERT(axis < m_AxisCount, "Joystick axis index out of bounds!");
-		return m_pAxes[axis];
+		return m_Axes[axis];
 	}
 
 	JoystickHatState JoystickState::GetHat(JoystickHat hat) const
 	{
 		CORE_ASSERT(m_Connected, "Attempted to read hat status from disconnected joystick!");
 		CORE_ASSERT(hat < m_HatCount, "Joystick hat index out of bounds!");
-		return m_pHats[hat / 2] & (0xF << (hat % 2));
+		return m_Hats[hat / 2] & (0xF << (hat % 2));
 	}
 
 	void JoystickState::SetButton(JoystickButton button, bool value)
@@ -69,8 +69,8 @@ namespace eng
 		CORE_ASSERT(button < m_ButtonCount, "Joystick button index out of bounds!");
 
 		uint8 bit = 1 << (button % 8);
-		uint8 previousState = m_pButtons[button / 8];
-		m_pButtons[button / 8] = value ? previousState | bit : previousState & ~bit;
+		uint8 previousState = m_Buttons[button / 8];
+		m_Buttons[button / 8] = value ? previousState | bit : previousState & ~bit;
 	}
 
 	void JoystickState::SetAxis(JoystickAxis axis, float value)
@@ -78,7 +78,7 @@ namespace eng
 		CORE_ASSERT(m_Connected, "Attempted to write axis status to disconnected joystick!");
 		CORE_ASSERT(axis < m_AxisCount, "Joystick axis index out of bounds!");
 
-		m_pAxes[axis] = value;
+		m_Axes[axis] = value;
 	}
 
 	void JoystickState::SetHat(JoystickHat hat, JoystickHatState value)
@@ -88,6 +88,6 @@ namespace eng
 		CORE_ASSERT((value & 0xF) == value, "Attempted to set a hat to an invalid state.");
 
 		uint8 bits = 4 * (hat % 2);
-		m_pHats[hat / 2] = (m_pHats[hat / 2] & ~(0xF << bits)) | (value << bits);
+		m_Hats[hat / 2] = (m_Hats[hat / 2] & ~(0xF << bits)) | (value << bits);
 	}
 }

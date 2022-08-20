@@ -12,13 +12,13 @@ namespace eng
 	class OpenGLContext : public Context
 	{
 	public:
-		OpenGLContext(void* pNativeWindow);
+		OpenGLContext(void* nativeWindow);
 	public:
 		virtual void SwapBuffers() override;
 		virtual void MakeCurrent() override;
 	private:
 #if SYSTEM_WINDOWS
-		GLFWwindow* m_pWindow;
+		GLFWwindow* m_Window;
 #endif
 	};
 }

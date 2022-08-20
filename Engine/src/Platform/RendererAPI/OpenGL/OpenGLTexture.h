@@ -8,8 +8,8 @@ namespace eng
 	class OpenGLTexture : public Texture2D
 	{
 	public:
-		OpenGLTexture(const TextureSpecification& crSpecs);
-		OpenGLTexture(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex);
+		OpenGLTexture(const TextureSpecification& specs);
+		OpenGLTexture(const Ref<Framebuffer>& framebuffer, sint32 attachmentIndex);
 		virtual ~OpenGLTexture();
 	public:
 		virtual void Bind(uint32 slot = 0) const override;

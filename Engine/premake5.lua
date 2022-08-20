@@ -43,7 +43,7 @@ project "Engine"
 		"%{Library.mono}",
 	}
 
-	defines ("SCRIPT_CORE_ASSEMBLY_FILEPATH=\"Resources/Scripts/bin/" .. OutputDir .. "/\"")
+	defines ("SCRIPT_CORE_ASSEMBLY_FILEPATH=\"Resources/Scripts/bin/" .. OutputDir .. "/ScriptCore.dll\"")
 
 	filter "system:windows"
 		systemversion "latest"

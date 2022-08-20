@@ -28,7 +28,7 @@ namespace eng
 	class Window
 	{
 	public:
-		static Scope<Window> CreateScope(const WindowSpecifications& crSpecs);
+		static Scope<Window> CreateScope(const WindowSpecifications& specs);
 		virtual ~Window() = default;
 	public:
 		virtual sint32 GetWidth() const = 0;
@@ -47,7 +47,7 @@ namespace eng
 		virtual std::string_view GetTitle() const = 0;
 		virtual void SetTitle(std::string_view title) = 0;
 
-		virtual void SetIcon(const Ref<LocalTexture2D>& crIcon) = 0;
+		virtual void SetIcon(const Ref<LocalTexture2D>& icon) = 0;
 	public:
 		virtual bool IsVsyncEnabled() const = 0;
 		virtual void SetVsync(bool vsync) = 0;
@@ -74,6 +74,6 @@ namespace eng
 		virtual void* GetNativeWindow() = 0;
 		virtual const void* GetNativeWindow() const = 0;
 	protected:
-		static void OnEvent(Event& rEvent);
+		static void OnEvent(Event& event);
 	};
 }

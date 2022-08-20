@@ -5,11 +5,11 @@
 
 namespace eng
 {
-	Scope<Context> Context::CreateScope(void* pNativeWindow)
+	Scope<Context> Context::CreateScope(void* nativeWindow)
 	{
 		switch (RendererAPI::GetAPI())
 		{
-			case RendererAPI::API_OpenGL: return eng::CreateScope<OpenGLContext>(pNativeWindow);
+			case RendererAPI::API_OpenGL: return eng::CreateScope<OpenGLContext>(nativeWindow);
 			UNKNOWN_RENDERER_API(RendererAPI::GetAPI(), nullptr);
 		}
 	}

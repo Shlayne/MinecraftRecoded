@@ -24,21 +24,25 @@ namespace mcr
 		eng::Ref<eng::UniformBuffer> cameraBuffer;
 		eng::Ref<eng::Shader> shader;
 	};
-	static BlockRendererData s_BlockRendererData;
+	static BlockRendererData* s_BlockRendererData = nullptr;
 
 	void BlockRenderer::Init()
 	{
+		ASSERT(s_BlockRendererData == nullptr, "Tried to reinitialize block renderer.");
+		s_BlockRendererData = new BlockRendererData();
+		auto& data = *s_BlockRendererData;
+
 		LOG_INFO("Max Texture Size:         {0}", eng::RendererCapabilities::GetMaxTextureSize());
 		LOG_INFO("Max Texture Slots:        {0}", eng::RendererCapabilities::GetMaxTextureSlots());
 		LOG_INFO("Max Texture Array Layers: {0}", eng::RendererCapabilities::GetMaxTextureArrayLayers());
 
-		s_BlockRendererData.vertexBuffer = eng::VertexBuffer::CreateRef(sizeof(Vertex) * 4 * 6, nullptr, eng::BufferUsage_DynamicDraw);
-		s_BlockRendererData.vertexBuffer->SetLayout({
+		data.vertexBuffer = eng::VertexBuffer::CreateRef(sizeof(Vertex) * 4 * 6, nullptr, eng::BufferUsage_DynamicDraw);
+		data.vertexBuffer->SetLayout({
 			eng::VertexBufferElementType_Float3, // position
 		});
 
-		s_BlockRendererData.vertexArray = eng::VertexArray::CreateRef();
-		s_BlockRendererData.vertexArray->AddVertexBuffer(s_BlockRendererData.vertexBuffer);
+		data.vertexArray = eng::VertexArray::CreateRef();
+		data.vertexArray->AddVertexBuffer(data.vertexBuffer);
 
 		constexpr uint32 indices[]
 		{
@@ -49,30 +53,39 @@ namespace mcr
 			16, 17, 18, 18, 19, 16,
 			20, 21, 22, 22, 23, 20
 		};
-		s_BlockRendererData.indexBuffer = eng::IndexBuffer::CreateRef(sizeof(indices) / sizeof(*indices), indices, eng::BufferUsage_StaticDraw, eng::IndexBufferElementType_UInt32);
+		data.indexBuffer = eng::IndexBuffer::CreateRef(sizeof(indices) / sizeof(*indices), indices, eng::BufferUsage_StaticDraw, eng::IndexBufferElementType_UInt32);
 
-		s_BlockRendererData.shader = eng::Shader::CreateRef({
+		data.shader = eng::Shader::CreateRef({
 			{ eng::ShaderStageType_Vertex, "Assets/mcr/shaders/BlockRenderer.vertex.glsl" },
 			{ eng::ShaderStageType_Geometry, "Assets/mcr/shaders/BlockRenderer.geometry.glsl" },
 			{ eng::ShaderStageType_Fragment, "Assets/mcr/shaders/BlockRenderer.fragment.glsl" },
 		});
 
-		s_BlockRendererData.cameraBuffer = eng::UniformBuffer::CreateRef(sizeof(CameraBuffer), 0, nullptr, eng::BufferUsage_DynamicDraw);
+		data.cameraBuffer = eng::UniformBuffer::CreateRef(sizeof(CameraBuffer), 0, nullptr, eng::BufferUsage_DynamicDraw);
 	}
 
 	void BlockRenderer::Shutdown()
 	{
-		eng::DestroyRef(s_BlockRendererData.vertexArray);
-		eng::DestroyRef(s_BlockRendererData.vertexBuffer);
-		eng::DestroyRef(s_BlockRendererData.indexBuffer);
-		eng::DestroyRef(s_BlockRendererData.cameraBuffer);
-		eng::DestroyRef(s_BlockRendererData.shader);
+		ASSERT(s_BlockRendererData != nullptr, "Tried to reshutdown block renderer.");
+		auto& data = *s_BlockRendererData;
+
+		eng::DestroyRef(data.vertexArray);
+		eng::DestroyRef(data.vertexBuffer);
+		eng::DestroyRef(data.indexBuffer);
+		eng::DestroyRef(data.cameraBuffer);
+		eng::DestroyRef(data.shader);
+
+		delete s_BlockRendererData;
+		s_BlockRendererData = nullptr;
 	}
 
 	void BlockRenderer::RenderBlock(const BlockPos& blockPos, const Camera& camera, const EntityPos& cameraPos, const glm::vec3& cameraRotation)
 	{
+		ASSERT(s_BlockRendererData != nullptr, "Tried to use block renderer before it was initialized.");
+		auto& data = *s_BlockRendererData;
+
 #if ENABLE_ASSERTS
-		auto localBlockPos = blockPos.GetLocalPosition();
+		glm::u8vec3 localBlockPos = blockPos.GetLocalPosition();
 		CORE_ASSERT(
 			localBlockPos.x < 16 && localBlockPos.y < 16 && localBlockPos.z < 16,
 			"Block tried to render at illegal block position <{0},{1},{2}>.",
@@ -122,14 +135,14 @@ namespace mcr
 		for (uint32 i = 0; i < 4 * 6; i++)
 			vertices[i].position = blockVertexPositions[blockFaceIndices[i]] + renderPos;
 
-		s_BlockRendererData.vertexBuffer->SetData(vertices, sizeof(vertices));
+		data.vertexBuffer->SetData(vertices, sizeof(vertices));
 		glm::mat4 viewProjection = camera.GetViewProjection(cameraRotation);
-		s_BlockRendererData.cameraBuffer->SetData(glm::value_ptr(viewProjection), sizeof(viewProjection));
-		s_BlockRendererData.shader->Bind();
+		data.cameraBuffer->SetData(glm::value_ptr(viewProjection), sizeof(viewProjection));
+		data.shader->Bind();
 
 		eng::Renderer::EnableBlending();
 		eng::Renderer::EnableCulling();
 		eng::Renderer::EnableDepthTest();
-		eng::Renderer::DrawIndexed(s_BlockRendererData.vertexArray, s_BlockRendererData.indexBuffer);
+		eng::Renderer::DrawIndexed(data.vertexArray, data.indexBuffer);
 	}
 }

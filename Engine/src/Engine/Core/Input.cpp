@@ -7,10 +7,10 @@
 
 namespace eng
 {
-	Scope<Input> Input::CreateScope(EventCallback&& rrfEventCallback)
+	Scope<Input> Input::CreateScope(EventCallback&& eventCallback)
 	{
 #if SYSTEM_WINDOWS
-		return eng::CreateScope<WindowsInput>(std::move(rrfEventCallback));
+		return eng::CreateScope<WindowsInput>(std::move(eventCallback));
 #endif
 	}
 

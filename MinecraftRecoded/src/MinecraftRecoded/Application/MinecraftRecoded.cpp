@@ -15,10 +15,10 @@ namespace eng
 		windowSpecs.height = 900;
 		windowSpecs.title = "Minecraft Recoded";
 
-		Application* pApplication = new Application(applicationSpecs);
+		Application* application = new Application(applicationSpecs);
 
-		pApplication->PushLayer(new mcr::WorldLayer());
+		application->PushLayer(new mcr::WorldLayer());
 
-		return pApplication;
+		return application;
 	}
 }

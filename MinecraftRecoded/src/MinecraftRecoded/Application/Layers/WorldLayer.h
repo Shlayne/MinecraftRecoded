@@ -16,10 +16,10 @@ namespace mcr
 		virtual void OnDetach() override;
 		virtual void OnUpdate(eng::Timestep timestep) override;
 		virtual void OnRender() override;
-		virtual void OnEvent(eng::Event& rEvent) override;
+		virtual void OnEvent(eng::Event& event) override;
 	private:
-		void OnWindowResizeEvent(eng::WindowResizeEvent& rEvent);
-		void OnWindowFramebufferResizeEvent(eng::WindowFramebufferResizeEvent& rEvent);
+		void OnWindowResizeEvent(eng::WindowResizeEvent& event);
+		void OnWindowFramebufferResizeEvent(eng::WindowFramebufferResizeEvent& event);
 	private:
 		Camera m_Camera;
 	};

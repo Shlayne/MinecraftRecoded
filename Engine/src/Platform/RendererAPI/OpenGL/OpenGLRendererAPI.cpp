@@ -37,15 +37,15 @@ namespace eng
 		return 0;
 	}
 
-	static constexpr void DebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* cpMessage, const void* cpUserParam)
+	static constexpr void DebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 	{
-		UNUSED(source, type, id, length, cpUserParam);
+		UNUSED(source, type, id, length, userParam);
 		switch (severity)
 		{
-			case GL_DEBUG_SEVERITY_HIGH:         LOG_CORE_FATAL(cpMessage); return;
-			case GL_DEBUG_SEVERITY_MEDIUM:       LOG_CORE_ERROR(cpMessage); return;
-			case GL_DEBUG_SEVERITY_LOW:          LOG_CORE_WARN(cpMessage);  return;
-			case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_CORE_TRACE(cpMessage); return;
+			case GL_DEBUG_SEVERITY_HIGH:         LOG_CORE_ERROR(message); return;
+			case GL_DEBUG_SEVERITY_MEDIUM:       LOG_CORE_WARN(message); return;
+			case GL_DEBUG_SEVERITY_LOW:          LOG_CORE_INFO(message);  return;
+			case GL_DEBUG_SEVERITY_NOTIFICATION: LOG_CORE_TRACE(message); return;
 		}
 
 		CORE_ASSERT(false, "Unknown OpenGL severity level={0}.", severity);
@@ -97,9 +97,9 @@ namespace eng
 		glDisable(GL_CULL_FACE);
 	}
 
-	void OpenGLRendererAPI::SetViewport(const glm::s32vec2& crPosition, const glm::s32vec2& crSize)
+	void OpenGLRendererAPI::SetViewport(const glm::s32vec2& position, const glm::s32vec2& size)
 	{
-		glViewport(crPosition.x, crPosition.y, crSize.x, crSize.y);
+		glViewport(position.x, position.y, size.x, size.y);
 	}
 
 	void OpenGLRendererAPI::Clear()
@@ -112,21 +112,21 @@ namespace eng
 		glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::SetClearColor(const glm::vec4& crColor)
+	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
 	{
-		glClearColor(crColor.r, crColor.g, crColor.b, crColor.a);
+		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& crVertexArray, const Ref<IndexBuffer>& crIndexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive)
+	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, const Ref<IndexBuffer>& indexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive)
 	{
-		crVertexArray->Bind();
-		crIndexBuffer->Bind();
+		vertexArray->Bind();
+		indexBuffer->Bind();
 
 		GLenum glPrimitive = UnconvertRendererPrimitive(primitive);
-		GLsizei indexCount = static_cast<GLsizei>(count != 0 ? count : crIndexBuffer->GetCount());
-		GLenum glType = UnconvertIndexBufferElementType(crIndexBuffer->GetType());
-		auto pOffset = (const void*)(offset * static_cast<GLsizeiptr>(GetIndexBufferElementSize(crIndexBuffer->GetType())));
-		glDrawElements(glPrimitive, indexCount, glType, pOffset);
+		GLsizei glCount = static_cast<GLsizei>(count != 0 ? count : indexBuffer->GetCount());
+		GLenum glType = UnconvertIndexBufferElementType(indexBuffer->GetType());
+		auto glOffset = (const void*)(offset * static_cast<GLsizeiptr>(GetIndexBufferElementSize(indexBuffer->GetType())));
+		glDrawElements(glPrimitive, glCount, glType, glOffset);
 	}
 
 	sint32 OpenGLRendererAPI::GetMaxTextureSlots()

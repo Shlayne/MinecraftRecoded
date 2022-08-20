@@ -15,7 +15,7 @@ namespace eng
 		virtual void OnDetach() {}
 		virtual void OnUpdate(Timestep timestep) {}
 		virtual void OnRender() {}
-		virtual void OnEvent(Event& rEvent) {}
+		virtual void OnEvent(Event& event) {}
 	public:
 		constexpr bool IsEnabled() const noexcept { return m_Enabled; }
 		constexpr void SetEnabled(bool enabled) noexcept { m_Enabled = enabled; }

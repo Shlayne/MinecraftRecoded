@@ -28,7 +28,7 @@ namespace eng
 		constexpr Modifiers(ModifierFlags flags) : m_Flags(flags & Modifiers_Mask) {}
 	public:
 		constexpr bool HasAnyOf(ModifierFlags flags) const { return !!(m_Flags & flags); }
-		constexpr bool operator==(const Modifiers& crModifiers) const { return m_Flags == crModifiers.m_Flags; }
+		constexpr bool operator==(const Modifiers& modifiers) const { return m_Flags == modifiers.m_Flags; }
 		constexpr operator ModifierFlags() const { return m_Flags; }
 	private:
 		ModifierFlags m_Flags = Modifiers_None;

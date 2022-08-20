@@ -32,22 +32,22 @@ namespace eng
 	struct TextureSpecification
 	{
 		constexpr TextureSpecification() noexcept = default;
-		TextureSpecification(const Ref<LocalTexture2D>& crTexture) noexcept
-			: texture(crTexture) {}
-		TextureSpecification(Ref<LocalTexture2D>&& rrTexture) noexcept
-			: texture(std::move(rrTexture)) {}
-		TextureSpecification(const Ref<LocalTexture2D>& crTexture, TextureFilterMode minFilter, TextureFilterMode magFilter, TextureWrapMode wrapS, TextureWrapMode wrapT) noexcept
-			: texture(crTexture), minFilter(minFilter), magFilter(magFilter), wrapS(wrapS), wrapT(wrapT) {}
-		TextureSpecification(Ref<LocalTexture2D>& rrTexture, TextureFilterMode minFilter, TextureFilterMode magFilter, TextureWrapMode wrapS, TextureWrapMode wrapT) noexcept
-			: texture(std::move(rrTexture)), minFilter(minFilter), magFilter(magFilter), wrapS(wrapS), wrapT(wrapT) {}
+		TextureSpecification(const Ref<LocalTexture2D>& texture) noexcept
+			: texture(texture) {}
+		TextureSpecification(Ref<LocalTexture2D>&& texture) noexcept
+			: texture(std::move(texture)) {}
+		TextureSpecification(const Ref<LocalTexture2D>& texture, TextureFilterMode minFilter, TextureFilterMode magFilter, TextureWrapMode wrapS, TextureWrapMode wrapT) noexcept
+			: texture(texture), minFilter(minFilter), magFilter(magFilter), wrapS(wrapS), wrapT(wrapT) {}
+		TextureSpecification(Ref<LocalTexture2D>& texture, TextureFilterMode minFilter, TextureFilterMode magFilter, TextureWrapMode wrapS, TextureWrapMode wrapT) noexcept
+			: texture(std::move(texture)), minFilter(minFilter), magFilter(magFilter), wrapS(wrapS), wrapT(wrapT) {}
 		TextureSpecification(TextureFilterMode minFilter, TextureFilterMode magFilter, TextureWrapMode wrapS, TextureWrapMode wrapT) noexcept
 			: minFilter(minFilter), magFilter(magFilter), wrapS(wrapS), wrapT(wrapT) {}
-		TextureSpecification(const TextureSpecification& crSpecs) noexcept
-			: texture(crSpecs.texture), minFilter(crSpecs.minFilter), magFilter(crSpecs.magFilter), wrapS(crSpecs.wrapS), wrapT(crSpecs.wrapT) {}
-		TextureSpecification(TextureSpecification&& rrSpecs) noexcept
-			: texture(std::move(rrSpecs.texture)), minFilter(rrSpecs.minFilter), magFilter(rrSpecs.magFilter), wrapS(rrSpecs.wrapS), wrapT(rrSpecs.wrapT) {}
-		TextureSpecification& operator=(const TextureSpecification& crSpecs) noexcept;
-		TextureSpecification& operator=(TextureSpecification&& rrSpecs) noexcept;
+		TextureSpecification(const TextureSpecification& specs) noexcept
+			: texture(specs.texture), minFilter(specs.minFilter), magFilter(specs.magFilter), wrapS(specs.wrapS), wrapT(specs.wrapT) {}
+		TextureSpecification(TextureSpecification&& specs) noexcept
+			: texture(std::move(specs.texture)), minFilter(specs.minFilter), magFilter(specs.magFilter), wrapS(specs.wrapS), wrapT(specs.wrapT) {}
+		TextureSpecification& operator=(const TextureSpecification& specs) noexcept;
+		TextureSpecification& operator=(TextureSpecification&& specs) noexcept;
 
 		Ref<LocalTexture2D> texture = nullptr;
 		TextureFilterMode minFilter = TextureFilterMode_Linear;
@@ -80,7 +80,7 @@ namespace eng
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> CreateRef(const TextureSpecification& crSpecs);
-		static Ref<Texture2D> CreateRef(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex);
+		static Ref<Texture2D> CreateRef(const TextureSpecification& specs);
+		static Ref<Texture2D> CreateRef(const Ref<Framebuffer>& framebuffer, sint32 attachmentIndex);
 	};
 }

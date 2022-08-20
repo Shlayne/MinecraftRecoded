@@ -56,19 +56,19 @@ namespace eng
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
 	
-		const VertexBufferLayout& crLayout = vertexBuffer->GetLayout();
-		for (const VertexBufferElement& crElement : crLayout)
+		const VertexBufferLayout& layout = vertexBuffer->GetLayout();
+		for (const VertexBufferElement& element : layout)
 		{
-			GLenum elementType = UnconvertVertexBufferElementType(crElement.type);
+			GLenum elementType = UnconvertVertexBufferElementType(element.type);
 
-			switch (crElement.type)
+			switch (element.type)
 			{
 				case VertexBufferElementType_Float:
 				case VertexBufferElementType_Float2:
 				case VertexBufferElementType_Float3:
 				case VertexBufferElementType_Float4:
 					glEnableVertexAttribArray(m_VertexAttributeIndex);
-					glVertexAttribPointer(m_VertexAttributeIndex, crElement.count, elementType, crElement.normalized ? GL_TRUE : GL_FALSE, crLayout.GetStride(), (const void*)crElement.offset);
+					glVertexAttribPointer(m_VertexAttributeIndex, element.count, elementType, element.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)element.offset);
 					m_VertexAttributeIndex++;
 					break;
 				case VertexBufferElementType_Int:
@@ -80,7 +80,7 @@ namespace eng
 				case VertexBufferElementType_UInt3:
 				case VertexBufferElementType_UInt4:
 					glEnableVertexAttribArray(m_VertexAttributeIndex);
-					glVertexAttribIPointer(m_VertexAttributeIndex, crElement.count, elementType, crLayout.GetStride(), (const void*)crElement.offset);
+					glVertexAttribIPointer(m_VertexAttributeIndex, element.count, elementType, layout.GetStride(), (const void*)element.offset);
 					m_VertexAttributeIndex++;
 					break;
 			}

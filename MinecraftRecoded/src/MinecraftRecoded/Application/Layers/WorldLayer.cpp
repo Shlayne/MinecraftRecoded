@@ -45,19 +45,19 @@ namespace mcr
 		BlockRenderer::RenderBlock(blockPos, m_Camera, cameraPos, cameraRotation);
 	}
 
-	void WorldLayer::OnEvent(eng::Event& rEvent)
+	void WorldLayer::OnEvent(eng::Event& event)
 	{
-		rEvent.Dispatch(this, &WorldLayer::OnWindowResizeEvent);
-		rEvent.Dispatch(this, &WorldLayer::OnWindowFramebufferResizeEvent);
+		event.Dispatch(this, &WorldLayer::OnWindowResizeEvent);
+		event.Dispatch(this, &WorldLayer::OnWindowFramebufferResizeEvent);
 	}
 
-	void WorldLayer::OnWindowResizeEvent(eng::WindowResizeEvent& rEvent)
+	void WorldLayer::OnWindowResizeEvent(eng::WindowResizeEvent& event)
 	{
-		m_Camera.Resize(rEvent.GetSize());
+		m_Camera.Resize(event.GetSize());
 	}
 
-	void WorldLayer::OnWindowFramebufferResizeEvent(eng::WindowFramebufferResizeEvent& rEvent)
+	void WorldLayer::OnWindowFramebufferResizeEvent(eng::WindowFramebufferResizeEvent& event)
 	{
-		eng::Renderer::SetViewport({ 0, 0 }, rEvent.GetSize());
+		eng::Renderer::SetViewport({ 0, 0 }, event.GetSize());
 	}
 }

@@ -25,76 +25,76 @@ namespace eng
 		: m_Width(width), m_Height(height), m_Channels(channels)
 	{
 		size_t size = static_cast<size_t>(width) * height * channels;
-		m_pData = new uint8[size]{ 0 };
+		m_Data = new uint8[size]{ 0 };
 	}
 
-	LocalTexture2D::LocalTexture2D(const LocalTexture2D& crTexture)
-		: m_Filepath(crTexture.m_Filepath), m_Width(crTexture.m_Width), m_Height(crTexture.m_Height), m_Channels(crTexture.m_Channels)
+	LocalTexture2D::LocalTexture2D(const LocalTexture2D& texture)
+		: m_Filepath(texture.m_Filepath), m_Width(texture.m_Width), m_Height(texture.m_Height), m_Channels(texture.m_Channels)
 	{
-		if (crTexture)
+		if (texture)
 		{
 			size_t size = static_cast<size_t>(m_Width) * m_Height * m_Channels;
-			m_pData = new uint8[size];
-			memcpy_s(m_pData, size, crTexture.m_pData, size);
+			m_Data = new uint8[size];
+			memcpy_s(m_Data, size, texture.m_Data, size);
 		}
 		else
-			m_pData = nullptr;
+			m_Data = nullptr;
 	}
 
-	LocalTexture2D::LocalTexture2D(LocalTexture2D&& rrTexture) noexcept
-		: m_Filepath(std::move(rrTexture.m_Filepath)), m_Width(rrTexture.m_Width), m_Height(rrTexture.m_Height), m_Channels(rrTexture.m_Channels), m_pData(rrTexture.m_pData)
+	LocalTexture2D::LocalTexture2D(LocalTexture2D&& texture) noexcept
+		: m_Filepath(std::move(texture.m_Filepath)), m_Width(texture.m_Width), m_Height(texture.m_Height), m_Channels(texture.m_Channels), m_Data(texture.m_Data)
 	{
-		rrTexture.m_Width = 0;
-		rrTexture.m_Height = 0;
-		rrTexture.m_Channels = 0;
-		rrTexture.m_pData = nullptr;
+		texture.m_Width = 0;
+		texture.m_Height = 0;
+		texture.m_Channels = 0;
+		texture.m_Data = nullptr;
 	}
 
-	LocalTexture2D& LocalTexture2D::operator=(const LocalTexture2D& crTexture)
+	LocalTexture2D& LocalTexture2D::operator=(const LocalTexture2D& texture)
 	{
-		if (this != &crTexture)
+		if (this != &texture)
 		{
-			if (m_pData != nullptr)
-				delete[] m_pData;
+			if (m_Data != nullptr)
+				delete[] m_Data;
 
-			m_Width = crTexture.m_Width;
-			m_Height = crTexture.m_Height;
-			m_Channels = crTexture.m_Channels;
-			m_Filepath = crTexture.m_Filepath;
+			m_Width = texture.m_Width;
+			m_Height = texture.m_Height;
+			m_Channels = texture.m_Channels;
+			m_Filepath = texture.m_Filepath;
 
-			if (crTexture)
+			if (texture)
 			{
 				size_t size = static_cast<size_t>(m_Width) * m_Height * m_Channels;
-				m_pData = new uint8[size];
-				memcpy_s(m_pData, size, crTexture.m_pData, size);
+				m_Data = new uint8[size];
+				memcpy_s(m_Data, size, texture.m_Data, size);
 			}
 			else
-				m_pData = nullptr;
+				m_Data = nullptr;
 		}
 		return *this;
 	}
 
-	LocalTexture2D& LocalTexture2D::operator=(LocalTexture2D&& rrTexture) noexcept
+	LocalTexture2D& LocalTexture2D::operator=(LocalTexture2D&& texture) noexcept
 	{
-		if (this != &rrTexture)
+		if (this != &texture)
 		{
-			m_Filepath = std::move(rrTexture.m_Filepath);
-			m_Width = rrTexture.m_Width;
-			m_Height = rrTexture.m_Height;
-			m_Channels = rrTexture.m_Channels;
-			m_pData = rrTexture.m_pData;
+			m_Filepath = std::move(texture.m_Filepath);
+			m_Width = texture.m_Width;
+			m_Height = texture.m_Height;
+			m_Channels = texture.m_Channels;
+			m_Data = texture.m_Data;
 
-			rrTexture.m_Width = 0;
-			rrTexture.m_Height = 0;
-			rrTexture.m_Channels = 0;
-			rrTexture.m_pData = nullptr;
+			texture.m_Width = 0;
+			texture.m_Height = 0;
+			texture.m_Channels = 0;
+			texture.m_Data = nullptr;
 		}
 		return *this;
 	}
 
 	LocalTexture2D::~LocalTexture2D()
 	{
-		delete[] m_pData;
+		delete[] m_Data;
 	}
 
 	bool LocalTexture2D::ReadFile(std::string_view filepath, sint32 requiredChannels)
@@ -107,12 +107,12 @@ namespace eng
 		PROFILE_FUNCTION();
 
 		stbi_set_flip_vertically_on_load(flipVertically);
-		stbi_uc* pStbiData = stbi_load(filepath.data(), &m_Width, &m_Height, &m_Channels, requiredChannels);
-		if (pStbiData != nullptr)
+		stbi_uc* stbiData = stbi_load(filepath.data(), &m_Width, &m_Height, &m_Channels, requiredChannels);
+		if (stbiData != nullptr)
 		{
-			if (m_pData != nullptr)
-				delete[] m_pData;
-			m_pData = pStbiData;
+			if (m_Data != nullptr)
+				delete[] m_Data;
+			m_Data = stbiData;
 
 			if (requiredChannels != 0)
 				m_Channels = requiredChannels;
@@ -133,22 +133,22 @@ namespace eng
 
 		stbi_flip_vertically_on_write(flipVertically);
 		// TODO: let the user decide the output file format
-		return m_pData != nullptr && stbi_write_png(filepath.data(), m_Width, m_Height, m_Channels, m_pData, 0) != 0;
+		return m_Data != nullptr && stbi_write_png(filepath.data(), m_Width, m_Height, m_Channels, m_Data, 0) != 0;
 	}
 
-	bool LocalTexture2D::SetSubregion(const LocalTexture2D& crTexture, sint32 positionX, sint32 positionY)
+	bool LocalTexture2D::SetSubregion(const LocalTexture2D& texture, sint32 positionX, sint32 positionY)
 	{
 		PROFILE_FUNCTION();
 
-		if (m_Channels == crTexture.m_Channels && positionX + crTexture.m_Width <= m_Width && positionX >= 0 && positionY + crTexture.m_Height <= m_Height && positionY >= 0)
+		if (m_Channels == texture.m_Channels && positionX + texture.m_Width <= m_Width && positionX >= 0 && positionY + texture.m_Height <= m_Height && positionY >= 0)
 		{
-			size_t textureIncrement = static_cast<size_t>(crTexture.m_Width) * m_Channels;
+			size_t textureIncrement = static_cast<size_t>(texture.m_Width) * m_Channels;
 			size_t increment = static_cast<size_t>(m_Width) * m_Channels;
 
-			uint8* pSource = crTexture.m_pData;
-			uint8* pDestination = m_pData + ((static_cast<size_t>(positionY) * m_Width + positionX) * m_Channels);
-			for (sint32 y = 0; y < crTexture.m_Height; y++, pSource += textureIncrement, pDestination += increment)
-				memcpy_s(pDestination, textureIncrement, pSource, textureIncrement);
+			uint8* source = texture.m_Data;
+			uint8* destination = m_Data + ((static_cast<size_t>(positionY) * m_Width + positionX) * m_Channels);
+			for (sint32 y = 0; y < texture.m_Height; y++, source += textureIncrement, destination += increment)
+				memcpy_s(destination, textureIncrement, source, textureIncrement);
 			return true;
 		}
 		return false;

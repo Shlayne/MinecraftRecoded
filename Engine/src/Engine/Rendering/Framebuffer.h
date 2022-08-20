@@ -70,7 +70,7 @@ namespace eng
 	class Framebuffer
 	{
 	public:
-		static Ref<Framebuffer> CreateRef(const FramebufferSpecification& crSpecs);
+		static Ref<Framebuffer> CreateRef(const FramebufferSpecification& specs);
 		virtual ~Framebuffer() = default;
 	public:
 		virtual void Bind() = 0;

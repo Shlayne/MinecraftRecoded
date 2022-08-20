@@ -8,16 +8,16 @@ namespace eng
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(uint32 size, const void* cpData, BufferUsage usage);
+		OpenGLVertexBuffer(uint32 size, const void* data, BufferUsage usage);
 		virtual ~OpenGLVertexBuffer();
 	public:
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
-		virtual void SetData(const void* cpData, uint32 size) override;
+		virtual void SetData(const void* data, uint32 size) override;
 
 		virtual const VertexBufferLayout& GetLayout() const override { return m_Layout; }
-		virtual void SetLayout(const VertexBufferLayout& crLayout) override { m_Layout = crLayout; }
+		virtual void SetLayout(const VertexBufferLayout& layout) override { m_Layout = layout; }
 	private:
 		GLuint m_RendererID = 0;
 		VertexBufferLayout m_Layout;
@@ -26,13 +26,13 @@ namespace eng
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(uint32 count, const void* cpData, BufferUsage usage, IndexBufferElementType type);
+		OpenGLIndexBuffer(uint32 count, const void* data, BufferUsage usage, IndexBufferElementType type);
 		virtual ~OpenGLIndexBuffer();
 	public:
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 
-		virtual void SetData(const void* cpData, uint32 count) override;
+		virtual void SetData(const void* data, uint32 count) override;
 
 		virtual uint32 GetCount() const override { return m_Count; }
 		virtual IndexBufferElementType GetType() const override { return m_Type; }
@@ -45,10 +45,10 @@ namespace eng
 	class OpenGLUniformBuffer : public UniformBuffer
 	{
 	public:
-		OpenGLUniformBuffer(uint32 size, uint32 binding, const void* cpData, BufferUsage usage);
+		OpenGLUniformBuffer(uint32 size, uint32 binding, const void* data, BufferUsage usage);
 		virtual ~OpenGLUniformBuffer();
 	public:
-		virtual void SetData(const void* cpData, uint32 size, uint32 offset = 0) override;
+		virtual void SetData(const void* data, uint32 size, uint32 offset = 0) override;
 	private:
 		GLuint m_RendererID = 0;
 	};

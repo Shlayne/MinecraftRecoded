@@ -56,9 +56,9 @@ namespace eng
 		s_API->DisableCulling();
 	}
 
-	void Renderer::SetViewport(const glm::s32vec2& crPosition, const glm::s32vec2& crSize)
+	void Renderer::SetViewport(const glm::s32vec2& position, const glm::s32vec2& size)
 	{
-		s_API->SetViewport(crPosition, crSize);
+		s_API->SetViewport(position, size);
 	}
 
 	void Renderer::Clear()
@@ -71,13 +71,13 @@ namespace eng
 		s_API->ClearDepth();
 	}
 
-	void Renderer::SetClearColor(const glm::vec4& crColor)
+	void Renderer::SetClearColor(const glm::vec4& color)
 	{
-		s_API->SetClearColor(crColor);
+		s_API->SetClearColor(color);
 	}
 
-	void Renderer::DrawIndexed(const Ref<VertexArray>& crVertexArray, const Ref<IndexBuffer>& crIndexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive)
+	void Renderer::DrawIndexed(const Ref<VertexArray>& vertexArray, const Ref<IndexBuffer>& indexBuffer, uint32 offset, uint32 count, RendererPrimitive primitive)
 	{
-		s_API->DrawIndexed(crVertexArray, crIndexBuffer, offset, count, primitive);
+		s_API->DrawIndexed(vertexArray, indexBuffer, offset, count, primitive);
 	}
 }

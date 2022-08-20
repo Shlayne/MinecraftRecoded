@@ -113,8 +113,8 @@ namespace eng
 		uint32 m_ButtonCount = 0;
 		uint32 m_AxisCount = 0;
 		uint32 m_HatCount = 0;
-		uint8* m_pButtons;
-		float* m_pAxes;
-		JoystickHatState* m_pHats;
+		uint8* m_Buttons;
+		float* m_Axes;
+		JoystickHatState* m_Hats;
 	};
 }

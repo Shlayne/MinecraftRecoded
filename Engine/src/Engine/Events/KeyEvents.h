@@ -9,20 +9,20 @@ namespace eng
 	class KeyEvent : public Event
 	{
 	public:
-		KeyEvent(void* pNativeWindow)
-			: m_pNativeWindow(pNativeWindow) {}
+		KeyEvent(void* nativeWindow)
+			: m_NativeWindow(nativeWindow) {}
 		EVENT_CATEGORIES(EventCategory_Keyboard)
 	public:
-		inline void* GetNativeWindow() const { return m_pNativeWindow; }
+		inline void* GetNativeWindow() const { return m_NativeWindow; }
 	private:
-		void* m_pNativeWindow;
+		void* m_NativeWindow;
 	};
 
 	class KeyPressEvent : public KeyEvent
 	{
 	public:
-		KeyPressEvent(void* pNativeWindow, Keycode keycode, Modifiers modifiers)
-			: KeyEvent(pNativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
+		KeyPressEvent(void* nativeWindow, Keycode keycode, Modifiers modifiers)
+			: KeyEvent(nativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
 		EVENT_TYPE(EventType_KeyPress)
 #if ENABLE_LOGGING
 	public:
@@ -39,8 +39,8 @@ namespace eng
 	class KeyRepeatEvent : public KeyEvent
 	{
 	public:
-		KeyRepeatEvent(void* pNativeWindow, Keycode keycode, Modifiers modifiers)
-			: KeyEvent(pNativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
+		KeyRepeatEvent(void* nativeWindow, Keycode keycode, Modifiers modifiers)
+			: KeyEvent(nativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
 		EVENT_TYPE(EventType_KeyRepeat)
 #if ENABLE_LOGGING
 	public:
@@ -57,8 +57,8 @@ namespace eng
 	class KeyReleaseEvent : public KeyEvent
 	{
 	public:
-		KeyReleaseEvent(void* pNativeWindow, Keycode keycode, Modifiers modifiers)
-			: KeyEvent(pNativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
+		KeyReleaseEvent(void* nativeWindow, Keycode keycode, Modifiers modifiers)
+			: KeyEvent(nativeWindow), m_Keycode(keycode), m_Modifiers(modifiers) {}
 		EVENT_TYPE(EventType_KeyRelease)
 #if ENABLE_LOGGING
 	public:
@@ -75,8 +75,8 @@ namespace eng
 	class CharTypeEvent : public KeyEvent
 	{
 	public:
-		CharTypeEvent(void* pNativeWindow, uint32 codepoint)
-			: KeyEvent(pNativeWindow), m_Codepoint(codepoint) {}
+		CharTypeEvent(void* nativeWindow, uint32 codepoint)
+			: KeyEvent(nativeWindow), m_Codepoint(codepoint) {}
 		EVENT_TYPE(EventType_CharType)
 #if ENABLE_LOGGING
 	public:

@@ -9,19 +9,19 @@ namespace eng
 	class MouseEvent : public Event
 	{
 	public:
-		MouseEvent(void* pNativeWindow)
-			: m_pNativeWindow(pNativeWindow) {}
+		MouseEvent(void* nativeWindow)
+			: m_NativeWindow(nativeWindow) {}
 	public:
-		inline void* GetNativeWindow() const { return m_pNativeWindow; }
+		inline void* GetNativeWindow() const { return m_NativeWindow; }
 	private:
-		void* m_pNativeWindow;
+		void* m_NativeWindow;
 	};
 
 	class MouseButtonPressEvent : public MouseEvent
 	{
 	public:
-		MouseButtonPressEvent(void* pNativeWindow, MouseButton button, Modifiers modifiers)
-			: MouseEvent(pNativeWindow), m_Button(button), m_Modifiers(modifiers) {}
+		MouseButtonPressEvent(void* nativeWindow, MouseButton button, Modifiers modifiers)
+			: MouseEvent(nativeWindow), m_Button(button), m_Modifiers(modifiers) {}
 		EVENT_TYPE(EventType_MouseButtonPress)
 		EVENT_CATEGORIES(EventCategory_Mouse | EventCategory_MouseButton)
 #if ENABLE_LOGGING
@@ -38,8 +38,8 @@ namespace eng
 	class MouseButtonReleaseEvent : public MouseEvent
 	{
 	public:
-		MouseButtonReleaseEvent(void* pNativeWindow, MouseButton button, Modifiers modifiers)
-			: MouseEvent(pNativeWindow), m_Button(button), m_Modifiers(modifiers) {}
+		MouseButtonReleaseEvent(void* nativeWindow, MouseButton button, Modifiers modifiers)
+			: MouseEvent(nativeWindow), m_Button(button), m_Modifiers(modifiers) {}
 		EVENT_TYPE(EventType_MouseButtonRelease)
 		EVENT_CATEGORIES(EventCategory_Mouse | EventCategory_MouseButton)
 #if ENABLE_LOGGING
@@ -56,8 +56,8 @@ namespace eng
 	class MouseMoveEvent : public MouseEvent
 	{
 	public:
-		MouseMoveEvent(void* pNativeWindow, float x, float y)
-			: MouseEvent(pNativeWindow), m_X(x), m_Y(y) {}
+		MouseMoveEvent(void* nativeWindow, float x, float y)
+			: MouseEvent(nativeWindow), m_X(x), m_Y(y) {}
 		EVENT_TYPE(EventType_MouseMove)
 		EVENT_CATEGORIES(EventCategory_Mouse)
 #if ENABLE_LOGGING
@@ -74,8 +74,8 @@ namespace eng
 	class MouseScrollEvent : public MouseEvent
 	{
 	public:
-		MouseScrollEvent(void* pNativeWindow, float offsetX, float offsetY)
-			: MouseEvent(pNativeWindow), m_OffsetX(offsetX), m_OffsetY(offsetY) {}
+		MouseScrollEvent(void* nativeWindow, float offsetX, float offsetY)
+			: MouseEvent(nativeWindow), m_OffsetX(offsetX), m_OffsetY(offsetY) {}
 		EVENT_TYPE(EventType_MouseScroll)
 		EVENT_CATEGORIES(EventCategory_Mouse)
 #if ENABLE_LOGGING
@@ -92,8 +92,8 @@ namespace eng
 	class MouseEnterEvent : public MouseEvent
 	{
 	public:
-		MouseEnterEvent(void* pNativeWindow, bool entered)
-			: MouseEvent(pNativeWindow), m_Entered(entered) {}
+		MouseEnterEvent(void* nativeWindow, bool entered)
+			: MouseEvent(nativeWindow), m_Entered(entered) {}
 		EVENT_TYPE(EventType_MouseEnter)
 		EVENT_CATEGORIES(EventCategory_Mouse)
 #if ENABLE_LOGGING

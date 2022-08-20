@@ -10,7 +10,7 @@ namespace eng
 	class WindowsWindow : public Window
 	{
 	public:
-		WindowsWindow(const WindowSpecifications& crSpecs);
+		WindowsWindow(const WindowSpecifications& specs);
 		virtual ~WindowsWindow();
 	public:
 		inline virtual sint32 GetWidth() const override { return m_State.current.size.x; }
@@ -29,7 +29,7 @@ namespace eng
 		inline virtual std::string_view GetTitle() const override { return m_State.title; }
 		virtual void SetTitle(std::string_view title) override;
 
-		virtual void SetIcon(const Ref<LocalTexture2D>& crIcon) override;
+		virtual void SetIcon(const Ref<LocalTexture2D>& icon) override;
 	public:
 		inline virtual bool IsVsyncEnabled() const override { return m_State.vsync; }
 		virtual void SetVsync(bool vsync) override;
@@ -51,10 +51,10 @@ namespace eng
 		virtual void SetMouseCapture(bool mouseCaptured) override;
 		inline virtual void ToggleMouseCapture() override { SetMouseCapture(!IsMouseCaptured()); }
 	public:
-		inline virtual Context& GetContext() override { return *m_rContext; }
-		inline virtual const Context& GetContext() const override { return *m_rContext; }
-		inline virtual void* GetNativeWindow() override { return m_pWindow; }
-		inline virtual const void* GetNativeWindow() const override { return m_pWindow; }
+		inline virtual Context& GetContext() override { return *m_Context; }
+		inline virtual const Context& GetContext() const override { return *m_Context; }
+		inline virtual void* GetNativeWindow() override { return m_Window; }
+		inline virtual const void* GetNativeWindow() const override { return m_Window; }
 	private:
 		struct State
 		{
@@ -78,32 +78,32 @@ namespace eng
 			bool maximized : 1 = false;
 		};
 	private:
-		GLFWwindow* m_pWindow = NULL;
-		Scope<Context> m_rContext = nullptr;
+		GLFWwindow* m_Window = NULL;
+		Scope<Context> m_Context = nullptr;
 		State m_State;
 	private:
-		static void SetCallbacks(GLFWwindow* pWindow);
+		static void SetCallbacks(GLFWwindow* window);
 
 		// Window event callbacks.
-		static void WindowCloseCallback(GLFWwindow* pWindow);
-		static void WindowSizeCallback(GLFWwindow* pWindow, sint32 width, sint32 height);
-		static void WindowPosCallback(GLFWwindow* pWindow, sint32 x, sint32 y);
-		static void WindowFocusCallback(GLFWwindow* pWindow, sint32 focused);
-		static void WindowIconifyCallback(GLFWwindow* pWindow, sint32 iconified);
-		static void WindowMaximizeCallback(GLFWwindow* pWindow, sint32 maximized);
-		static void DropCallback(GLFWwindow* pWindow, sint32 pathCount, const char** ppPaths);
-		static void FramebufferSizeCallback(GLFWwindow* pWindow, sint32 width, sint32 height);
-		static void WindowContentScaleCallback(GLFWwindow* pWindow, float scaleX, float scaleY);
-		static void WindowRefreshCallback(GLFWwindow* pWindow);
+		static void WindowCloseCallback(GLFWwindow* window);
+		static void WindowSizeCallback(GLFWwindow* window, sint32 width, sint32 height);
+		static void WindowPosCallback(GLFWwindow* window, sint32 x, sint32 y);
+		static void WindowFocusCallback(GLFWwindow* window, sint32 focused);
+		static void WindowIconifyCallback(GLFWwindow* window, sint32 iconified);
+		static void WindowMaximizeCallback(GLFWwindow* window, sint32 maximized);
+		static void DropCallback(GLFWwindow* window, sint32 pathCount, const char** paths);
+		static void FramebufferSizeCallback(GLFWwindow* window, sint32 width, sint32 height);
+		static void WindowContentScaleCallback(GLFWwindow* window, float scaleX, float scaleY);
+		static void WindowRefreshCallback(GLFWwindow* window);
 
 		// Window key callbacks.
-		static void KeyCallback(GLFWwindow* pWindow, sint32 keycode, sint32 scancode, sint32 action, sint32 modifiers);
-		static void CharCallback(GLFWwindow* pWindow, uint32 codepoint);
+		static void KeyCallback(GLFWwindow* window, sint32 keycode, sint32 scancode, sint32 action, sint32 modifiers);
+		static void CharCallback(GLFWwindow* window, uint32 codepoint);
 
 		// Window mouse callbacks.
-		static void MouseButtonCallback(GLFWwindow* pWindow, sint32 button, sint32 action, sint32 modifiers);
-		static void CursorPosCallback(GLFWwindow* pWindow, double x, double y);
-		static void ScrollCallback(GLFWwindow* pWindow, double offsetX, double offsetY);
-		static void CursorEnterCallback(GLFWwindow* pWindow, sint32 entered);
+		static void MouseButtonCallback(GLFWwindow* window, sint32 button, sint32 action, sint32 modifiers);
+		static void CursorPosCallback(GLFWwindow* window, double x, double y);
+		static void ScrollCallback(GLFWwindow* window, double offsetX, double offsetY);
+		static void CursorEnterCallback(GLFWwindow* window, sint32 entered);
 	};
 }

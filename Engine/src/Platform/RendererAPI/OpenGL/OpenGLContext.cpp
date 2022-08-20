@@ -3,14 +3,14 @@
 
 namespace eng
 {
-	OpenGLContext::OpenGLContext(void* pNativeWindow)
+	OpenGLContext::OpenGLContext(void* nativeWindow)
 #if SYSTEM_WINDOWS
-		: m_pWindow(static_cast<GLFWwindow*>(pNativeWindow))
+		: m_Window(static_cast<GLFWwindow*>(nativeWindow))
 	{
 		PROFILE_FUNCTION();
 
-		CORE_ASSERT(m_pWindow != NULL, "Context's Window is null!");
-		glfwMakeContextCurrent(m_pWindow);
+		CORE_ASSERT(m_Window != NULL, "Context's Window is null!");
+		glfwMakeContextCurrent(m_Window);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		CORE_ASSERT(status != 0, "Failed to initialize GLAD loader!");
 	}
@@ -21,7 +21,7 @@ namespace eng
 		PROFILE_FUNCTION();
 
 #if SYSTEM_WINDOWS
-		glfwSwapBuffers(m_pWindow);
+		glfwSwapBuffers(m_Window);
 #endif
 	}
 
@@ -30,7 +30,7 @@ namespace eng
 		PROFILE_FUNCTION();
 
 #if SYSTEM_WINDOWS
-		glfwMakeContextCurrent(m_pWindow);
+		glfwMakeContextCurrent(m_Window);
 #endif
 	}
 }

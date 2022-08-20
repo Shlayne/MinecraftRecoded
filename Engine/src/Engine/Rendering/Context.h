@@ -8,13 +8,13 @@ namespace eng
 	class Context
 	{
 	public:
-		static Scope<Context> CreateScope(void* pNativeWindow);
+		static Scope<Context> CreateScope(void* nativeWindow);
 		virtual ~Context() = default;
 	public:
 		virtual void SwapBuffers() = 0;
 		virtual void MakeCurrent() = 0;
 	};
 
-	void WithContext(void* pNativeWindow, const std::function<void()>& crfWork);
+	void WithContext(void* nativeWindow, const std::function<void()>& work);
 	void RemoveCurrentContext();
 }

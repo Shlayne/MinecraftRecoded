@@ -66,9 +66,9 @@ namespace eng
 #endif
 	public:
 		template<typename C, typename E>
-		inline void Dispatch(C* object, void(C::*fCallback)(E&));
+		inline void Dispatch(C* object, void(C::*callback)(E&));
 		template<typename E>
-		inline void Dispatch(void(*fCallback)(E&));
+		inline void Dispatch(void(*callback)(E&));
 	public:
 		inline bool IsHandled() const;
 		inline void Handle();

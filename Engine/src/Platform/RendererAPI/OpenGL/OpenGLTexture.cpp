@@ -58,8 +58,8 @@ namespace eng
 		CORE_ASSERT(false, "Unknown Texture Format!");
 	}
 
-	OpenGLTexture::OpenGLTexture(const TextureSpecification& crSpecs)
-		: m_Specs(crSpecs)
+	OpenGLTexture::OpenGLTexture(const TextureSpecification& specs)
+		: m_Specs(specs)
 	{
 		Init();
 	}
@@ -81,8 +81,8 @@ namespace eng
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Specs.texture->GetWidth(), m_Specs.texture->GetHeight(), m_Format, m_Type, m_Specs.texture->GetData());
 	}
 
-	OpenGLTexture::OpenGLTexture(const Ref<Framebuffer>& crFramebuffer, sint32 attachmentIndex)
-		: m_OwnsRendererID(false), m_RendererID(crFramebuffer->GetColorAttachment(attachmentIndex)) {}
+	OpenGLTexture::OpenGLTexture(const Ref<Framebuffer>& framebuffer, sint32 attachmentIndex)
+		: m_OwnsRendererID(false), m_RendererID(framebuffer->GetColorAttachment(attachmentIndex)) {}
 
 	OpenGLTexture::~OpenGLTexture()
 	{
