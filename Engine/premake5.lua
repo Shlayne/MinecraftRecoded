@@ -3,7 +3,7 @@ project "Engine"
 	language "C++"
 	cppdialect "C++20"
 	cdialect "C17"
-	staticruntime "On"
+	staticruntime "Off"
 
 	targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
@@ -30,6 +30,7 @@ project "Engine"
 		"%{IncludeDir.gcem}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.mono}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.spdlog}",
 	}
@@ -38,7 +39,11 @@ project "Engine"
 	links {
 		"glad",
 		"stb",
+
+		"%{Library.mono}",
 	}
+
+	defines ("SCRIPT_CORE_ASSEMBLY_FILEPATH=\"Resources/Scripts/bin/" .. OutputDir .. "/\"")
 
 	filter "system:windows"
 		systemversion "latest"
@@ -53,6 +58,10 @@ project "Engine"
 
 		links {
 			"glfw",
+			"%{Library.winsock}",
+			"%{Library.winmm}",
+			"%{Library.winver}",
+			"%{Library.winbcrypt}",
 		}
 
 		files {
@@ -86,7 +95,7 @@ project "Engine"
 			"ENABLE_PROFILE",
 			"ENABLE_ASSERTS",
 			"ENABLE_STATS",
-			"ENABLE_LOGGING"
+			"ENABLE_LOGGING",
 		}
 
 	filter "configurations:Release"

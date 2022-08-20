@@ -3,7 +3,7 @@ project "MinecraftRecoded"
 	language "C++"
 	cppdialect "C++20"
 	cdialect "C17"
-	staticruntime "On"
+	staticruntime "Off"
 
 	targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")

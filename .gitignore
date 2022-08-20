@@ -10,7 +10,9 @@
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+**.csproj
+**.csproj.user
 
 # Output Binaries
-bin/**
-bin-int/**
+**/bin/**
+**/bin-int/**

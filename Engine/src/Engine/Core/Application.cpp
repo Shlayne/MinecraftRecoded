@@ -1,6 +1,7 @@
 #include "Engine/pch.h"
 #include "Engine/Core/Application.h"
 #include "Engine/Rendering/Renderer.h"
+#include "Engine/Scripting/ScriptEngine.h"
 #include <filesystem>
 
 extern bool g_RestartApplication;
@@ -23,6 +24,7 @@ namespace eng
 		m_sInput = Input::CreateScope(BIND_FUNC(OnEvent));
 		m_sWindow = Window::CreateScope(crSpecs.windowSpecs);
 		Renderer::Init();
+		ScriptEngine::Init();
 	}
 
 	Application::~Application()
@@ -38,6 +40,7 @@ namespace eng
 			delete rLayer;
 		}
 
+		ScriptEngine::Shutdown();
 		Renderer::Shutdown();
 		DestroyScope(m_sWindow);
 		DestroyScope(m_sInput);

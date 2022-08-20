@@ -45,5 +45,10 @@ group "Dependencies/MinecraftRecoded"
 group ""
 
 -- Add any projects here with 'include "__PROJECT_NAME__"'
-include "Engine"
+
+group "Core"
+	include "Engine"
+	include "ScriptCore"
+group ""
+
 include "MinecraftRecoded"
