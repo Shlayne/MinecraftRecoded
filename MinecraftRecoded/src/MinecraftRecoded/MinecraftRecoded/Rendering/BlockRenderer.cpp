@@ -32,9 +32,9 @@ namespace mcr
 		s_BlockRendererData = new BlockRendererData();
 		auto& data = *s_BlockRendererData;
 
-		LOG_INFO("Max Texture Size:         {0}", eng::RendererCapabilities::GetMaxTextureSize());
-		LOG_INFO("Max Texture Slots:        {0}", eng::RendererCapabilities::GetMaxTextureSlots());
-		LOG_INFO("Max Texture Array Layers: {0}", eng::RendererCapabilities::GetMaxTextureArrayLayers());
+		LOG_INFO("Max Texture Size:         {}", eng::RendererCapabilities::GetMaxTextureSize());
+		LOG_INFO("Max Texture Slots:        {}", eng::RendererCapabilities::GetMaxTextureSlots());
+		LOG_INFO("Max Texture Array Layers: {}", eng::RendererCapabilities::GetMaxTextureArrayLayers());
 
 		data.vertexBuffer = eng::VertexBuffer::CreateRef(sizeof(Vertex) * 4 * 6, nullptr, eng::BufferUsage_DynamicDraw);
 		data.vertexBuffer->SetLayout({
@@ -84,15 +84,6 @@ namespace mcr
 		ASSERT(s_BlockRendererData != nullptr, "Tried to use block renderer before it was initialized.");
 		auto& data = *s_BlockRendererData;
 
-#if ENABLE_ASSERTS
-		glm::u8vec3 localBlockPos = blockPos.GetLocalPosition();
-		CORE_ASSERT(
-			localBlockPos.x < 16 && localBlockPos.y < 16 && localBlockPos.z < 16,
-			"Block tried to render at illegal block position <{0},{1},{2}>.",
-			localBlockPos.x, localBlockPos.y, localBlockPos.z
-		);
-#endif
-
 		constexpr glm::vec3 blockVertexPositions[]
 		{
 			glm::vec3(0.0f, 0.0f, 0.0f),
@@ -119,18 +110,14 @@ namespace mcr
 
 		glm::s64vec3 renderChunkPos = blockPos.GetChunkPosition() - cameraPos.GetChunkPosition();
 		glm::vec3 renderLocalPos = glm::vec3(blockPos.GetLocalPosition()) - cameraPos.GetLocalPosition();
-//#if ENABLE_ASSERTS
-//		glm::s64vec3 checkRenderChunkPosition = glm::vec3(renderChunkPosition + glm::sign(renderChunkPosition)) * 16.0f; // 16 = chunk size in blocks
-//		CORE_ASSERT(
-//			renderChunkPosition.x == checkRenderChunkPosition.x &&
-//			renderChunkPosition.y == checkRenderChunkPosition.y &&
-//			renderChunkPosition.z == checkRenderChunkPosition.z,
-//			"Block trying to render at illegal chunk position <{0},{1},{2}>.",
-//			renderChunkPosition.x, renderChunkPosition.y, renderChunkPosition.z
-//		);
-//#endif
 
+#if ENABLE_ASSERTS
+		glm::s64vec3 scaledChunkPos = renderChunkPos * static_cast<sint64>(s_ChunkBlockSize);
+		CORE_ASSERT(glm::s64vec3(glm::vec3(scaledChunkPos)) == scaledChunkPos, "Block tried to render at an imprecise position.");
+		glm::vec3 renderPos = scaledChunkPos + glm::s64vec3(renderLocalPos);
+#else
 		glm::vec3 renderPos = renderChunkPos * static_cast<sint64>(s_ChunkBlockSize) + glm::s64vec3(renderLocalPos);
+#endif
 
 		for (uint32 i = 0; i < 4 * 6; i++)
 			vertices[i].position = blockVertexPositions[blockFaceIndices[i]] + renderPos;

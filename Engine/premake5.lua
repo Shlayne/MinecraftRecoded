@@ -30,7 +30,6 @@ project "Engine"
 		"%{IncludeDir.gcem}",
 		"%{IncludeDir.glad}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.mono}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.spdlog}",
 	}
@@ -39,11 +38,7 @@ project "Engine"
 	links {
 		"glad",
 		"stb",
-
-		"%{Library.mono}",
 	}
-
-	defines ("SCRIPT_CORE_ASSEMBLY_FILEPATH=\"Resources/Scripts/bin/" .. OutputDir .. "/ScriptCore.dll\"")
 
 	filter "system:windows"
 		systemversion "latest"
@@ -56,18 +51,14 @@ project "Engine"
 			"%{IncludeDir.glfw}",
 		}
 
-		links {
-			"glfw",
-			"%{Library.winsock}",
-			"%{Library.winmm}",
-			"%{Library.winver}",
-			"%{Library.winbcrypt}",
-		}
-
 		files {
 			"src/Platform/System/Windows/**.h",
 			"src/Platform/System/Windows/**.cpp",
 			"src/Platform/System/Windows/**.inl",
+		}
+
+		links {
+			"glfw"
 		}
 
 	filter "configurations:Profile"

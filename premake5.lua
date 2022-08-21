@@ -46,9 +46,5 @@ group ""
 
 -- Add any projects here with 'include "__PROJECT_NAME__"'
 
-group "Core"
-	include "Engine"
-	include "ScriptCore"
-group ""
-
+include "Engine"
 include "MinecraftRecoded"

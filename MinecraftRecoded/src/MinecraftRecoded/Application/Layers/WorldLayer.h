@@ -9,9 +9,6 @@ namespace mcr
 	class WorldLayer : public eng::Layer
 	{
 	public:
-		WorldLayer();
-		virtual ~WorldLayer();
-	public:
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnUpdate(eng::Timestep timestep) override;

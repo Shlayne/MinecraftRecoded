@@ -13,8 +13,6 @@ project "MinecraftRecoded"
 
 	files {
 		"src/**.h",
-		"src/**.c",
-		"src/**.hpp",
 		"src/**.cpp",
 		"src/**.inl"
 	}

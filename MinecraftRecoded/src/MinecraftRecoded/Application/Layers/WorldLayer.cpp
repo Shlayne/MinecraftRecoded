@@ -6,16 +6,6 @@
 
 namespace mcr
 {
-	WorldLayer::WorldLayer()
-	{
-
-	}
-
-	WorldLayer::~WorldLayer()
-	{
-
-	}
-
 	void WorldLayer::OnAttach()
 	{
 		eng::Renderer::SetClearColor({ 0.3f, 0.4f, 1.0f, 1.0f });

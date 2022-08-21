@@ -20,6 +20,18 @@ namespace eng
 		ref.reset();
 	}
 
+	template<typename T, typename T2>
+	inline Ref<T> CastRef(const Ref<T2>& ref)
+	{
+		return std::dynamic_pointer_cast<T, T2>(ref);
+	}
+
+	template<typename T, typename T2>
+	inline Ref<T> CastRef(Ref<T2>&& ref)
+	{
+		return std::dynamic_pointer_cast<T, T2>(std::move(ref));
+	}
+
 	// Scope
 	template<typename T>
 	using Scope = std::unique_ptr<T>;

@@ -1,6 +1,6 @@
-Source:
+src:
 	modid1:
-		scripts: e.g. OnXXXEvent, modded blocks/items/entities/guis/biomes/etc., world gen, etc.
+		...
 
 	modid2:
 		...
