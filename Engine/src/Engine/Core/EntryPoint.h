@@ -15,16 +15,8 @@ namespace eng
 
 	int Main(CommandLineArgs args)
 	{
-#if ENABLE_LOGGING
-		Logger::Init();
-#endif
-
 		// TODO: change this.
-		bool initialSettingRendererAPIStatus = RendererAPI::SetAPI(RendererAPI::API_OpenGL);
-		CORE_ASSERT(initialSettingRendererAPIStatus, "Failed to set initial Renderer API!");
-#if !ENABLE_ASSERTS
-		UNUSED(initialSettingRendererAPIStatus);
-#endif
+		UNUSED(RendererAPI::SetAPI(RendererAPI::API_OpenGL));
 
 		do
 		{

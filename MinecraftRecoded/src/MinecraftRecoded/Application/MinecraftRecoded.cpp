@@ -8,6 +8,7 @@ namespace eng
 	{
 		ApplicationSpecifications applicationSpecs;
 		applicationSpecs.args = args;
+		applicationSpecs.workingDirectory = "./MinecraftRecoded/";
 
 		// Window Specs
 		auto& windowSpecs = applicationSpecs.windowSpecs;

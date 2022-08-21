@@ -14,11 +14,15 @@ namespace eng
 	{
 		PROFILE_FUNCTION();
 
-		CORE_ASSERT(s_Application == nullptr, "Attempted to recreate Application!");
-		s_Application = this;
-
 		if (!specs.workingDirectory.empty())
 			std::filesystem::current_path(specs.workingDirectory);
+
+#if ENABLE_LOGGING
+		Logger::Init();
+#endif
+
+		CORE_ASSERT(s_Application == nullptr, "Attempted to recreate Application!");
+		s_Application = this;
 
 		m_Input = Input::CreateScope(BIND_FUNC(OnEvent));
 		m_Window = Window::CreateScope(specs.windowSpecs);
