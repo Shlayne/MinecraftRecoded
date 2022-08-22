@@ -46,5 +46,11 @@ group ""
 
 -- Add any projects here with 'include "__PROJECT_NAME__"'
 
-include "Engine"
-include "MinecraftRecoded"
+group "MinecraftRecoded"
+	include "Engine"
+	include "MinecraftRecoded"
+group ""
+
+group "Mods"
+	include "Mods/src/mcr"
+group ""

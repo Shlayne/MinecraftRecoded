@@ -2,12 +2,15 @@
 #include "WorldLayer.h"
 #include <Engine/Core/Application.h>
 #include <Engine/Rendering/Renderer.h>
+#include "Modding/ModLoader.h"
 #include "Rendering/BlockRenderer.h"
 
 namespace mcr
 {
 	void WorldLayer::OnAttach()
 	{
+		ModLoader::Load();
+
 		eng::Renderer::SetClearColor({ 0.3f, 0.4f, 1.0f, 1.0f });
 		BlockRenderer::Init();
 	}
@@ -15,6 +18,8 @@ namespace mcr
 	void WorldLayer::OnDetach()
 	{
 		BlockRenderer::Shutdown();
+
+		ModLoader::Unload();
 	}
 
 	float angle = 0.0f;

@@ -1,15 +1,12 @@
-project "MinecraftRecoded"
-	kind "ConsoleApp"
+project "mcr"
+	kind "SharedLib"
 	language "C++"
 	cppdialect "C++20"
 	cdialect "C17"
 	staticruntime "Off"
 
-	targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
-	objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
-
-	pchheader "MinecraftRecoded/pch.h"
-	pchsource "src/MinecraftRecoded/pch.cpp"
+	targetdir ("%{wks.location}/Mods/bin/" .. OutputDir .. "/%{prj.name}")
+	objdir ("%{wks.location}/Mods/bin-int/" .. OutputDir .. "/%{prj.name}")
 
 	files {
 		"src/**.h",
@@ -20,22 +17,16 @@ project "MinecraftRecoded"
 	includedirs {
 		-- Add any project source directories here.
 		"src",
-		"src/MinecraftRecoded/MinecraftRecoded",
 		"%{wks.location}/Engine/src",
+		"%{wks.location}/MinecraftRecoded/src/MinecraftRecoded/MinecraftRecoded",
 
 		-- Add any dependency includes here.
 		"%{IncludeDir.gcem}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.spdlog}",
-	}
 
-	defines {
-		"MODDING_BIN_DIR=\"bin/" .. OutputDir .. "\""
-	}
-
-	-- Add any links dependency libs via their project names here.
-	links {
-		"Engine"
+		-- Misc.
+		"%{wks.location}/Mods/src/DLL_EXPORT"
 	}
 
 	filter "system:windows"
@@ -94,5 +85,3 @@ project "MinecraftRecoded"
 		defines {
 			"CONFIG_DIST"
 		}
-
-		kind "WindowedApp"

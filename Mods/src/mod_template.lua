@@ -1,12 +1,12 @@
-project "MCRMod"
+project "__MOD_NAME__"
 	kind "SharedLib"
 	language "C++"
 	cppdialect "C++20"
 	cdialect "C17"
 	staticruntime "Off"
 
-	targetdir ("%{wks.location}/bin/" .. OutputDir .. "/%{prj.name}")
-	objdir ("%{wks.location}/bin-int/" .. OutputDir .. "/%{prj.name}")
+	targetdir ("%{wks.location}/Mods/bin/" .. OutputDir .. "/%{prj.name}")
+	objdir ("%{wks.location}/Mods/bin-int/" .. OutputDir .. "/%{prj.name}")
 
 	files {
 		"src/**.h",
@@ -24,6 +24,9 @@ project "MCRMod"
 		"%{IncludeDir.gcem}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.spdlog}",
+
+		-- Misc.
+		"%{wks.location}/Mods/src/DLL_EXPORT"
 	}
 
 	filter "system:windows"

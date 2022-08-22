@@ -29,3 +29,10 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+
+#if SYSTEM_WINDOWS
+	#ifndef NOMINMAX
+		#define NOMINMAX
+	#endif
+	#include <Windows.h>
+#endif
