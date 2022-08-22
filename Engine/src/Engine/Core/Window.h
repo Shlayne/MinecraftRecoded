@@ -13,7 +13,7 @@ namespace eng
 	{
 		sint32 width = 1280; // Framebuffer width.
 		sint32 height = 720; // Framebuffer height.
-		std::string_view title = "Untitled Window";
+		std::string title = "Untitled Window";
 
 		bool vsync : 1 = true;
 		bool resizable : 1 = true;
@@ -45,7 +45,7 @@ namespace eng
 		virtual bool IsMaximized() const = 0;
 
 		virtual std::string_view GetTitle() const = 0;
-		virtual void SetTitle(std::string_view title) = 0;
+		virtual void SetTitle(const std::string& title) = 0;
 
 		virtual void SetIcon(const Ref<LocalTexture2D>& icon) = 0;
 	public:

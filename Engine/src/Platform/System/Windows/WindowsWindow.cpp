@@ -88,7 +88,7 @@ namespace eng
 		glfwDestroyWindow(m_Window);
 	}
 
-	void WindowsWindow::SetTitle(std::string_view title)
+	void WindowsWindow::SetTitle(const std::string& title)
 	{
 		m_State.title = title;
 		glfwSetWindowTitle(m_Window, title.data());

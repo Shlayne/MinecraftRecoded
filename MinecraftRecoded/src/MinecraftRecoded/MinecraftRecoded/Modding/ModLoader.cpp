@@ -14,7 +14,8 @@ namespace mcr
 	void ModLoader::Load()
 	{
 		// TODO:
-		// A mod profile is just a vector of which mods are being enabled, and what their configs are.
+		// A modpack is just a list of required mods (including versions, so you can have multiple mod versions at once),
+		//		which mods are being enabled, and what their configs are.
 		// At title screen, there's a modding button
 		//	gui allows for creating, deleting, copying, renaming, and editing of mod profiles.
 
@@ -39,18 +40,41 @@ namespace mcr
 								auto GetMods = (FGetMods)GetProcAddress(hModule, "GetMods");
 								if (GetMods != NULL)
 								{
-									std::vector<IMod*> mods;
-									GetMods(mods);
+									std::vector<IMod*> newMods;
+									GetMods(newMods);
 
-									if (!mods.empty())
+									if (!newMods.empty())
 									{
-										for (auto mod : mods)
-											s_Mods.emplace_back(mod, hModule);
+										for (auto newMod : newMods)
+										{
+											bool modIsUnique = true;
+											for (auto& mod : s_Mods)
+											{
+												if (newMod->GetID() == mod.first->GetID())
+												{
+													modIsUnique = false;
+													break;
+												}
+											}
+
+											if (modIsUnique)
+												s_Mods.emplace_back(newMod, hModule);
+											else
+											{
+												LOG_ERROR("Modid \"{}\" already in use found at at \"{}\".", newMod->GetID(), filepath.string());
+												ASSERT(false, "TODO: See comment...");
+												// TODO:
+												// gui will cache all mods upon loading (with refresh button).
+												// dependency mods -> MissingDependencyAction.
+												// this loader will then not look for all .dll's, but look for
+												// the ones in the current modpack. If it can't find all the mods
+											}
+										}
 
 										#if ENABLE_LOGGING
 											LOG_INFO("Mods found at \"{}\":", filepath.string());
-											for (auto mod : mods)
-												LOG_INFO("\t{}", mod->GetID());
+											for (auto newMod : newMods)
+												LOG_INFO("\t{}", newMod->GetID());
 										#endif
 									}
 									else
@@ -78,10 +102,7 @@ namespace mcr
 		{
 			delete mod.first;
 			if (hModule != mod.second)
-			{
-				hModule = mod.second;
-				FreeLibrary(hModule);
-			}
+				FreeLibrary(hModule = mod.second);
 		}
 		s_Mods.clear();
 	}

@@ -27,7 +27,7 @@ namespace eng
 		inline virtual bool IsMaximized() const override { return m_State.maximized; }
 
 		inline virtual std::string_view GetTitle() const override { return m_State.title; }
-		virtual void SetTitle(std::string_view title) override;
+		virtual void SetTitle(const std::string& title) override;
 
 		virtual void SetIcon(const Ref<LocalTexture2D>& icon) override;
 	public:
