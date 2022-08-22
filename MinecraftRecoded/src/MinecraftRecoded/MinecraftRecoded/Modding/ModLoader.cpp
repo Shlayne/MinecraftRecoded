@@ -45,7 +45,7 @@ namespace mcr
 									if (!mods.empty())
 									{
 										for (auto mod : mods)
-											s_Mods.push_back(std::make_pair(mod, hModule));
+											s_Mods.emplace_back(mod, hModule);
 
 										#if ENABLE_LOGGING
 											LOG_INFO("Mods found at \"{}\":", filepath.string());

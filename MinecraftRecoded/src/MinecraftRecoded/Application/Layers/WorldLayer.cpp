@@ -3,6 +3,7 @@
 #include <Engine/Core/Application.h>
 #include <Engine/Rendering/Renderer.h>
 #include "Modding/ModLoader.h"
+#include "Modding/Registry.h"
 #include "Rendering/BlockRenderer.h"
 
 namespace mcr
@@ -10,6 +11,7 @@ namespace mcr
 	void WorldLayer::OnAttach()
 	{
 		ModLoader::Load();
+		Registry::Init();
 
 		eng::Renderer::SetClearColor({ 0.3f, 0.4f, 1.0f, 1.0f });
 		BlockRenderer::Init();
@@ -19,6 +21,7 @@ namespace mcr
 	{
 		BlockRenderer::Shutdown();
 
+		Registry::Shutdown();
 		ModLoader::Unload();
 	}
 

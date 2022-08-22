@@ -11,8 +11,8 @@ namespace mcr
 	public:
 		static constexpr std::string_view ID = "mcr";
 	public:
-		constexpr virtual std::string_view GetID() override { return ID; }
-		virtual void GetBlocks(std::vector<IBlock*>& outBlocks) override;
-		virtual void GetItems(std::vector<IItem*>& outItems) override;
+		constexpr virtual std::string_view GetID() const override { return ID; }
+		virtual void GetBlocks(std::vector<Block*>& outBlocks) override;
+		virtual void GetItems(std::vector<Item*>& outItems) override;
 	};
 }
