@@ -17,7 +17,7 @@ namespace eng
 		static Ref<spdlog::logger> s_CoreLogger;
 		static Ref<spdlog::logger> s_ClientLogger;
 	private:
-		friend class Application;
+		friend int Main(CommandLineArgs args);
 		static void Init();
 	};
 }

@@ -18,12 +18,7 @@ namespace eng
 		if (m_CurrentSession != nullptr)
 			InternalEndSession();
 
-		// Cache this so that all profiles go to the same directory.
-		static std::string workingDirectory = std::filesystem::current_path().string();
-
-		std::string filepath = workingDirectory;
-		filepath += std::filesystem::path::preferred_separator;
-		filepath += "Profiles";
+		std::string filepath = "Profiles";
 		filepath += std::filesystem::path::preferred_separator;
 		filepath += name;
 		filepath += ".profile.json";

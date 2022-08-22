@@ -50,7 +50,7 @@ namespace eng
 		friend int Main(CommandLineArgs args);
 		void Run();
 	protected:
-		friend Application* CreateApplication(CommandLineArgs args);
+		friend Application* CreateApplication(const ApplicationSpecifications& specs);
 		Application(const ApplicationSpecifications& specs);
 		virtual ~Application();
 	private:

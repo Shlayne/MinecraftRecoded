@@ -5,13 +5,15 @@
 #include "Engine/Core/Application.h"
 #include "Engine/Core/Logger.h"
 #include "Engine/Debug/Profiler.h"
+#include <filesystem>
 
 bool g_RestartApplication = true;
 eng::RendererAPI::API g_NextRendererAPI = eng::RendererAPI::API_None;
 
 namespace eng
 {
-	extern Application* CreateApplication(CommandLineArgs args);
+	extern ApplicationSpecifications CreateApplicationSpecifications(CommandLineArgs args);
+	extern Application* CreateApplication(const ApplicationSpecifications& specs);
 
 	int Main(CommandLineArgs args)
 	{
@@ -20,8 +22,17 @@ namespace eng
 
 		do
 		{
+			ApplicationSpecifications specs = CreateApplicationSpecifications(args);
+
+			// Need to set working directory before any profiling, so it has the right directory.
+			if (!specs.workingDirectory.empty())
+				std::filesystem::current_path(specs.workingDirectory);
+#if ENABLE_LOGGING
+			Logger::Init();
+#endif
+
 			PROFILE_BEGIN_RUNTIME("Init");
-			Application* application = CreateApplication(args);
+			Application* application = CreateApplication(specs);
 			PROFILE_END_RUNTIME();
 
 			PROFILE_BEGIN_RUNTIME("Run");
@@ -34,7 +45,7 @@ namespace eng
 
 			if (!RendererAPI::SetAPI(g_NextRendererAPI))
 			{
-				LOG_CORE_WARN("Could not set Renderer API to {0}. Defaulting to old Renderer API {1}", +g_NextRendererAPI, +RendererAPI::GetAPI());
+				LOG_CORE_WARN("Could not set Renderer API to {}. Defaulting to old Renderer API {}", +g_NextRendererAPI, +RendererAPI::GetAPI());
 				g_NextRendererAPI = RendererAPI::GetAPI();
 			}
 		}

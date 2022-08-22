@@ -4,19 +4,24 @@
 
 namespace eng
 {
-	Application* CreateApplication(CommandLineArgs args)
+	ApplicationSpecifications CreateApplicationSpecifications(CommandLineArgs args)
 	{
-		ApplicationSpecifications applicationSpecs;
-		applicationSpecs.args = args;
-		applicationSpecs.workingDirectory = "./MinecraftRecoded/";
+		ApplicationSpecifications specs;
+		specs.args = args;
+		specs.workingDirectory = "../Mods/";
 
 		// Window Specs
-		auto& windowSpecs = applicationSpecs.windowSpecs;
+		auto& windowSpecs = specs.windowSpecs;
 		windowSpecs.width = 1600;
 		windowSpecs.height = 900;
 		windowSpecs.title = "Minecraft Recoded";
 
-		Application* application = new Application(applicationSpecs);
+		return specs;
+	}
+
+	Application* CreateApplication(const ApplicationSpecifications& specs)
+	{
+		Application* application = new Application(specs);
 
 		application->PushLayer(new mcr::WorldLayer());
 

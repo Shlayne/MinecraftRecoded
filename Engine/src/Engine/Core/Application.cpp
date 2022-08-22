@@ -14,13 +14,6 @@ namespace eng
 	{
 		PROFILE_FUNCTION();
 
-		if (!specs.workingDirectory.empty())
-			std::filesystem::current_path(specs.workingDirectory);
-
-#if ENABLE_LOGGING
-		Logger::Init();
-#endif
-
 		CORE_ASSERT(s_Application == nullptr, "Attempted to recreate Application!");
 		s_Application = this;
 
@@ -71,6 +64,8 @@ namespace eng
 
 	void Application::PushLayer(Layer* layer)
 	{
+		PROFILE_FUNCTION();
+
 		CORE_ASSERT(layer != nullptr, "Layer was nullptr.");
 
 		layer->OnAttach();
@@ -79,6 +74,8 @@ namespace eng
 
 	void Application::PushOverlay(Layer* overlay)
 	{
+		PROFILE_FUNCTION();
+
 		CORE_ASSERT(overlay != nullptr, "Overlay was nullptr.");
 
 		overlay->OnAttach();
@@ -87,6 +84,8 @@ namespace eng
 
 	Layer* Application::PopLayer()
 	{
+		PROFILE_FUNCTION();
+
 		Layer* layer = m_LayerStack.PopLayer();
 		if (layer != nullptr)
 			layer->OnDetach();
@@ -99,6 +98,8 @@ namespace eng
 
 	Layer* Application::PopOverlay()
 	{
+		PROFILE_FUNCTION();
+
 		Layer* overlay = m_LayerStack.PopOverlay();
 		if (overlay != nullptr)
 			overlay->OnDetach();
@@ -158,12 +159,11 @@ namespace eng
 			OnEvent(wfre);
 		}
 
-		Input& input = *m_Input;
 		while (m_Running)
 		{
 			PROFILE_SCOPE("Application::Run -> while(m_Running)");
 
-			Timestep timestep = input.GetElapsedTime();
+			Timestep timestep = m_Input->GetElapsedTime();
 
 			// Update
 			{
@@ -181,10 +181,17 @@ namespace eng
 				for (auto& layer : m_LayerStack)
 					if (layer->IsEnabled())
 						layer->OnRender();
-				m_Window->GetContext().SwapBuffers();
+
+				{
+					PROFILE_SCOPE("Application::Run -> Render -> SwapBuffers");
+					m_Window->GetContext().SwapBuffers();
+				}
 			}
 
-			input.PollEvents();
+			{
+				PROFILE_SCOPE("Application::Run -> PollEvents");
+				m_Input->PollEvents();
+			}
 		}
 	}
 }
