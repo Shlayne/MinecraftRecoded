@@ -14,7 +14,7 @@ namespace eng
 		auto& windowSpecs = specs.windowSpecs;
 		windowSpecs.width = 1600;
 		windowSpecs.height = 900;
-		windowSpecs.title = "Minecraft Recoded - 0.11.0";
+		windowSpecs.title = "Minecraft Recoded";
 
 		return specs;
 	}
