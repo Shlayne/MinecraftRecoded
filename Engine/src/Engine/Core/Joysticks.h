@@ -6,8 +6,8 @@
 
 namespace eng
 {
-	using Joystick = uint8;
-	enum : Joystick
+	using Joystick_ = uint8;
+	enum Joystick : Joystick_
 	{
 		Joystick_1 = 0,
 		Joystick_2 = 1,
@@ -29,8 +29,8 @@ namespace eng
 		Joystick_Count
 	};
 
-	using JoystickButton = uint8;
-	enum : JoystickButton
+	using JoystickButton_ = uint8;
+	enum JoystickButton : JoystickButton_
 	{
 		JoystickButton_A            =  0, JoystickButton_Cross    = JoystickButton_A,
 		JoystickButton_B            =  1, JoystickButton_Circle   = JoystickButton_B,
@@ -51,8 +51,8 @@ namespace eng
 		JoystickButton_Count
 	};
 
-	using JoystickAxis = uint8;
-	enum : JoystickAxis
+	using JoystickAxis_ = uint8;
+	enum JoystickAxis : JoystickAxis_
 	{
 		JoystickAxis_LeftX        = 0,
 		JoystickAxis_LeftY        = 1,
@@ -64,8 +64,8 @@ namespace eng
 		JoystickAxis_Count
 	};
 
-	using JoystickHat = uint8;
-	enum : JoystickHat
+	using JoystickHat_ = uint8;
+	enum JoystickHat : JoystickHat_
 	{
 		JoystickHat_1 = 0,
 		JoystickHat_2 = 1,
@@ -75,8 +75,8 @@ namespace eng
 		JoystickHat_Count
 	};
 
-	using JoystickHatState = uint8;
-	enum : JoystickHatState
+	using JoystickHatState_ = uint8;
+	enum JoystickHatState : JoystickHatState_
 	{
 		JoystickHatState_Centered  = 0,
 		JoystickHatState_Up        = 1,

@@ -6,8 +6,8 @@
 
 namespace eng
 {
-	using Keycode = uint16;
-	enum : Keycode
+	using Keycode_ = uint16;
+	enum Keycode : Keycode_
 	{
 		/* Printable keys */
 		Keycode_Space      = 32,

@@ -6,8 +6,8 @@
 
 namespace eng
 {
-	using MouseButton = uint8;
-	enum : MouseButton
+	using MouseButton_ = uint8;
+	enum MouseButton : MouseButton_
 	{
 		MouseButton_1 = 0, MouseButton_Left     = MouseButton_1,
 		MouseButton_2 = 1, MouseButton_Right    = MouseButton_2,

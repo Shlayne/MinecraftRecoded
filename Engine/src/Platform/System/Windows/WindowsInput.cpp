@@ -59,7 +59,7 @@ namespace eng
 
 		// Reset all static data.
 
-		for (Joystick joystick = Joystick_1; joystick < Joystick_Count; joystick++)
+		for (Joystick joystick = Joystick_1; joystick < Joystick_Count; (*(Joystick_*)&joystick)++)
 			OnJoystickDisconnected(joystick);
 	}
 
@@ -177,7 +177,7 @@ namespace eng
 				for (sint32 i = 0; i < axisCount; i++)
 					SetJoystickAxis(joystickState, ConvertJoystickAxis(i), axes[i]);
 				for (sint32 i = 0; i < hatCount; i++)
-					SetJoystickHat(joystickState, ConvertJoystickHat(i), hats[i]);
+					SetJoystickHat(joystickState, ConvertJoystickHat(i), static_cast<JoystickHatState>(hats[i]));
 			}
 		}
 	}

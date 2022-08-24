@@ -60,7 +60,7 @@ namespace eng
 	{
 	public:
 		virtual ~Texture() = default;
-
+	public:
 		virtual void Bind(uint32 slot = 0) const = 0;
 		virtual void Unbind(uint32 slot = 0) const = 0;
 

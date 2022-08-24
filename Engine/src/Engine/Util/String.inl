@@ -1,10 +1,9 @@
 namespace eng::util::string
 {
 	template<typename Integral, class Elem, class Traits, class Alloc>
+		requires(std::is_integral_v<Integral>)
 	bool IToS(Integral integral, std::basic_string<Elem, Traits, Alloc>& outString, uint8_t radix, bool lowercase)
 	{
-		static_assert(std::is_integral_v<Integral>, "IToS only works on integral types.");
-
 		// Check if the radix is valid.
 		if (radix < 2 || radix > 36)
 			return false;
@@ -79,10 +78,9 @@ namespace eng::util::string
 	}
 
 	template<typename Integral, class Elem, class Traits>
+		requires(std::is_integral_v<Integral>)
 	bool SToI(std::basic_string_view<Elem, Traits> stringView, Integral& outIntegral, uint8_t radix)
 	{
-		static_assert(std::is_integral_v<Integral>, "SToI only works on integral types.");
-
 		// Check if the radix or string are trivially invalid.
 		if (radix < 2 || radix > 36 || stringView.empty())
 			return false;

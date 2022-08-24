@@ -17,7 +17,7 @@ namespace eng
 #endif
 	public:
 		inline Joystick GetJoystick() const { return m_Joystick; }
-		inline Joystick IsConnected() const { return m_Connected; }
+		inline bool IsConnected() const { return m_Connected; }
 	private:
 		Joystick m_Joystick;
 		bool m_Connected;

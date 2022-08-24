@@ -60,7 +60,7 @@ namespace eng
 	{
 		CORE_ASSERT(m_Connected, "Attempted to read hat status from disconnected joystick!");
 		CORE_ASSERT(hat < m_HatCount, "Joystick hat index out of bounds!");
-		return m_Hats[hat / 2] & (0xF << (hat % 2));
+		return static_cast<JoystickHatState>(m_Hats[hat / 2] & (0xF << (hat % 2)));
 	}
 
 	void JoystickState::SetButton(JoystickButton button, bool value)
@@ -88,6 +88,6 @@ namespace eng
 		CORE_ASSERT((value & 0xF) == value, "Attempted to set a hat to an invalid state.");
 
 		uint8 bits = 4 * (hat % 2);
-		m_Hats[hat / 2] = (m_Hats[hat / 2] & ~(0xF << bits)) | (value << bits);
+		m_Hats[hat / 2] = static_cast<JoystickHatState>((m_Hats[hat / 2] & ~(0xF << bits)) | (value << bits));
 	}
 }
