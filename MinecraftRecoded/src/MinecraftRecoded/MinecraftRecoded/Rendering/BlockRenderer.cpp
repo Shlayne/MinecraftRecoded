@@ -32,9 +32,9 @@ namespace mcr
 		s_BlockRendererData = new BlockRendererData();
 		auto& data = *s_BlockRendererData;
 
-		LOG_INFO("Max Texture Size:         {}", eng::RendererCapabilities::GetMaxTextureSize());
-		LOG_INFO("Max Texture Slots:        {}", eng::RendererCapabilities::GetMaxTextureSlots());
-		LOG_INFO("Max Texture Array Layers: {}", eng::RendererCapabilities::GetMaxTextureArrayLayers());
+		//LOG_INFO("Max Texture Size:         {}", eng::RendererCapabilities::GetMaxTextureSize());
+		//LOG_INFO("Max Texture Slots:        {}", eng::RendererCapabilities::GetMaxTextureSlots());
+		//LOG_INFO("Max Texture Array Layers: {}", eng::RendererCapabilities::GetMaxTextureArrayLayers());
 
 		data.vertexBuffer = eng::VertexBuffer::CreateRef(sizeof(Vertex) * 4 * 6, nullptr, eng::BufferUsage_DynamicDraw);
 		data.vertexBuffer->SetLayout({

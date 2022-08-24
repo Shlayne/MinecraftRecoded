@@ -3,6 +3,7 @@
 #include <Engine/Core/Layer.h>
 #include <Engine/Events/WindowEvents.h>
 #include "Rendering/Camera.h"
+#include "World/Chunk/Chunk.h"
 
 namespace mcr
 {
@@ -19,5 +20,6 @@ namespace mcr
 		void OnWindowFramebufferResizeEvent(eng::WindowFramebufferResizeEvent& event);
 	private:
 		Camera m_Camera;
+		Chunk* m_Chunk = nullptr;
 	};
 }

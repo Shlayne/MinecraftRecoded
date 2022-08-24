@@ -67,7 +67,8 @@ namespace mcr
 												// gui will cache all mods upon loading (with refresh button).
 												// dependency mods -> MissingDependencyAction.
 												// this loader will then not look for all .dll's, but look for
-												// the ones in the current modpack. If it can't find all the mods
+												// the ones in the current modpack. If it can't find all the mods,
+												// then it can say so
 											}
 										}
 

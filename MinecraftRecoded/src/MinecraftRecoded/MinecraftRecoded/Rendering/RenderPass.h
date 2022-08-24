@@ -15,5 +15,8 @@ namespace mcr
 
 		// Only alpha = 0.0f -> 1.0f
 		RenderPass_Translucent,
+
+		RenderPass_Count,
+		RenderPass_First = RenderPass_Opaque
 	};
 }

@@ -13,5 +13,8 @@ namespace mcr
 		Face_South,
 		Face_West,
 		Face_East,
+
+		Face_Count,
+		Face_First = Face_Bottom
 	};
 }

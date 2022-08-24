@@ -13,8 +13,8 @@ namespace mcr
 		static void Init();
 		static void Shutdown();
 	public:
-		static Block* GetBlock(std::string_view fullBlockID);
-		static Item* GetItem(std::string_view fullItemID);
+		static const Block* GetBlock(std::string_view fullBlockID);
+		static const Item* GetItem(std::string_view fullItemID);
 	private:
 		static void Register(IMod* mod, Registerable* registerable);
 	};

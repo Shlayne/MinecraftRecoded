@@ -26,6 +26,7 @@ project "MinecraftRecoded"
 		-- Add any dependency includes here.
 		"%{IncludeDir.gcem}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.siv}",
 		"%{IncludeDir.spdlog}",
 	}
 

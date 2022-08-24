@@ -5,14 +5,14 @@ namespace mcr
 {
 	ModVersion MCRMod::GetVersion() const
 	{
-		return { 0, 11, 1 };
+		return { 0, 12, 0 };
 	}
 
 	void MCRMod::GetDependencies(std::vector<ModDependency>& outDependencies)
 	{
-		// Example
+		// Example:
 		//outDependencies.reserve(1);
-		//outDependencies.push_back({ "mcr2", { { 0, 11, 0 }, { 1, 0, 0 }, false }, ModDependencyType_HardRequired });
+		//outDependencies.push_back({ "mcr2", { { 1, 0, 0 }, { 2, 0, 0 }, false }, ModDependencyType_HardRequired });
 	}
 
 	void MCRMod::GetBlocks(std::vector<Block*>& outBlocks)

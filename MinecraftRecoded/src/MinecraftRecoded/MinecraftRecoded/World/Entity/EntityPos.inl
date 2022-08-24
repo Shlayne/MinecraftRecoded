@@ -1,14 +1,8 @@
 namespace mcr
 {
-	constexpr EntityPos::EntityPos(const glm::vec3& crLocalPosition, const glm::s64vec3& crChunkPosition)
-		: m_LocalPosition(crLocalPosition), m_ChunkPosition(crChunkPosition)
-	{
-		Normalize();
-	}
-
 	constexpr glm::vec3 EntityPos::GetLocalPosition() const noexcept
 	{
-		return m_LocalPosition;
+		return glm::vec3(x, y, z);
 	}
 
 	constexpr glm::s64vec3 EntityPos::GetChunkPosition() const noexcept
@@ -16,76 +10,140 @@ namespace mcr
 		return m_ChunkPosition;
 	}
 
-	constexpr EntityPos EntityPos::operator+(const EntityPos& entityPos) const noexcept
+	// Does the same as the Normalize defined in EntityPos.cpp, but for only one coordinate.
+	template<uint8 Coord>
+	constexpr void EntityPos::Normalize(float& coordValue) noexcept
 	{
-		return +*this += entityPos;
+		float excessChunkCoord = gcem::floor(coordValue / static_cast<float>(s_ChunkBlockSize));
+		m_ChunkPosition[Coord] += static_cast<sint64>(excessChunkCoord);
+		coordValue -= static_cast<float>(s_ChunkBlockSize) * excessChunkCoord;
 	}
 
-	constexpr EntityPos& EntityPos::operator+=(const EntityPos& entityPos) noexcept
+	template<uint8 Coord>
+	template<typename T2, typename>
+	constexpr EntityPos::Coordinate<Coord>::Coordinate(T2 value) noexcept
+		: PrimitiveWrapper(value) {}
+
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator+(Value value) const noexcept
 	{
-		m_LocalPosition += entityPos.m_LocalPosition;
-		m_ChunkPosition += entityPos.m_ChunkPosition;
+		return Coordinate(*this) += value;
+	}
+
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator+=(Value value) noexcept
+	{
+		m_Value += value;
 		Normalize();
 		return *this;
 	}
 
-	constexpr EntityPos EntityPos::operator+() const noexcept
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator-(Value value) const noexcept
 	{
-		return EntityPos(+m_LocalPosition, +m_ChunkPosition);
+		return Coordinate(*this) -= value;
 	}
 
-	constexpr EntityPos EntityPos::operator-(const EntityPos& entityPos) const noexcept
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator-=(Value value) noexcept
 	{
-		return +*this -= entityPos;
-	}
-
-	constexpr EntityPos& EntityPos::operator-=(const EntityPos& entityPos) noexcept
-	{
-		m_LocalPosition -= entityPos.m_LocalPosition;
-		m_ChunkPosition -= entityPos.m_ChunkPosition;
+		m_Value -= value;
 		Normalize();
 		return *this;
 	}
 
-	constexpr EntityPos EntityPos::operator-() const noexcept
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator*(Value value) const noexcept
 	{
-		return EntityPos(-m_LocalPosition, -m_ChunkPosition);
-	}
-}
-
-// I hate how legacy code backwards compatability is the only thing holding back
-// math functions from being constexpr. They once thought it was a good idea for
-// a math function to modify errno on error. What kind of absolutely stupid fuc-
-namespace glm
-{
-	namespace detail
-	{
-		template<length_t L, typename T, qualifier Q, bool Aligned>
-		struct compute_gcem_floor
-		{
-			GLM_FUNC_QUALIFIER GLM_CONSTEXPR static vec<L, T, Q> call(vec<L, T, Q> const& x)
-			{
-				return detail::functor1<vec, L, T, T, Q>::call(gcem::floor, x);
-			}
-		};
+		return Coordinate(*this) *= value;
 	}
 
-	template<length_t L, typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR vec<L, T, Q> gcem_floor(vec<L, T, Q> const& x)
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator*=(Value value) noexcept
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'floor' only accept floating-point inputs.");
-		return detail::compute_gcem_floor<L, T, Q, detail::is_aligned<Q>::value>::call(x);
+		m_Value *= value;
+		Normalize();
+		return *this;
 	}
-}
 
-namespace mcr
-{
-	// Normalizes the EntityPos's local position into [0.0f, s_ChunkBlockSize)
-	// and puts the excess position information in its chunk position.
-	constexpr void EntityPos::Normalize() noexcept
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator/(Value value) const noexcept
 	{
-		glm::vec3 excessChunkPosition = glm::gcem_floor(m_LocalPosition / static_cast<float>(s_ChunkBlockSize));
-		m_ChunkPosition += excessChunkPosition;
-		m_LocalPosition -= static_cast<float>(s_ChunkBlockSize) * excessChunkPosition;
+		return Coordinate(*this) /= value;
+	}
+
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator/=(Value value) noexcept
+	{
+		m_Value /= value;
+		Normalize();
+		return *this;
+	}
+
+	template<uint8 Coord>
+	template<typename T2, typename>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator+(T2 value) const noexcept
+	{
+		return *this + static_cast<Value>(value);
+	}
+
+	template<uint8 Coord>
+	template<typename T2, typename>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator-(T2 value) const noexcept
+	{
+		return *this - static_cast<Value>(value);
+	}
+
+	template<uint8 Coord>
+	template<typename T2, typename>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator*(T2 value) const noexcept
+	{
+		return *this * static_cast<Value>(value);
+	}
+
+	template<uint8 Coord>
+	template<typename T2, typename>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator/(T2 value) const noexcept
+	{
+		return *this / static_cast<Value>(value);
+	}
+
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator++(int) noexcept
+	{
+		Value value = m_Value;
+		++*this;
+		return value;
+	}
+
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator++() noexcept
+	{
+		++m_Value;
+		Normalize();
+		return *this;
+	}
+
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator--(int) noexcept
+	{
+		Value value = m_Value;
+		--*this;
+		return value;
+	}
+
+	template<uint8 Coord>
+	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator--() noexcept
+	{
+		--m_Value;
+		Normalize();
+		return *this;
+	}
+
+	template<uint8 Coord>
+	void EntityPos::Coordinate<Coord>::Normalize() noexcept
+	{
+		// This is why the other methods aren't constexpr.
+		reinterpret_cast<EntityPos*>(this - Coord)->Normalize<Coord>(m_Value);
 	}
 }

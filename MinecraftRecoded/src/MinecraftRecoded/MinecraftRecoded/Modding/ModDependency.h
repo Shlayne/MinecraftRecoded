@@ -10,19 +10,19 @@ namespace mcr
 	{
 	public:
 		constexpr ModVersion() noexcept = default;
-		constexpr ModVersion(uint16 major, uint16 minor, uint32 patch) noexcept;
+		constexpr ModVersion(uint8 major, uint8 minor, uint16 patch) noexcept;
 		constexpr ModVersion(const ModVersion&) noexcept = default;
 		constexpr ModVersion& operator=(const ModVersion&) noexcept = default;
 	public:
 		constexpr std::strong_ordering operator<=>(ModVersion version) const noexcept;
 	public:
-		constexpr uint16 Major() const noexcept;
-		constexpr uint16 Minor() const noexcept;
-		constexpr uint32 Patch() const noexcept;
+		constexpr uint8 GetMajor() const noexcept;
+		constexpr uint8 GetMinor() const noexcept;
+		constexpr uint16 GetPatch() const noexcept;
 	private:
-		uint16 m_Major = 0;
-		uint16 m_Minor = 0;
-		uint32 m_Patch = 0;
+		uint8 m_Major = 0;
+		uint8 m_Minor = 0;
+		uint16 m_Patch = 0;
 	};
 
 	struct ModVersionRange
@@ -35,9 +35,9 @@ namespace mcr
 	public:
 		constexpr bool Contains(ModVersion version) const noexcept;
 	public:
-		constexpr ModVersion MinVersion() const noexcept;
-		constexpr ModVersion MaxVersion() const noexcept;
-		constexpr bool Inclusive() const noexcept;
+		constexpr ModVersion GetMinVersion() const noexcept;
+		constexpr ModVersion GetMaxVersion() const noexcept;
+		constexpr bool GetInclusive() const noexcept;
 	private:
 		ModVersion m_MinVersion;
 		ModVersion m_MaxVersion;
@@ -68,9 +68,9 @@ namespace mcr
 		constexpr ModDependency(const ModDependency&) noexcept = default;
 		constexpr ModDependency& operator=(const ModDependency&) noexcept = default;
 	public:
-		constexpr std::string_view ModID() const noexcept;
-		constexpr ModVersionRange VersionRange() const noexcept;
-		constexpr ModDependencyType Type() const noexcept;
+		constexpr std::string_view GetModID() const noexcept;
+		constexpr ModVersionRange GetVersionRange() const noexcept;
+		constexpr ModDependencyType GetType() const noexcept;
 	private:
 		std::string_view m_ModID;
 		ModVersionRange m_VersionRange;

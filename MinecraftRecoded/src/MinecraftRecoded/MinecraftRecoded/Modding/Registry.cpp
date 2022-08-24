@@ -1,18 +1,18 @@
 #include "MinecraftRecoded/pch.h"
 #include "Registry.h"
-#include "Registerable.h"
 #include "ModLoader.h"
 
 namespace mcr
 {
-	using FRegister = void (*) (IMod*, Registerable*);
-
 	struct RegistryData
 	{
+		// The Registerable's (for now, just Block and Item)
+		// hold the memory for the maps' string_views, and they're
+		// deleted at the same time, so this is fine.
 		std::unordered_map<std::string_view, Block*> blocks;
 		std::unordered_map<std::string_view, Item*> items;
 
-		FRegister fRegister = nullptr;
+		void (* fRegister) (IMod*, Registerable*) = nullptr;
 	};
 
 	static RegistryData* s_RegistryData = nullptr;
@@ -53,12 +53,17 @@ namespace mcr
 		{
 			auto& data = *s_RegistryData;
 #if ENABLE_LOGGING
-			RegisterAll<Block>("blocks", mod, &IMod::GetBlocks, data.blocks);
-			RegisterAll<Item>("items", mod, &IMod::GetItems, data.items);
+			constexpr const char* typeNames[]
+			{
+				"blocks",
+				"items",
+			};
+	#define TYPE_NAME(index) typeNames[index],
 #else
-			RegisterAll<Block>(mod, &IMod::GetBlocks, data.blocks);
-			RegisterAll<Item>(mod, &IMod::GetItems, data.items);
+	#define TYPE_NAME(index)
 #endif
+			RegisterAll<Block>(TYPE_NAME(0) mod, &IMod::GetBlocks, data.blocks);
+			RegisterAll<Item>(TYPE_NAME(1) mod, &IMod::GetItems, data.items);
 		});
 	}
 
@@ -76,13 +81,13 @@ namespace mcr
 		s_RegistryData = nullptr;
 	}
 
-	Block* Registry::GetBlock(std::string_view fullBlockID)
+	const Block* Registry::GetBlock(std::string_view fullBlockID)
 	{
 		auto& data = *s_RegistryData;
 		return data.blocks.contains(fullBlockID) ? data.blocks.at(fullBlockID) : nullptr;
 	}
 
-	Item* Registry::GetItem(std::string_view fullItemID)
+	const Item* Registry::GetItem(std::string_view fullItemID)
 	{
 		auto& data = *s_RegistryData;
 		return data.items.contains(fullItemID) ? data.items.at(fullItemID) : nullptr;

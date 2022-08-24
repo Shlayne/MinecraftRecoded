@@ -1,6 +1,6 @@
 namespace mcr
 {
-	constexpr ModVersion::ModVersion(uint16 major, uint16 minor, uint32 patch) noexcept
+	constexpr ModVersion::ModVersion(uint8 major, uint8 minor, uint16 patch) noexcept
 		: m_Major(major), m_Minor(minor), m_Patch(patch) {}
 
 	constexpr std::strong_ordering ModVersion::operator<=>(ModVersion version) const noexcept
@@ -12,17 +12,17 @@ namespace mcr
 		return m_Patch <=> version.m_Patch;
 	}
 
-	constexpr uint16 ModVersion::Major() const noexcept
+	constexpr uint8 ModVersion::GetMajor() const noexcept
 	{
 		return m_Major;
 	}
 
-	constexpr uint16 ModVersion::Minor() const noexcept
+	constexpr uint8 ModVersion::GetMinor() const noexcept
 	{
 		return m_Minor;
 	}
 
-	constexpr uint32 ModVersion::Patch() const noexcept
+	constexpr uint16 ModVersion::GetPatch() const noexcept
 	{
 		return m_Patch;
 	}
@@ -39,17 +39,17 @@ namespace mcr
 		return order < 0 || (m_Inclusive && order == 0);
 	}
 
-	constexpr ModVersion ModVersionRange::MinVersion() const noexcept
+	constexpr ModVersion ModVersionRange::GetMinVersion() const noexcept
 	{
 		return m_MinVersion;
 	}
 
-	constexpr ModVersion ModVersionRange::MaxVersion() const noexcept
+	constexpr ModVersion ModVersionRange::GetMaxVersion() const noexcept
 	{
 		return m_MaxVersion;
 	}
 
-	constexpr bool ModVersionRange::Inclusive() const noexcept
+	constexpr bool ModVersionRange::GetInclusive() const noexcept
 	{
 		return m_Inclusive;
 	}
@@ -57,17 +57,17 @@ namespace mcr
 	constexpr ModDependency::ModDependency(std::string_view modID, ModVersionRange versionRange, ModDependencyType type) noexcept
 		: m_ModID(modID), m_VersionRange(versionRange), m_Type(type) {}
 
-	constexpr std::string_view ModDependency::ModID() const noexcept
+	constexpr std::string_view ModDependency::GetModID() const noexcept
 	{
 		return m_ModID;
 	}
 
-	constexpr ModVersionRange ModDependency::VersionRange() const noexcept
+	constexpr ModVersionRange ModDependency::GetVersionRange() const noexcept
 	{
 		return m_VersionRange;
 	}
 
-	constexpr ModDependencyType ModDependency::Type() const noexcept
+	constexpr ModDependencyType ModDependency::GetType() const noexcept
 	{
 		return m_Type;
 	}
