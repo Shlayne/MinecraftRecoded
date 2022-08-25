@@ -5,7 +5,7 @@ namespace mcr
 {
 	ModVersion MCRMod::GetVersion() const
 	{
-		return { 0, 12, 3 };
+		return { 0, 12, 4 };
 	}
 
 	void MCRMod::GetDependencies(std::vector<ModDependency>& outDependencies)

@@ -28,6 +28,7 @@ namespace eng
 		constexpr std::string_view GetFilepath() const noexcept { return m_Filepath; }
 		constexpr sint32 GetWidth() const noexcept { return m_Width; }
 		constexpr sint32 GetHeight() const noexcept { return m_Height; }
+		constexpr glm::s32vec2 GetSize() const noexcept { return { m_Width, m_Height }; }
 		constexpr sint32 GetChannels() const noexcept { return m_Channels; }
 		constexpr uint8* GetData() const noexcept { return m_Data; }
 
