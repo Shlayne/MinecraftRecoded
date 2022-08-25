@@ -12,12 +12,13 @@ namespace mcr
 		m_Blocks = new BlockInstance[s_TotalBlocksInChunk];
 
 		// TODO: move world gen
-		std::fill_n(m_Blocks, s_TotalBlocksInChunk, BlockInstance(Registry::GetBlock("mcr:stone")));
-		//const Block* stone = Registry::GetBlock("mcr:stone");
-		//for (sint32 z = 0; z < s_ChunkBlockSize; z++)
-		//	for (sint32 y = 0; y < s_ChunkBlockSize; y++)
-		//		for (sint32 x = 0; x < s_ChunkBlockSize; x++)
-		//			m_Blocks[GetIndex({ x, y, z })].SetBlock(stone);
+		std::fill_n(m_Blocks, s_TotalBlocksInChunk, BlockInstance(Registry::GetBlock("mcr:air")));
+		const Block* stone = Registry::GetBlock("mcr:stone");
+		for (sint32 z = 0; z < s_ChunkBlockSize; z++)
+			for (sint32 y = 0; y < s_ChunkBlockSize; y++)
+				for (sint32 x = 0; x < s_ChunkBlockSize; x++)
+					if (y < std::max(x, z))
+						m_Blocks[GetIndex({ x, y, z })].SetBlock(stone);
 
 		RegenerateMeshes();
 	}
@@ -37,7 +38,7 @@ namespace mcr
 	{
 		m_Meshes.clear();
 		m_Meshes.reserve(RenderPass_Count);
-		for (RenderPass pass = RenderPass_First; pass < RenderPass_Count; (*(RenderPass_*)&pass)++)
+		for (RenderPass pass = RenderPass_First; pass < RenderPass_Count; ++*(RenderPass_*)&pass)
 			ChunkMeshGenerator::GenerateMesh(*this, m_Meshes.emplace_back(), pass);
 	}
 
@@ -59,14 +60,14 @@ namespace mcr
 		m_Blocks[index] = std::move(block);
 	}
 
-	BlockInstance& Chunk::GetBlock(uint16 index)
+	BlockInstance* Chunk::GetBlock(uint16 index)
 	{
-		return m_Blocks[index];
+		return m_Blocks + index;
 	}
 
-	const BlockInstance& Chunk::GetBlock(uint16 index) const
+	const BlockInstance* Chunk::GetBlock(uint16 index) const
 	{
-		return m_Blocks[index];
+		return m_Blocks + index;
 	}
 
 	void Chunk::SetBlock(glm::s8vec3 localPos, BlockInstance&& block)
@@ -74,13 +75,34 @@ namespace mcr
 		return SetBlock(GetIndex(localPos), std::move(block));
 	}
 
-	BlockInstance& Chunk::GetBlock(glm::s8vec3 localPos)
+	BlockInstance* Chunk::GetBlock(glm::s8vec3 localPos)
 	{
 		return GetBlock(GetIndex(localPos));
 	}
 
-	const BlockInstance& Chunk::GetBlock(glm::s8vec3 localPos) const
+	const BlockInstance* Chunk::GetBlock(glm::s8vec3 localPos) const
 	{
 		return GetBlock(GetIndex(localPos));
+	}
+
+	BlockInstance* Chunk::GetBlockOnFace(glm::s8vec3 localPos, Face face)
+	{
+		return const_cast<BlockInstance*>(const_cast<const Chunk*>(this)->GetBlockOnFace(localPos, face));
+	}
+
+	const BlockInstance* Chunk::GetBlockOnFace(glm::s8vec3 localPos, Face face) const
+	{
+		switch (face)
+		{
+			case Face_Bottom: if (--localPos.y < 0)                 return nullptr; break;
+			case Face_Top:    if (++localPos.y >= s_ChunkBlockSize) return nullptr; break;
+			case Face_North:  if (--localPos.z < 0)                 return nullptr; break;
+			case Face_South:  if (++localPos.z >= s_ChunkBlockSize) return nullptr; break;
+			case Face_West:   if (--localPos.x < 0)                 return nullptr; break;
+			case Face_East:   if (++localPos.x >= s_ChunkBlockSize) return nullptr; break;
+			default: ASSERT(false, "Unknown block face.");
+		}
+
+		return GetBlock(localPos);
 	}
 }

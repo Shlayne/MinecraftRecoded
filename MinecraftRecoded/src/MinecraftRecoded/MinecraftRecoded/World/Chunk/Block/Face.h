@@ -17,4 +17,9 @@ namespace mcr
 		Face_Count,
 		Face_First = Face_Bottom
 	};
+
+	constexpr Face OppositeFace(Face face)
+	{
+		return static_cast<Face>(face ^ 1);
+	}
 }

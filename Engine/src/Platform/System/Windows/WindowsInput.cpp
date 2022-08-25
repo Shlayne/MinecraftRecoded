@@ -59,7 +59,7 @@ namespace eng
 
 		// Reset all static data.
 
-		for (Joystick joystick = Joystick_1; joystick < Joystick_Count; (*(Joystick_*)&joystick)++)
+		for (Joystick joystick = Joystick_1; joystick < Joystick_Count; ++*(Joystick_*)&joystick)
 			OnJoystickDisconnected(joystick);
 	}
 

@@ -25,12 +25,15 @@ namespace mcr
 		static uint16 GetIndex(glm::s8vec3 localPos) noexcept;
 
 		void SetBlock(uint16 index, BlockInstance&& block);
-		BlockInstance& GetBlock(uint16 index);
-		const BlockInstance& GetBlock(uint16 index) const;
+		BlockInstance* GetBlock(uint16 index);
+		const BlockInstance* GetBlock(uint16 index) const;
 
 		void SetBlock(glm::s8vec3 localPos, BlockInstance&& block);
-		BlockInstance& GetBlock(glm::s8vec3 localPos);
-		const BlockInstance& GetBlock(glm::s8vec3 localPos) const;
+		BlockInstance* GetBlock(glm::s8vec3 localPos);
+		const BlockInstance* GetBlock(glm::s8vec3 localPos) const;
+
+		BlockInstance* GetBlockOnFace(glm::s8vec3 localPos, Face face);
+		const BlockInstance* GetBlockOnFace(glm::s8vec3 localPos, Face face) const;
 	private:
 		BlockInstance* m_Blocks = nullptr;
 		std::vector<ChunkMesh> m_Meshes;
