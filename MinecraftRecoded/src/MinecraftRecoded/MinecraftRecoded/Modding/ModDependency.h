@@ -37,7 +37,7 @@ namespace mcr
 	public:
 		constexpr ModVersion GetMinVersion() const noexcept;
 		constexpr ModVersion GetMaxVersion() const noexcept;
-		constexpr bool GetInclusive() const noexcept;
+		constexpr bool IsInclusive() const noexcept;
 	private:
 		ModVersion m_MinVersion;
 		ModVersion m_MaxVersion;

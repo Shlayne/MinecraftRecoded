@@ -49,7 +49,7 @@ namespace mcr
 		return m_MaxVersion;
 	}
 
-	constexpr bool ModVersionRange::GetInclusive() const noexcept
+	constexpr bool ModVersionRange::IsInclusive() const noexcept
 	{
 		return m_Inclusive;
 	}
