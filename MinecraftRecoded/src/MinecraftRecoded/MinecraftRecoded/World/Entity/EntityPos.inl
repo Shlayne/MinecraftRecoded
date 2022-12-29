@@ -1,149 +1,169 @@
 namespace mcr
 {
+	constexpr EntityPosFloatWrapper::EntityPosFloatWrapper(float local, sint64 chunk) noexcept
+		: m_Local(local), m_Chunk(chunk) {}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator+(EntityPosFloatWrapper value) const noexcept
+	{
+		return +*this += value;
+	}
+
+	constexpr EntityPosFloatWrapper& EntityPosFloatWrapper::operator+=(EntityPosFloatWrapper value) noexcept
+	{
+		m_Local += value.m_Local;
+		m_Chunk += value.m_Chunk;
+		Normalize();
+		return *this;
+	}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator-(EntityPosFloatWrapper value) const noexcept
+	{
+		return +*this -= value;
+	}
+
+	constexpr EntityPosFloatWrapper& EntityPosFloatWrapper::operator-=(EntityPosFloatWrapper value) noexcept
+	{
+		m_Local -= value.m_Local;
+		m_Chunk -= value.m_Chunk;
+		Normalize();
+		return *this;
+	}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator*(EntityPosFloatWrapper value) const noexcept
+	{
+		return +*this *= value;
+	}
+
+	constexpr EntityPosFloatWrapper& EntityPosFloatWrapper::operator*=(EntityPosFloatWrapper value) noexcept
+	{
+		m_Local *= value.m_Local;
+		m_Chunk *= value.m_Chunk;
+		Normalize();
+		return *this;
+	}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator/(EntityPosFloatWrapper value) const noexcept
+	{
+		return +*this /= value;
+	}
+
+	constexpr EntityPosFloatWrapper& EntityPosFloatWrapper::operator/=(EntityPosFloatWrapper value) noexcept
+	{
+		m_Local /= value.m_Local;
+		m_Chunk /= value.m_Chunk;
+		Normalize();
+		return *this;
+	}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator+() const noexcept
+	{
+		return EntityPosFloatWrapper(*this);
+	}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator-() const noexcept
+	{
+		return EntityPosFloatWrapper(-m_Local, -m_Chunk);
+	}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator++(int) const noexcept
+	{
+		return ++(+*this);
+	}
+
+	constexpr EntityPosFloatWrapper& EntityPosFloatWrapper::operator++() noexcept
+	{
+		m_Local++;
+		Normalize();
+		return *this;
+	}
+
+	constexpr EntityPosFloatWrapper EntityPosFloatWrapper::operator--(int) const noexcept
+	{
+		return --(+*this);
+	}
+
+	constexpr EntityPosFloatWrapper& EntityPosFloatWrapper::operator--() noexcept
+	{
+		m_Local--;
+		Normalize();
+		return *this;
+	}
+
+	constexpr void EntityPosFloatWrapper::Normalize() noexcept
+	{
+		float unfloored = m_Local / static_cast<float>(s_ChunkBlockSize);
+		float excessChunkPosition = gcem::floor(unfloored);
+		m_Chunk += static_cast<sint64>(excessChunkPosition);
+		m_Local -= static_cast<float>(s_ChunkBlockSize) * excessChunkPosition;
+	}
+
+
+
+	constexpr EntityPos::EntityPos() noexcept
+		: Base(Wrapper{}) {}
+
+	constexpr EntityPos::EntityPos(const glm::vec3& localPosition, const glm::s64vec3& chunkPosition) noexcept
+		: Base(
+			Wrapper(localPosition.x, chunkPosition.x),
+			Wrapper(localPosition.y, chunkPosition.y),
+			Wrapper(localPosition.z, chunkPosition.z))
+	{
+		Normalize();
+	}
+
 	constexpr glm::vec3 EntityPos::GetLocalPosition() const noexcept
 	{
-		return glm::vec3(x, y, z);
+		return glm::vec3(x.m_Local, y.m_Local, z.m_Local);
 	}
 
 	constexpr glm::s64vec3 EntityPos::GetChunkPosition() const noexcept
 	{
-		return m_ChunkPosition;
+		return glm::vec3(x.m_Chunk, y.m_Chunk, z.m_Chunk);
 	}
 
-	// Does the same as the Normalize defined in EntityPos.cpp, but for only one coordinate.
-	template<uint8 Coord>
-	constexpr void EntityPos::Normalize(float& coordValue) noexcept
+	constexpr EntityPos EntityPos::operator+(const EntityPos& entityPos) const noexcept
 	{
-		float excessChunkCoord = gcem::floor(coordValue / static_cast<float>(s_ChunkBlockSize));
-		m_ChunkPosition[Coord] += static_cast<sint64>(excessChunkCoord);
-		coordValue -= static_cast<float>(s_ChunkBlockSize) * excessChunkCoord;
+		return +*this += entityPos;
 	}
 
-	template<uint8 Coord>
-	template<typename T2, typename>
-	constexpr EntityPos::Coordinate<Coord>::Coordinate(T2 value) noexcept
-		: PrimitiveWrapper(value) {}
-
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator+(Value value) const noexcept
+	constexpr EntityPos& EntityPos::operator+=(const EntityPos& entityPos) noexcept
 	{
-		return Coordinate(*this) += value;
-	}
-
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator+=(Value value) noexcept
-	{
-		m_Value += value;
+		Base::operator+=(static_cast<Base>(entityPos));
 		Normalize();
 		return *this;
 	}
 
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator-(Value value) const noexcept
+	constexpr EntityPos EntityPos::operator+() const noexcept
 	{
-		return Coordinate(*this) -= value;
+		return EntityPos(*this);
 	}
 
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator-=(Value value) noexcept
+	constexpr EntityPos EntityPos::operator-(const EntityPos& entityPos) const noexcept
 	{
-		m_Value -= value;
+		return +*this -= entityPos;
+	}
+
+	constexpr EntityPos& EntityPos::operator-=(const EntityPos& entityPos) noexcept
+	{
+		Base::operator-=(static_cast<Base>(entityPos));
 		Normalize();
 		return *this;
 	}
 
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator*(Value value) const noexcept
+	constexpr EntityPos EntityPos::operator-() const noexcept
 	{
-		return Coordinate(*this) *= value;
+		return glm::operator-(static_cast<Base>(*this));
 	}
 
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator*=(Value value) noexcept
+	// Normalizes the EntityPos's local position into [0.0f, s_ChunkBlockSize)
+	// and puts the excess position information in its chunk position.
+	constexpr void EntityPos::Normalize() noexcept
 	{
-		m_Value *= value;
-		Normalize();
-		return *this;
+		x.Normalize();
+		y.Normalize();
+		z.Normalize();
 	}
 
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator/(Value value) const noexcept
-	{
-		return Coordinate(*this) /= value;
-	}
-
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator/=(Value value) noexcept
-	{
-		m_Value /= value;
-		Normalize();
-		return *this;
-	}
-
-	template<uint8 Coord>
-	template<typename T2, typename>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator+(T2 value) const noexcept
-	{
-		return *this + static_cast<Value>(value);
-	}
-
-	template<uint8 Coord>
-	template<typename T2, typename>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator-(T2 value) const noexcept
-	{
-		return *this - static_cast<Value>(value);
-	}
-
-	template<uint8 Coord>
-	template<typename T2, typename>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator*(T2 value) const noexcept
-	{
-		return *this * static_cast<Value>(value);
-	}
-
-	template<uint8 Coord>
-	template<typename T2, typename>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator/(T2 value) const noexcept
-	{
-		return *this / static_cast<Value>(value);
-	}
-
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator++(int) noexcept
-	{
-		Value value = m_Value;
-		++*this;
-		return value;
-	}
-
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator++() noexcept
-	{
-		++m_Value;
-		Normalize();
-		return *this;
-	}
-
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>::Value EntityPos::Coordinate<Coord>::operator--(int) noexcept
-	{
-		Value value = m_Value;
-		--*this;
-		return value;
-	}
-
-	template<uint8 Coord>
-	EntityPos::Coordinate<Coord>& EntityPos::Coordinate<Coord>::operator--() noexcept
-	{
-		--m_Value;
-		Normalize();
-		return *this;
-	}
-
-	template<uint8 Coord>
-	void EntityPos::Coordinate<Coord>::Normalize() noexcept
-	{
-		// This is why the other methods aren't constexpr.
-		reinterpret_cast<EntityPos*>(this - Coord)->Normalize<Coord>(m_Value);
-	}
+	constexpr EntityPos::EntityPos(const Base& base) noexcept
+		: Base(base) {}
 }

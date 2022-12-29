@@ -71,6 +71,10 @@ namespace mcr
 			cameraPos.x -= movementSpeed * std::sin(cameraRotation.y) * timestep;
 			cameraPos.z -= movementSpeed * std::cos(cameraRotation.y) * timestep;
 		}
+
+		//auto l = cameraPos.GetLocalPosition();
+		//auto c = cameraPos.GetChunkPosition();
+		//LOG_DEBUG("camera local pos=<{0}, {1}, {2}>    camera chunk pos=<{3}, {4}, {5}>", l.x, l.y, l.z, c.x, c.y, c.z);
 	}
 
 	void WorldLayer::OnRender()

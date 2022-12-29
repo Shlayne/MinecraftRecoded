@@ -9,6 +9,17 @@ namespace mcr
 	{
 		// TODO: if chunk is completely full of air, don't allocate m_Blocks.
 		// Same for storing chunk to disk.
+		// The specific example I'm thinking of is when moving between chunks,
+		// new chunks in the direction the player is moving will be generated.
+		// However, don't even allocate a chunk there if no blocks besides air
+		// are present. The WorldGenerator class will set blocks through the
+		// World class's SetBlock function, which if it tries to set a block
+		// within render distance, the world will either get or allocate a new
+		// chunk, then set the block set the block in that chunk (which itself
+		// will cause said chunk to allocate its block array).
+		// Then when saving a chunk, the ChunkSerializer class (name pending)
+		// will take in a chunk pointer, but only chunks that have been allocated
+		// and have their block array allocated will be provided.
 		m_Blocks = new BlockInstance[s_TotalBlocksInChunk];
 
 		// TODO: move world gen
@@ -31,6 +42,7 @@ namespace mcr
 	const ChunkMesh& Chunk::GetMesh(RenderPass pass) const
 	{
 		ASSERT(pass < RenderPass_Count, "Tried to get invalid mesh from chunk for render pass = {}.", +pass);
+		ASSERT(!m_Meshes.empty(), "Tried to get mesh for chunk that hasn't yet generated meshes.");
 		return m_Meshes[pass];
 	}
 

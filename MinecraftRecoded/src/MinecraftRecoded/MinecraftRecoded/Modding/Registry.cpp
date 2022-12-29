@@ -8,7 +8,8 @@ namespace mcr
 	{
 		// The Registerable's (for now, just Block and Item)
 		// hold the memory for the maps' string_views, and they're
-		// deleted at the same time, so this is fine.
+		// deleted at the same time, so using the string_views as
+		// the map's keys is perfectly fine.
 		std::unordered_map<std::string_view, Block*> blocks;
 		std::unordered_map<std::string_view, Item*> items;
 

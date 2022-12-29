@@ -2,70 +2,68 @@
 
 #include <Engine/Core/Int.h>
 #include "World/Chunk/ChunkConstants.h"
-#include "MinecraftRecoded/Util/PrimitiveWrapper.h"
 
 namespace mcr
 {
-	struct EntityPos
+	// This is required to get the normalize functionality integrated into the component's operators.
+	struct EntityPosFloatWrapper
 	{
 	public:
-		constexpr EntityPos() noexcept = default;
-		EntityPos(const glm::vec3& localPosition, const glm::s64vec3& chunkPosition = glm::s64vec3(0ull));
+		constexpr EntityPosFloatWrapper(float local = 0.0f, sint64 chunk = 0ll) noexcept;
+		constexpr EntityPosFloatWrapper(const EntityPosFloatWrapper&) noexcept = default;
+		constexpr EntityPosFloatWrapper& operator=(const EntityPosFloatWrapper&) noexcept = default;
+	public:
+		constexpr EntityPosFloatWrapper  operator+ (EntityPosFloatWrapper value) const noexcept;
+		constexpr EntityPosFloatWrapper& operator+=(EntityPosFloatWrapper value) noexcept;
+		constexpr EntityPosFloatWrapper  operator- (EntityPosFloatWrapper value) const noexcept;
+		constexpr EntityPosFloatWrapper& operator-=(EntityPosFloatWrapper value) noexcept;
+		constexpr EntityPosFloatWrapper  operator* (EntityPosFloatWrapper value) const noexcept;
+		constexpr EntityPosFloatWrapper& operator*=(EntityPosFloatWrapper value) noexcept;
+		constexpr EntityPosFloatWrapper  operator/ (EntityPosFloatWrapper value) const noexcept;
+		constexpr EntityPosFloatWrapper& operator/=(EntityPosFloatWrapper value) noexcept;
+	public:
+		constexpr EntityPosFloatWrapper  operator+ () const noexcept;
+		constexpr EntityPosFloatWrapper  operator- () const noexcept;
+	public:
+		constexpr EntityPosFloatWrapper  operator++(int) const noexcept;
+		constexpr EntityPosFloatWrapper& operator++() noexcept;
+		constexpr EntityPosFloatWrapper  operator--(int) const noexcept;
+		constexpr EntityPosFloatWrapper& operator--() noexcept;
+	private:
+		friend struct EntityPos;
+
+		constexpr void Normalize() noexcept;
+
+		// I can't believe I didn't think to combine them instead of doing crazy non-constexpr unsafe memory address offsets.
+		float m_Local;
+		sint64 m_Chunk;
+	};
+
+	struct EntityPos : private glm::vec<3, EntityPosFloatWrapper>
+	{
+	public:
+		constexpr EntityPos() noexcept;
+		constexpr EntityPos(const glm::vec3& localPosition, const glm::s64vec3& chunkPosition = glm::s64vec3(0ull)) noexcept;
 	public:
 		constexpr glm::vec3 GetLocalPosition() const noexcept;
 		constexpr glm::s64vec3 GetChunkPosition() const noexcept;
 	public:
-		EntityPos  operator+ (const EntityPos& entityPos) const noexcept;
-		EntityPos& operator+=(const EntityPos& entityPos) noexcept;
-		EntityPos  operator+ () const noexcept;
-		EntityPos  operator- (const EntityPos& entityPos) const noexcept;
-		EntityPos& operator-=(const EntityPos& entityPos) noexcept;
-		EntityPos  operator- () const noexcept;
+		constexpr EntityPos  operator+ (const EntityPos& entityPos) const noexcept;
+		constexpr EntityPos& operator+=(const EntityPos& entityPos) noexcept;
+		constexpr EntityPos  operator+ () const noexcept;
+		constexpr EntityPos  operator- (const EntityPos& entityPos) const noexcept;
+		constexpr EntityPos& operator-=(const EntityPos& entityPos) noexcept;
+		constexpr EntityPos  operator- () const noexcept;
 	private:
-		glm::vec3& GetLocalPositionInternal() const noexcept;
-		void Normalize() noexcept;
-		template<uint8 Coord>
-		constexpr void Normalize(float& coordValue) noexcept;
-	private:
-		template<uint8 Coord>
-		struct Coordinate : public PrimitiveWrapper<float>
-		{
-		public:
-			constexpr Coordinate() noexcept = default;
-			template<typename T2, typename = std::enable_if_t<std::is_convertible_v<T2, Value>>>
-			constexpr Coordinate(T2 value) noexcept;
-		public:
-			Value operator+(Value value) const noexcept;
-			Coordinate& operator+=(Value value) noexcept;
-			Value operator-(Value value) const noexcept;
-			Coordinate& operator-=(Value value) noexcept;
-			Value operator*(Value value) const noexcept;
-			Coordinate& operator*=(Value value) noexcept;
-			Value operator/(Value value) const noexcept;
-			Coordinate& operator/=(Value value) noexcept;
-		public:
-			template<typename T2, typename = std::enable_if_t<std::is_convertible_v<T2, Value>>>
-			Value operator+(T2 value) const noexcept;
-			template<typename T2, typename = std::enable_if_t<std::is_convertible_v<T2, Value>>>
-			Value operator-(T2 value) const noexcept;
-			template<typename T2, typename = std::enable_if_t<std::is_convertible_v<T2, Value>>>
-			Value operator*(T2 value) const noexcept;
-			template<typename T2, typename = std::enable_if_t<std::is_convertible_v<T2, Value>>>
-			Value operator/(T2 value) const noexcept;
-		public:
-			Value operator++(int) noexcept;
-			Coordinate& operator++() noexcept;
-			Value operator--(int) noexcept;
-			Coordinate& operator--() noexcept;
-		private:
-			void Normalize() noexcept;
-		};
+		using Wrapper = EntityPosFloatWrapper;
+		using Base = glm::vec<3, Wrapper>;
+
+		constexpr void Normalize() noexcept;
+		constexpr EntityPos(const Base& base) noexcept;
 	public:
-		Coordinate<0> x;
-		Coordinate<1> y;
-		Coordinate<2> z;
-	private:
-		glm::s64vec3 m_ChunkPosition{ 0ll };
+		using Base::x;
+		using Base::y;
+		using Base::z;
 	};
 }
 
