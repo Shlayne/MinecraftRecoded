@@ -11,6 +11,7 @@ Library = {}
 	IncludeDir["spdlog"] = "%{wks.location}/Engine/Dependencies/spdlog-1.10.0/include/"
 	
 	IncludeDir["siv"] = "%{wks.location}/MinecraftRecoded/Dependencies/siv-3.0.0/include/"
+	IncludeDir["yaml_cpp"] = "%{wks.location}/MinecraftRecoded/Dependencies/yaml-cpp-0.7.0/include/"
 
 -- Library Directories
 --	LibraryDir["__LIBRARY_DIR_NAME__"] = "%{__LIBRARY_DIR_NAME__}/__LIBRARY_DIR_PATH__"

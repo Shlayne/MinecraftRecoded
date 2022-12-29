@@ -30,6 +30,7 @@ project "MinecraftRecoded"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.siv}",
 		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	defines {
@@ -38,7 +39,8 @@ project "MinecraftRecoded"
 
 	-- Add any links dependency libs via their project names here.
 	links {
-		"Engine"
+		"Engine",
+		"yaml-cpp"
 	}
 
 	filter "system:windows"

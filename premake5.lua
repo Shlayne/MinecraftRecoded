@@ -41,7 +41,7 @@ group "Dependencies/Engine"
 	include "Engine/Dependencies/glfw-3.3.8"
 	include "Engine/Dependencies/stb-2.27"
 group "Dependencies/MinecraftRecoded"
-	-- TODO: MinecraftRecoded-specific dependencies
+	include "MinecraftRecoded/Dependencies/yaml-cpp-0.7.0"
 group ""
 
 -- Add any projects here with 'include "__PROJECT_NAME__"'

@@ -16,11 +16,11 @@ project "Engine"
 		"src/Engine/**.c",
 		"src/Engine/**.hpp",
 		"src/Engine/**.cpp",
-		"src/Engine/**.inl"
+		"src/Engine/**.inl",
 		"src/Engine.h",
 		"src/Platform/RendererAPI/**.h",
 		"src/Platform/RendererAPI/**.cpp",
-		"src/Platform/RendererAPI/**.inl",
+		"src/Platform/RendererAPI/**.inl"
 	}
 
 	includedirs {
@@ -34,12 +34,14 @@ project "Engine"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.yaml}"
 	}
 
 	-- Add any links dependency libs via their project names here.
 	links {
 		"glad",
-		"stb",
+		"glfw",
+		"stb"
 	}
 
 	filter "system:windows"
@@ -57,10 +59,6 @@ project "Engine"
 			"src/Platform/System/Windows/**.h",
 			"src/Platform/System/Windows/**.cpp",
 			"src/Platform/System/Windows/**.inl",
-		}
-
-		links {
-			"glfw"
 		}
 
 	filter "configurations:Profile"
