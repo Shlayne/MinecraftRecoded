@@ -23,6 +23,7 @@ project "glad"
 
 		filter "system:windows"
 			systemversion "latest"
+			buildoptions "/wd5105" -- Until Microsoft updates Windows 10 to not have terrible code (aka never), this must be here to prevent a warning.
 
 		filter { "system:windows", "configurations:Profile" }
 			runtime "Debug"

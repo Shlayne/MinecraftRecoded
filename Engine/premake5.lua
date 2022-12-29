@@ -13,8 +13,10 @@ project "Engine"
 
 	files {
 		"src/Engine/**.h",
+		"src/Engine/**.c",
+		"src/Engine/**.hpp",
 		"src/Engine/**.cpp",
-		"src/Engine/**.inl",
+		"src/Engine/**.inl"
 		"src/Engine.h",
 		"src/Platform/RendererAPI/**.h",
 		"src/Platform/RendererAPI/**.cpp",
